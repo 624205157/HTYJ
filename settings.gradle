@@ -1,0 +1,5 @@
+rootProject.name='HTYJ'
+include ':app'
+include ':commonlib'
+include ':main'
+include ':grid'
