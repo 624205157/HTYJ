@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.view.View;
 
 import com.example.commonlib.base.BaseActivity;
 import com.example.main.R;
@@ -20,6 +22,11 @@ import java.lang.reflect.Method;
 
 public class SplashActivity extends BaseActivity {
 
+    private Handler mHandler = new Handler();
+    private Runnable runnable = () -> {
+        toLogin();
+
+    };
 
     @Override
     protected int setContentView() {
@@ -27,17 +34,26 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate() {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                Intent mainIntent = new Intent(SplashActivity.this,
-                        LoginActivity.class);
-                SplashActivity.this.startActivity(mainIntent);
-                SplashActivity.this.finish();
+    protected void onCreate(Bundle savedInstanceState, String a) {
+        mHandler.postDelayed(runnable, 3000);
+        findViewById(R.id.pass).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toLogin();
             }
-        }, 5000);
+        });
+
     }
 
+    private void toLogin(){
+        startActivity(new Intent(SplashActivity.this,
+                LoginActivity.class));
+        finish();
+    }
+
+    private void toMainActivity(){
+
+    }
 
     /**
      * 检测是否开启通知
@@ -127,6 +143,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        mHandler.removeCallbacks(runnable);
         super.onDestroy();
     }
 

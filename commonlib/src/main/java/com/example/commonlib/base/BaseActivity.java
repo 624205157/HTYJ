@@ -33,7 +33,7 @@ public abstract class BaseActivity extends Activity {
 //        }
         setContentView(setContentView());
         ButterKnife.bind(this);
-        onCreate();
+        onCreate(savedInstanceState,"");
     }
 
     protected void showToast(String text) {
@@ -54,7 +54,7 @@ public abstract class BaseActivity extends Activity {
 
     protected abstract int setContentView();
 
-    protected abstract void onCreate();
+    protected abstract void onCreate(Bundle savedInstanceState,String a);
 
     protected void addBack(){
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
