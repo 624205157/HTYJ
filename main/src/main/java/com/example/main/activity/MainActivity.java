@@ -5,22 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
-import com.example.toollibrary.Utils.ShareHelper;
-import com.zhhl.openlock.fragment.BaseFragment;
-import com.zhhl.openlock.fragment.Fragment1;
-import com.zhhl.openlock.fragment.Fragment2;
-import com.zhhl.openlock.fragment.Fragment3;
+import com.example.main.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +18,6 @@ import java.util.List;
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.SupportFragment;
 
-import static com.zhhl.openlock.MyLocationClientOption.getMyOption;
 
 public class MainActivity extends SupportActivity {
 
