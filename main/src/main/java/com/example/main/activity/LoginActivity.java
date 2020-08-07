@@ -2,6 +2,7 @@ package com.example.main.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
@@ -41,8 +42,9 @@ public class LoginActivity extends BaseActivity {
         return R.layout.activity_login;
     }
 
+
     @Override
-    protected void onCreate() {
+    protected void onCreate(Bundle savedInstanceState, String a) {
         addBack();
         setTitleText("登录");
     }
@@ -98,7 +100,8 @@ public class LoginActivity extends BaseActivity {
                 showToast("密码不可为空");
                 return;
             }
-            login();
+//            login();
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
         } else if (id == R.id.wechat) {
         } else if (id == R.id.qq) {
         } else if (id == R.id.weibo) {

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.toollibrary.Utils.ShareHelper;
-import com.zhhl.openlock.R;
+
+import androidx.annotation.Nullable;
+
+import com.example.commonlib.utils.ShareHelper;
+import com.example.main.R;
 
 import me.yokeyword.fragmentation.SupportFragment;
 

@@ -1,5 +1,6 @@
 package com.example.main.activity;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
 
@@ -35,7 +36,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate() {
+    protected void onCreate(Bundle savedInstanceState, String a) {
         addBack();
         setTitleText("注册账号");
     }

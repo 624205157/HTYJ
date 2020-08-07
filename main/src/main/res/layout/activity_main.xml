@@ -33,19 +33,25 @@
             android:id="@+id/tab_1"
             style="@style/MineBottomBarButtonStyle"
             android:drawableTop="@drawable/b_home"
-            android:text="备案信息" />
+            android:text="首页" />
 
         <RadioButton
             android:id="@+id/tab_2"
             style="@style/MineBottomBarButtonStyle"
-            android:drawableTop="@drawable/b_home"
-            android:text="企业信息" />
+            android:drawableTop="@drawable/b_grid"
+            android:text="网格" />
 
         <RadioButton
             android:id="@+id/tab_3"
             style="@style/MineBottomBarButtonStyle"
-            android:drawableTop="@drawable/b_home"
-            android:text="派单信息" />
+            android:drawableTop="@drawable/b_phone"
+            android:text="通讯录" />
+
+        <RadioButton
+            android:id="@+id/tab_4"
+            style="@style/MineBottomBarButtonStyle"
+            android:drawableTop="@drawable/b_my"
+            android:text="我的" />
 
     </RadioGroup>
 </LinearLayout>
