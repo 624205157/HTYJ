@@ -34,8 +34,6 @@ public class LoginActivity extends BaseActivity {
     EditText userName;
     @BindView(R2.id.password)
     EditText password;
-    @BindView(R2.id.automatic_login)
-    CheckBox automaticLogin;
 
     @Override
     protected int setContentView() {
@@ -45,14 +43,13 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
-        addBack();
-        setTitleText("登录");
+
     }
 
 
-    private void login(){
+    private void login() {
         buildDialog("登录中，请稍后...");
-        User user = new User(userName.getText() + "",password.getText() + "");
+        User user = new User(userName.getText() + "", password.getText() + "");
         Gson gson = new Gson();
         String jsonStr = gson.toJson(user);
         RequestCenter.requestLogin(jsonStr, new DisposeDataListener() {
@@ -66,7 +63,7 @@ public class LoginActivity extends BaseActivity {
                     showToast(message);
                     if (TextUtils.equals("200", code)) {
                         ARouter.getInstance().build("/show/img")
-                                .withString("type","公司简介")
+                                .withString("type", "公司简介")
                                 .navigation();
 //                        finish();
                     }
@@ -85,12 +82,10 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    @OnClick({R2.id.register, R2.id.forget_password, R2.id.login, R2.id.wechat, R2.id.qq, R2.id.weibo})
+    @OnClick({R2.id.forget_password, R2.id.login})
     public void onViewClicked(View view) {
         int id = view.getId();
-        if (id == R.id.register) {
-            startActivity(new Intent(this, RegisterActivity.class));
-        } else if (id == R.id.forget_password) {
+        if (id == R.id.forget_password) {
         } else if (id == R.id.login) {
             if (TextUtils.isEmpty(userName.getText())) {
                 showToast("用户名不可为空");
@@ -101,10 +96,7 @@ public class LoginActivity extends BaseActivity {
                 return;
             }
 //            login();
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-        } else if (id == R.id.wechat) {
-        } else if (id == R.id.qq) {
-        } else if (id == R.id.weibo) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }
     }
 }

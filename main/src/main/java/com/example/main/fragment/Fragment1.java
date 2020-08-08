@@ -1,6 +1,8 @@
 package com.example.main.fragment;
 
 
+import android.os.Bundle;
+
 import com.example.main.R;
 import com.example.main.fragment.home.HomeFragment;
 
@@ -10,7 +12,7 @@ import com.example.main.fragment.home.HomeFragment;
 public class Fragment1 extends GroupPopFragment {
 
     @Override
-    protected void lazyLoad() {
+    protected void lazyLoad(Bundle savedInstanceState) {
         if (findChildFragment(HomeFragment.class) == null) {
             loadRootFragment(R.id.home, new HomeFragment());
         }

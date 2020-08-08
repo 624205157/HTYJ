@@ -1,5 +1,7 @@
 package com.example.main.fragment.my;
 
+import android.os.Bundle;
+
 import com.example.main.R;
 import com.example.main.fragment.BaseFragment;
 
@@ -14,7 +16,7 @@ public class MyFragment extends BaseFragment {
     }
 
     @Override
-    protected void lazyLoad() {
+    protected void lazyLoad(Bundle savedInstanceState) {
 
     }
 }

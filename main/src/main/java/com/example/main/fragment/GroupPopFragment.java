@@ -1,5 +1,6 @@
 package com.example.main.fragment;
 
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.main.R;
@@ -39,7 +40,7 @@ public class GroupPopFragment extends BaseFragment {
     }
 
     @Override
-    protected void lazyLoad() {
+    protected void lazyLoad(Bundle savedInstanceState) {
 
     }
 }

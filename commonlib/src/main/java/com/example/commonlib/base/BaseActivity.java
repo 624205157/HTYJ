@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +14,9 @@ import android.widget.Toast;
 import com.example.commonlib.R;
 
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import butterknife.ButterKnife;
 
@@ -28,12 +32,14 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            getWindow().setStatusBarColor(getResources().getColor(R.color.red));//设置状态栏颜色
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.white));//设置状态栏颜色
+            getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         setContentView(setContentView());
         ButterKnife.bind(this);
         onCreate(savedInstanceState,"");
+
     }
 
     protected void showToast(String text) {
@@ -127,4 +133,6 @@ public abstract class BaseActivity extends Activity {
         lastClickTime = curClickTime;
         return flag;
     }
+
+
 }

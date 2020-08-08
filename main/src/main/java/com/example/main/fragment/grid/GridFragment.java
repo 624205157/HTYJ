@@ -1,5 +1,7 @@
 package com.example.main.fragment.grid;
 
+import android.os.Bundle;
+
 import com.example.main.R;
 import com.example.main.fragment.BaseFragment;
 
@@ -10,7 +12,7 @@ public class GridFragment extends BaseFragment {
     }
 
     @Override
-    protected void lazyLoad() {
+    protected void lazyLoad(Bundle savedInstanceState) {
 
     }
 }

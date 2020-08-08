@@ -59,6 +59,11 @@ dependencies {
 
     api 'me.yokeyword:fragmentationx:1.0.2'
 
-
+    //3D地图so及jar
+    api 'com.amap.api:3dmap:latest.integration'
+    //定位功能
+    api 'com.amap.api:location:latest.integration'
+    //搜索功能
+    api 'com.amap.api:search:latest.integration'
 
 }

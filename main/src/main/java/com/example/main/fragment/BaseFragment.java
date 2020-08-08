@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import com.example.commonlib.utils.ShareHelper;
 import com.example.main.R;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -35,6 +37,8 @@ public abstract class BaseFragment extends SupportFragment {
 
     protected Context mContext;//上下文
     protected Activity mActivity;//界面
+
+    private Unbinder unbinder;
 
     /**
      * 当视图被加载到Activity中时候调用
@@ -55,8 +59,9 @@ public abstract class BaseFragment extends SupportFragment {
         view = inflater.inflate(setContentView(), container, false);
         isInit = true;
         title = view.findViewById(R.id.title);
+        unbinder = ButterKnife.bind(this, view);
         /**初始化的时候去加载数据**/
-        isCanLoadData();
+        isCanLoadData(savedInstanceState);
 
         return view;
     }
@@ -67,7 +72,7 @@ public abstract class BaseFragment extends SupportFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        isCanLoadData();
+        isCanLoadData(null);
         refreshData();
     }
 
@@ -77,7 +82,7 @@ public abstract class BaseFragment extends SupportFragment {
      * 1.视图已经初始化
      * 2.视图对用户可见
      */
-    private void isCanLoadData() {
+    private void isCanLoadData(Bundle savedInstanceState) {
 
         if (shareHelper == null)
             shareHelper = ShareHelper.getInstance();
@@ -87,7 +92,7 @@ public abstract class BaseFragment extends SupportFragment {
         }
         if (getUserVisibleHint()) {
             firmID = (String) shareHelper.query("firmID","");
-            lazyLoad();
+            lazyLoad(savedInstanceState);
             isLoad = true;
         } else {
             if (isLoad) {
@@ -104,7 +109,7 @@ public abstract class BaseFragment extends SupportFragment {
         super.onDestroyView();
         isInit = false;
         isLoad = false;
-
+        unbinder.unbind();
     }
 
     protected void showToast(String message) {
@@ -145,7 +150,7 @@ public abstract class BaseFragment extends SupportFragment {
     /**
      * 当视图初始化并且对用户可见的时候去真正的加载数据
      */
-    protected abstract void lazyLoad();
+    protected abstract void lazyLoad(Bundle savedInstanceState);
 
     /**
      * 当视图已经对用户不可见并且加载过数据，如果需要在切换到其他页面时停止加载数据，可以调用此方法

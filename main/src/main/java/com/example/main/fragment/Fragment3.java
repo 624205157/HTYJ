@@ -1,6 +1,8 @@
 package com.example.main.fragment;
 
 
+import android.os.Bundle;
+
 import com.example.main.R;
 import com.example.main.fragment.phone.PhoneFragment;
 
@@ -11,7 +13,7 @@ public class Fragment3 extends GroupPopFragment {
 
 
     @Override
-    protected void lazyLoad() {
+    protected void lazyLoad(Bundle savedInstanceState) {
         if (findChildFragment(PhoneFragment.class) == null) {
             loadRootFragment(R.id.home, new PhoneFragment());
         }

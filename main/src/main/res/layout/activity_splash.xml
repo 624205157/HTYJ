@@ -5,11 +5,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/iv"
+        android:id="@+id/pass"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:background="#1644B8"
+        android:src="@mipmap/splash_background"
         />
 
     <ImageView
@@ -73,22 +73,22 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_1"
         />
 
-    <TextView
-        android:id="@+id/pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="25dp"
-        android:text="跳过"
-        android:textColor="#b6ffffff"
-        android:background="@drawable/background_frame_hollow_1"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/pass"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:layout_marginRight="15dp"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:text="跳过"-->
+<!--        android:textColor="#b6ffffff"-->
+<!--        android:background="@drawable/background_frame_hollow_1"-->
+<!--        android:paddingLeft="20dp"-->
+<!--        android:paddingRight="20dp"-->
+<!--        android:paddingTop="10dp"-->
+<!--        android:paddingBottom="10dp"-->
+<!--        />-->
 
 
 
