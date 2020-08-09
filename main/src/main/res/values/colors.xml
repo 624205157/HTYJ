@@ -6,4 +6,6 @@
 
     <color name="b_text_color_true">#4E8EF0</color>
     <color name="b_text_color_false">#4B4B4B</color>
+
+    <color name="text_color">#333333</color>
 </resources>
