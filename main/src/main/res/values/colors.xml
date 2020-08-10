@@ -8,4 +8,6 @@
     <color name="b_text_color_false">#4B4B4B</color>
 
     <color name="text_color">#333333</color>
+    <color name="text_color2">#0091FF</color>
+    <color name="line_color">#e6e6e6</color>
 </resources>
