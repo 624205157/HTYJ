@@ -49,7 +49,7 @@ public abstract class BaseFragment extends SupportFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mContext = context;
-        this.mActivity = (Activity) context;
+        this.mActivity = getActivity();
 
     }
 
@@ -201,11 +201,11 @@ public abstract class BaseFragment extends SupportFragment {
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        BaseFragment fragment = (BaseFragment) getTopChildFragment();
-        fragment.onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        BaseFragment fragment = (BaseFragment) getTopChildFragment();
+//        fragment.onActivityResult(requestCode, resultCode, data);
+//    }
 
 }

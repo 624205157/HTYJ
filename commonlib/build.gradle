@@ -66,4 +66,15 @@ dependencies {
     //搜索功能
     api 'com.amap.api:search:latest.integration'
 
+    api "com.google.android.material:material:1.0.0"
+
+    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.8'
+
+    api 'com.facebook.fresco:fresco:0.14.1'
+
+    // 引入multidex库
+    api 'com.android.support:multidex:1.0.3'
+
+    api 'com.contrarywind:Android-PickerView:4.1.8'
+
 }

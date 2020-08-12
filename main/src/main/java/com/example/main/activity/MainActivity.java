@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.utils.ShareHelper;
 import com.example.main.R;
 import com.example.main.fragment.BaseFragment;
@@ -31,7 +32,7 @@ import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.SupportFragment;
 
 
-public class MainActivity extends SupportActivity {
+public class MainActivity extends BaseActivity {
 
 
     private RadioGroup rg;
@@ -39,19 +40,18 @@ public class MainActivity extends SupportActivity {
     private int index = 0;
     private ShareHelper shareHelper;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().setStatusBarColor(getResources().getColor(com.example.commonlib.R.color.white));//设置状态栏颜色
-            getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
-        setContentView(R.layout.activity_main);
+    protected int setContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState, String a) {
         shareHelper = ShareHelper.getInstance();
-        rg =  findViewById(R.id.rg);
+        rg = findViewById(R.id.rg);
         getPermission();
         initData();
-
     }
 
 
@@ -62,18 +62,18 @@ public class MainActivity extends SupportActivity {
         fragments.add(new Fragment3());
         fragments.add(new Fragment4());
 
-        loadMultipleRootFragment(R.id.frag,0,
+        loadMultipleRootFragment(R.id.frag, 0,
                 fragments.get(0),
                 fragments.get(1),
                 fragments.get(2),
                 fragments.get(3)
-                );
+        );
 
 
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i){
+                switch (i) {
                     case R.id.tab_1:
                         index = 0;
                         showHideFragment(fragments.get(0));
@@ -86,7 +86,7 @@ public class MainActivity extends SupportActivity {
                         index = 2;
                         showHideFragment(fragments.get(2));
                         break;
-                        case R.id.tab_4:
+                    case R.id.tab_4:
                         index = 3;
                         showHideFragment(fragments.get(3));
                         break;
@@ -164,21 +164,26 @@ public class MainActivity extends SupportActivity {
 //    }
 
 
-    private void getPermission(){
+    private void getPermission() {
         PermissionX.init(this)
-                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .request(new RequestCallback() {
                     @Override
                     public void onResult(boolean allGranted, List<String> grantedList, List<String> deniedList) {
                         if (allGranted) {
 
                         } else {
+                            String text = "";
+                            for (String a : deniedList) {
+                                text = text + a + ";";
+                            }
+                            showToast("您拒绝了" +text);
 //                            Toast.makeText(MainActivity.this, "您拒绝了定位权限", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
-
 
 
 }

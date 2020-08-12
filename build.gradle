@@ -38,7 +38,7 @@ ext {
     //localBuildToolsVersion是gradle.properties中的数据
     buildToolsVersion = localBuildToolsVersion
     compileSdkVersion = 29
-    minSdkVersion = 16
+    minSdkVersion = 19
     targetSdkVersion = 29
     versionCode = 1
     versionName = "1.0"

@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.main">
 
-    <!--允许程序打开网络套接字-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--允许程序设置内置sd卡的写权限-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--允许程序获取网络状态-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--允许程序访问WiFi网络信息-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--允许程序读写手机状态和身份-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name="debug.MainApplication"
@@ -22,8 +11,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
-        <activity android:name=".activity.SplashActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        tools:replace="android:theme">
+        <activity
+            android:name=".activity.SplashActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             >
             <intent-filter>
@@ -33,12 +24,29 @@
             </intent-filter>
         </activity>
 
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="e8103e248dae6d96f796e3d1f32029f6"/>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="e8103e248dae6d96f796e3d1f32029f6" />
 
 
-        <activity android:name=".activity.LoginActivity"/>
-        <activity android:name=".activity.MainActivity"/>
-        <activity android:name=".activity.phone.PersonalInfoActivity"/>
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.phone.PersonalInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.PositionFineTuningActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.EnterpriseActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>
 

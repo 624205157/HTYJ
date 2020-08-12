@@ -87,6 +87,7 @@ public class LoginActivity extends BaseActivity {
         int id = view.getId();
         if (id == R.id.forget_password) {
         } else if (id == R.id.login) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
             if (TextUtils.isEmpty(userName.getText())) {
                 showToast("用户名不可为空");
                 return;
@@ -96,7 +97,7 @@ public class LoginActivity extends BaseActivity {
                 return;
             }
 //            login();
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
         }
     }
 }

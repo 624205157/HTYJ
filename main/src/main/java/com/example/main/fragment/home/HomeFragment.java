@@ -1,5 +1,6 @@
 package com.example.main.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.activity.EnterpriseActivity;
 import com.example.main.fragment.BaseFragment;
 
 import butterknife.BindView;
@@ -49,6 +51,7 @@ public class HomeFragment extends BaseFragment {
             case R.id.task:
                 break;
             case R.id.enterprise:
+                startActivity(new Intent(getActivity(), EnterpriseActivity.class));
                 break;
             case R.id.resources:
                 break;
