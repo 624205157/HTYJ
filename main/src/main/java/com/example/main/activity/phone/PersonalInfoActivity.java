@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.example.commonlib.base.BaseActivity;
 import com.example.main.R;
+import com.example.main.R2;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -17,13 +18,13 @@ import butterknife.OnClick;
 public class PersonalInfoActivity extends BaseActivity {
 
 
-    @BindView(R.id.name)
+    @BindView(R2.id.name)
     TextView name;
-    @BindView(R.id.address)
+    @BindView(R2.id.address)
     TextView address;
-    @BindView(R.id.department)
+    @BindView(R2.id.department)
     TextView department;
-    @BindView(R.id.tel)
+    @BindView(R2.id.tel)
     TextView tel;
 
     @Override
@@ -37,13 +38,12 @@ public class PersonalInfoActivity extends BaseActivity {
         setTitleText("人员详情");
     }
 
-    @OnClick({R.id.voice, R.id.video})
+    @OnClick({R2.id.voice, R2.id.video})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.voice:
-                break;
-            case R.id.video:
-                break;
+        if (view.getId() == R.id.voice){
+
+        }else  if (view.getId() == R.id.video){
+
         }
     }
 }

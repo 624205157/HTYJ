@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="15dp"
+        >
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/enterprise_img2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:text="企业名称"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@+id/iv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="5dp"
+            />
+
+        <ImageView
+            android:id="@+id/hidden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/down_img"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone"
+        >
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/line_color"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="地址: 海南省海口市华龙区奥术大师大大所大所奥术大师大所"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/navigation"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            />
+
+        <ImageView
+            android:id="@+id/navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/map_img"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/address"
+            app:layout_constraintBottom_toBottomOf="@+id/address"
+            android:layout_margin="15dp"
+            android:padding="10dp"
+            />
+
+        <View
+            android:id="@+id/v_1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/line_color"
+            app:layout_constraintLeft_toLeftOf="@+id/address"
+            app:layout_constraintTop_toBottomOf="@id/address"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="15dp"
+            />
+
+        <TextView
+            android:id="@+id/social_credit_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="社会信用代码: 460000"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/v_1"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            />
+
+
+        <View
+            android:id="@+id/v_2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/line_color"
+            app:layout_constraintLeft_toLeftOf="@+id/social_credit_code"
+            app:layout_constraintTop_toBottomOf="@id/social_credit_code"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="15dp"
+            />
+
+
+        <TextView
+            android:id="@+id/legal_person"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="法人: 法人111"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/v_2"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            />
+
+
+        <View
+            android:id="@+id/v_3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/line_color"
+            app:layout_constraintLeft_toLeftOf="@+id/legal_person"
+            app:layout_constraintTop_toBottomOf="@id/legal_person"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="15dp"
+            />
+
+        <TextView
+            android:id="@+id/is_start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="是否是星标企业: 是"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/v_3"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            />
+
+
+        <View
+            android:id="@+id/v_4"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/line_color"
+            app:layout_constraintLeft_toLeftOf="@+id/is_start"
+            app:layout_constraintTop_toBottomOf="@id/is_start"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="15dp"
+            />
+
+
+        <TextView
+            android:id="@+id/del"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:background="@drawable/background_solid_8"
+            app:layout_constraintTop_toBottomOf="@+id/v_4"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="15dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="12dp"
+            android:paddingLeft="15dp"
+            />
+
+        <TextView
+            android:id="@+id/update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:background="@drawable/background_solid_8"
+            app:layout_constraintTop_toBottomOf="@+id/v_4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/del"
+            android:layout_margin="15dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="12dp"
+            android:paddingLeft="15dp"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</LinearLayout>

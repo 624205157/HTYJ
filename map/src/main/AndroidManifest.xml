@@ -2,5 +2,12 @@
     package="com.gd.map">
 
     <application
-        android:theme="@style/AppTheme"/>
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="com.gd.map.MapActivity"
+            android:label="@string/title_activity_map"
+            android:theme="@style/AppTheme.NoActionBar"/>
+    </application>
+
 </manifest>

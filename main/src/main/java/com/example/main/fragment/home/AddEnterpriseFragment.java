@@ -29,6 +29,7 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.example.main.R;
+import com.example.main.R2;
 import com.example.main.activity.PositionFineTuningActivity;
 import com.example.main.adapter.GridImageAdapter;
 import com.example.main.fragment.BaseFragment;
@@ -55,33 +56,33 @@ import butterknife.OnClick;
 public class AddEnterpriseFragment extends BaseFragment {
 
 
-    @BindView(R.id.map)
+    @BindView(R2.id.map)
     MapView map;
-    @BindView(R.id.name)
+    @BindView(R2.id.name)
     EditText name;
-    @BindView(R.id.enterprise_code)
+    @BindView(R2.id.enterprise_code)
     EditText enterpriseCode;
-    @BindView(R.id.address)
+    @BindView(R2.id.address)
     TextView address;
-    @BindView(R.id.tel)
+    @BindView(R2.id.tel)
     EditText tel;
-    @BindView(R.id.fax)
+    @BindView(R2.id.fax)
     EditText fax;
-    @BindView(R.id.legal_person)
+    @BindView(R2.id.legal_person)
     EditText legalPerson;
-    @BindView(R.id.legal_person_tel)
+    @BindView(R2.id.legal_person_tel)
     EditText legalPersonTel;
-    @BindView(R.id.key_enterprises)
+    @BindView(R2.id.key_enterprises)
     TextView keyEnterprises;
-    @BindView(R.id.grid)
+    @BindView(R2.id.grid)
     TextView grid;
-    @BindView(R.id.photo_recycler1)
+    @BindView(R2.id.photo_recycler1)
     RecyclerView photoRecycler1;
-    @BindView(R.id.photo_recycler2)
+    @BindView(R2.id.photo_recycler2)
     RecyclerView photoRecycler2;
-    @BindView(R.id.location_text)
+    @BindView(R2.id.location_text)
     TextView locationText;
-    @BindView(R.id.is_key_enterprises)
+    @BindView(R2.id.is_key_enterprises)
     Switch isKeyEnterprises;
 
     private OptionsPickerView reasonPicker;
@@ -180,20 +181,17 @@ public class AddEnterpriseFragment extends BaseFragment {
         initGridList();
     }
 
-    @OnClick({R.id.relocation, R.id.position_fine_tuning, R.id.grid, R.id.cl})
+    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.cl})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.relocation:
-                getPermission();
-                break;
-            case R.id.position_fine_tuning:
-                startActivityForResult(new Intent(mActivity, PositionFineTuningActivity.class), 0x100);
-                break;
-            case R.id.grid:
-                reasonPicker.show();
-                break;
-            case R.id.cl:
-                break;
+
+        int id = view.getId();
+        if (id == R.id.relocation) {
+            getPermission();
+        } else if (id == R.id.position_fine_tuning) {
+            startActivityForResult(new Intent(mActivity, PositionFineTuningActivity.class), 0x100);
+        } else if (id == R.id.grid) {
+            reasonPicker.show();
+        } else if (id == R.id.cl) {
         }
     }
 

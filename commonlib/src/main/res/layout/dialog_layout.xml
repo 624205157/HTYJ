@@ -24,7 +24,7 @@
             android:textStyle="bold"
             android:visibility="gone"
             tools:text="标题"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="5dp"/>
         <!-- 内容 -->
         <TextView
             android:id="@+id/message"
@@ -34,7 +34,9 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:visibility="gone"
-            tools:text="内容" />
+            tools:text="内容"
+            android:layout_margin="5dp"
+            />
         <!-- 按钮 -->
     </LinearLayout>
     <ImageView

@@ -28,7 +28,7 @@
     <RadioGroup
         android:id="@+id/rg"
         style="@style/MineBottomBarStyle"
-        tools:showIn="@layout/activity_main">
+        tools:showIn="@layout/activity_my_main">
         <!-- 首页 -->
         <RadioButton
             android:id="@+id/tab_1"

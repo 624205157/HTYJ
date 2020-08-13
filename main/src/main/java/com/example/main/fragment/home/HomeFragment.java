@@ -45,20 +45,14 @@ public class HomeFragment extends BaseFragment {
 
     @OnClick({R2.id.event, R2.id.task, R2.id.enterprise, R2.id.resources, R2.id.plan, R2.id.trajectory})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.event:
-                break;
-            case R.id.task:
-                break;
-            case R.id.enterprise:
-                startActivity(new Intent(getActivity(), EnterpriseActivity.class));
-                break;
-            case R.id.resources:
-                break;
-            case R.id.plan:
-                break;
-            case R.id.trajectory:
-                break;
+        int id = view.getId();
+        if (id == R.id.event) {
+        } else if (id == R.id.task) {
+        } else if (id == R.id.enterprise) {
+            startActivity(new Intent(getActivity(), EnterpriseActivity.class));
+        } else if (id == R.id.resources) {
+        } else if (id == R.id.plan) {
+        } else if (id == R.id.trajectory) {
         }
     }
 

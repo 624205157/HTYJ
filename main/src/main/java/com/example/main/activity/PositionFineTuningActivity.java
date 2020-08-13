@@ -292,42 +292,36 @@ public class PositionFineTuningActivity extends BaseActivity {
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.iv_back:
+                if (view.getId() == R.id.iv_back){
+                    finish();
+                }else if (view.getId() == R.id.iv_search){
+                    startActivityForResult(new Intent(PositionFineTuningActivity.this, SearchActivity.class), SEARCHREQUESTCODE);
+
+                }else if (view.getId() == R.id.iv_location){
+                    mIvLocation.setImageResource(R.mipmap.location_gps_green);
+                    if (null != mSelectByListMarker) {
+                        mSelectByListMarker.setVisible(false);
+                    }
+                    if (null == location) {
+                        startLocation();
+                    } else {
+                        doWhenLocationSucess();
+                    }
+                }else if (view.getId() == R.id.bt_send){
+                    if (null != mList && 0 < mList.size() && null != mAddressAdapter) {
+                        int position = mAddressAdapter.getSelectPositon();
+                        if (position < 0) {
+                            position = 0;
+                        } else if (position > mList.size()) {
+                            position = mList.size();
+                        }
+                        PoiItem poiItem = mList.get(position);
+                        Intent intent = new Intent(PositionFineTuningActivity.this, EnterpriseActivity.class);
+                        intent.putExtra("address",poiItem);
+                        setResult(RESULT_OK, intent);
                         finish();
-                        break;
-                    case R.id.iv_search:
-//                        Toast.makeText(MainActivity.this, "搜索", Toast.LENGTH_SHORT).show();
-                        startActivityForResult(new Intent(PositionFineTuningActivity.this, SearchActivity.class), SEARCHREQUESTCODE);
-                        break;
-                    case R.id.iv_location:
-//                        Toast.makeText(MainActivity.this, "定位", Toast.LENGTH_SHORT).show();
-                        mIvLocation.setImageResource(R.mipmap.location_gps_green);
-                        if (null != mSelectByListMarker) {
-                            mSelectByListMarker.setVisible(false);
-                        }
-                        if (null == location) {
-                            startLocation();
-                        } else {
-                            doWhenLocationSucess();
-                        }
-                        break;
-                    case R.id.bt_send:
-                        if (null != mList && 0 < mList.size() && null != mAddressAdapter) {
-                            int position = mAddressAdapter.getSelectPositon();
-                            if (position < 0) {
-                                position = 0;
-                            } else if (position > mList.size()) {
-                                position = mList.size();
-                            }
-                            PoiItem poiItem = mList.get(position);
-                            Intent intent = new Intent(PositionFineTuningActivity.this, EnterpriseActivity.class);
-                            intent.putExtra("address",poiItem);
-                            setResult(RESULT_OK, intent);
-                            finish();
 //                            Toast.makeText(PositionFineTuningActivity.this, "发送：" + poiItem.getTitle() + "  " + poiItem.getSnippet() + "  " + "纬度：" + poiItem.getLatLonPoint().getLatitude() + "  " + "经度：" + poiItem.getLatLonPoint().getLongitude(), Toast.LENGTH_SHORT).show();
-                        }
-                        break;
+                    }
                 }
             }
         };

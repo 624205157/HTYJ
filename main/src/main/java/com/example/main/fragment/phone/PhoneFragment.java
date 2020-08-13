@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.main.R;
+import com.example.main.R2;
 import com.example.main.activity.phone.PersonalInfoActivity;
 import com.example.main.adapter.PhoneAdapter;
 import com.example.main.bean.People;
@@ -29,9 +30,9 @@ import butterknife.OnClick;
  */
 public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    @BindView(R.id.list)
+    @BindView(R2.id.list)
     RecyclerView list;
-    @BindView(R.id.refresh)
+    @BindView(R2.id.refresh)
     SwipeRefreshLayout refresh;
 
     private PhoneAdapter adapter;
@@ -63,7 +64,7 @@ public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
 
-    @OnClick(R.id.search)
+    @OnClick(R2.id.search)
     public void onViewClicked() {
 
 

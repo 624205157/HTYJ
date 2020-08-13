@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.view.ViewPagerSlide;
 import com.example.main.R;
+import com.example.main.R2;
 import com.example.main.adapter.PagerAdapter;
 import com.example.main.fragment.home.AddEnterpriseFragment;
 import com.example.main.fragment.home.UpdateEnterpriseFragment;
@@ -23,9 +24,9 @@ import me.yokeyword.fragmentation.SupportActivity;
  * describe: 企业
  */
 public class EnterpriseActivity extends BaseActivity {
-    @BindView(R.id.tab)
+    @BindView(R2.id.tab)
     TabLayout tabView;
-    @BindView(R.id.fragment)
+    @BindView(R2.id.fragment)
     ViewPagerSlide pager;
 
     @Override

@@ -31,8 +31,8 @@
         <activity
             android:name="com.gd.map.MapActivity"
             android:label="@string/title_activity_map"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="com.gd.map.TestActivity">
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name="debug.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,22 +1,15 @@
 package com.example.main.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.RadioGroup;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.utils.ShareHelper;
 import com.example.main.R;
+import com.example.main.R2;
 import com.example.main.fragment.BaseFragment;
 import com.example.main.fragment.Fragment1;
 import com.example.main.fragment.Fragment2;
@@ -28,14 +21,15 @@ import com.permissionx.guolindev.callback.RequestCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.yokeyword.fragmentation.SupportActivity;
+import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
 
 
 public class MainActivity extends BaseActivity {
 
+    @BindView(R2.id.rg)
+    RadioGroup rg;
 
-    private RadioGroup rg;
     private List<SupportFragment> fragments;
     private int index = 0;
     private ShareHelper shareHelper;
@@ -43,13 +37,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int setContentView() {
-        return R.layout.activity_main;
+        return R.layout.activity_my_main;
     }
 
+    @SuppressLint("InvalidR2Usage")
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
         shareHelper = ShareHelper.getInstance();
-        rg = findViewById(R.id.rg);
         getPermission();
         initData();
     }
@@ -71,25 +65,21 @@ public class MainActivity extends BaseActivity {
 
 
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("InvalidR2Usage")
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i) {
-                    case R.id.tab_1:
-                        index = 0;
-                        showHideFragment(fragments.get(0));
-                        break;
-                    case R.id.tab_2:
-                        index = 1;
-                        showHideFragment(fragments.get(1));
-                        break;
-                    case R.id.tab_3:
-                        index = 2;
-                        showHideFragment(fragments.get(2));
-                        break;
-                    case R.id.tab_4:
-                        index = 3;
-                        showHideFragment(fragments.get(3));
-                        break;
+                if (i == R.id.tab_1){
+                    index = 0;
+                    showHideFragment(fragments.get(0));
+                }else if (i == R.id.tab_2){
+                    index = 1;
+                    showHideFragment(fragments.get(1));
+                }else if (i == R.id.tab_3){
+                    index = 2;
+                    showHideFragment(fragments.get(2));
+                }else if (i == R.id.tab_4) {
+                    index = 3;
+                    showHideFragment(fragments.get(3));
                 }
             }
         });

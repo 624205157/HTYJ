@@ -11,6 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.main.R;
+import com.example.main.R2;
 import com.example.main.adapter.GridAdapter;
 import com.example.main.bean.Grid;
 import com.example.main.fragment.BaseFragment;
@@ -24,9 +25,9 @@ import butterknife.OnClick;
 public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
 
-    @BindView(R.id.list)
+    @BindView(R2.id.list)
     RecyclerView list;
-    @BindView(R.id.refresh)
+    @BindView(R2.id.refresh)
     SwipeRefreshLayout refresh;
 
     private GridAdapter adapter;
@@ -57,7 +58,7 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         getData();
     }
 
-    @OnClick(R.id.search)
+    @OnClick(R2.id.search)
     public void onViewClicked() {
 
 

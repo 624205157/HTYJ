@@ -6,6 +6,9 @@ import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -16,6 +19,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.example.commonlib.base.BaseActivity;
+import com.example.main.bean.Enterprise;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -29,13 +33,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.main.R;
 
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URISyntaxException;
 import java.util.List;
 
+@Route(path="/map/navigation")
 public class MapActivity extends BaseActivity {
 
 
@@ -43,6 +47,8 @@ public class MapActivity extends BaseActivity {
     private AMap aMap = null;
     CameraUpdate cameraUpdate;
 
+    @Autowired
+    public Enterprise enterprise;
 
     @Override
     protected int setContentView() {
@@ -51,6 +57,7 @@ public class MapActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState,String a) {
+        ARouter.getInstance().inject(this);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.map);
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
@@ -63,8 +70,8 @@ public class MapActivity extends BaseActivity {
         }
 
         showMy();
-        LatLng latLng = new LatLng(43.85485,126.562528);
-        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("好牛逼企业").snippet("DefaultMarker"));
+        LatLng latLng = new LatLng(enterprise.getLatitude(),enterprise.getLongitude());
+        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title(enterprise.getName()));
 
 
         cameraUpdate= CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng,18,0,30));
@@ -94,12 +101,12 @@ public class MapActivity extends BaseActivity {
             }
         });
 
-        aMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                showToast("导航到XXX企业");
-            }
-        });
+//        aMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
+//            @Override
+//            public void onInfoWindowClick(Marker marker) {
+//                showToast("导航到XXX企业");
+//            }
+//        });
 
         marker.showInfoWindow();
 
