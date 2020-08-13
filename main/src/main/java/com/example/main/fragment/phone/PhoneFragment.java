@@ -35,6 +35,14 @@ public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.On
     @BindView(R2.id.refresh)
     SwipeRefreshLayout refresh;
 
+    public static PhoneFragment newInstance(String department){
+        PhoneFragment fragment = new PhoneFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("department",department);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     private PhoneAdapter adapter;
     private List<People> mData = new ArrayList<>();
 

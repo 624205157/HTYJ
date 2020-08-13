@@ -94,7 +94,7 @@ public class AddEnterpriseFragment extends BaseFragment {
     private List<LocalMedia> selectList = new ArrayList<>();
     private List<LocalMedia> selectList2 = new ArrayList<>();
     //照片选择最大值
-    private int maxSelectNum = 9;
+    private int maxSelectNum = 1;
 
     AMap aMap = null;
 
