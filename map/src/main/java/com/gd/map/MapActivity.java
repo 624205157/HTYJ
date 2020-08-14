@@ -3,6 +3,7 @@ package com.gd.map;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -19,6 +20,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.example.commonlib.base.BaseActivity;
+import com.example.main.bean.Address;
 import com.example.main.bean.Enterprise;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -48,7 +50,7 @@ public class MapActivity extends BaseActivity {
     CameraUpdate cameraUpdate;
 
     @Autowired
-    public Enterprise enterprise;
+    public Address address;
 
     @Override
     protected int setContentView() {
@@ -70,8 +72,8 @@ public class MapActivity extends BaseActivity {
         }
 
         showMy();
-        LatLng latLng = new LatLng(enterprise.getLatitude(),enterprise.getLongitude());
-        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title(enterprise.getName()));
+        LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
+        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title(address.getName()));
 
 
         cameraUpdate= CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng,18,0,30));

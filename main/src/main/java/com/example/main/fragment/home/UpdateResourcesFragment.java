@@ -20,7 +20,9 @@ import com.example.commonlib.view.MyDialog;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.adapter.UpdateEnterpriseAdapter;
+import com.example.main.adapter.UpdateResourcesAdapter;
 import com.example.main.bean.Enterprise;
+import com.example.main.bean.Resources;
 import com.example.main.fragment.BaseFragment;
 
 import java.util.ArrayList;
@@ -30,9 +32,9 @@ import butterknife.BindView;
 
 /**
  * Created by czy on 2020/8/10 11:32.
- * describe: 企业信息维护
+ * describe: 维护应急资源
  */
-public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UpdateResourcesFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     @BindView(R2.id.search)
     EditText search;
     @BindView(R2.id.recyclerview)
@@ -40,8 +42,8 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
     @BindView(R2.id.refresh)
     SwipeRefreshLayout refresh;
 
-    private UpdateEnterpriseAdapter mAdapter;
-    private List<Enterprise> mData = new ArrayList<>();
+    private UpdateResourcesAdapter mAdapter;
+    private List<Resources> mData = new ArrayList<>();
 
     Handler handler = new Handler();
 
@@ -74,7 +76,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
             }
         });
 
-        mAdapter = new UpdateEnterpriseAdapter(mData);
+        mAdapter = new UpdateResourcesAdapter(mData);
         mAdapter.setAnimationEnable(true);
         mAdapter.addChildClickViewIds(R.id.navigation,R.id.update,R.id.del);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
@@ -138,12 +140,11 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
 
     private void getData(){
         for (int i = 1;i<9;i++) {
-            Enterprise enterprise = new Enterprise();
+            Resources enterprise = new Resources();
             enterprise.setName("高大上企业" + i);
             enterprise.setAddress("海南省海口市华龙区奥术大师大大所大所奥术大师大所"+ i);
-            enterprise.setSocialCreditCode(""+ i+ i+ i+ i+ i+ i);
-            enterprise.setLegalPerson("dasc是"+ i);
-            enterprise.setIsStart("是"+ i);
+            enterprise.setType("防护用品"+ i);
+            enterprise.setTotal("18"+ i);
             enterprise.setLatitude(43.888824);
             enterprise.setLongitude(125.300985);
             mData.add(enterprise);

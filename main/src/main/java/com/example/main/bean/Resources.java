@@ -4,19 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by czy on 2020/8/12 12:50.
- * describe: 企业信息
+ * Created by czy on 2020/8/13 17:27.
+ * describe: 资源
  */
-public class Enterprise {
+public class Resources {
 
     private String id;
     private String name;
     private String address;
-    private String socialCreditCode;//社会信用代码
-    private String legalPerson;//法人
-    private String isStart;//是否星标企业
+    private String type;
+    private String total;
     private double longitude;//经度
     private double latitude;//纬度
+
     private Address point = new Address();
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
@@ -46,28 +46,20 @@ public class Enterprise {
         this.address = address;
     }
 
-    public String getSocialCreditCode() {
-        return socialCreditCode;
+    public String getType() {
+        return type;
     }
 
-    public void setSocialCreditCode(String socialCreditCode) {
-        this.socialCreditCode = socialCreditCode;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getLegalPerson() {
-        return legalPerson;
+    public String getTotal() {
+        return total;
     }
 
-    public void setLegalPerson(String legalPerson) {
-        this.legalPerson = legalPerson;
-    }
-
-    public String getIsStart() {
-        return isStart;
-    }
-
-    public void setIsStart(String isStart) {
-        this.isStart = isStart;
+    public void setTotal(String total) {
+        this.total = total;
     }
 
     public double getLongitude() {
@@ -85,6 +77,7 @@ public class Enterprise {
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
+
 
     public boolean isHidden() {
         return hidden;
@@ -104,5 +97,4 @@ public class Enterprise {
     public void setPoint(Address point) {
         this.point = point;
     }
-
 }

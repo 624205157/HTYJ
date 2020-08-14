@@ -15,12 +15,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
-import com.example.commonlib.listener.CallPhoneListener;
-import com.example.commonlib.view.MyDialog;
 import com.example.main.R;
 import com.example.main.R2;
-import com.example.main.adapter.UpdateEnterpriseAdapter;
-import com.example.main.bean.Enterprise;
+import com.example.main.adapter.EventAdapter;
+import com.example.main.bean.Event;
 import com.example.main.fragment.BaseFragment;
 
 import java.util.ArrayList;
@@ -30,9 +28,9 @@ import butterknife.BindView;
 
 /**
  * Created by czy on 2020/8/10 11:32.
- * describe: 企业信息维护
+ * describe: 事件列表
  */
-public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class EventListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     @BindView(R2.id.search)
     EditText search;
     @BindView(R2.id.recyclerview)
@@ -40,8 +38,18 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
     @BindView(R2.id.refresh)
     SwipeRefreshLayout refresh;
 
-    private UpdateEnterpriseAdapter mAdapter;
-    private List<Enterprise> mData = new ArrayList<>();
+    private String state;
+
+    public static EventListFragment newInstance(String state){
+        EventListFragment fragment = new EventListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("state",state);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    private EventAdapter mAdapter;
+    private List<Event> mData = new ArrayList<>();
 
     Handler handler = new Handler();
 
@@ -52,6 +60,8 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
 
     @Override
     protected void lazyLoad(Bundle savedInstanceState) {
+
+        state = getArguments().getString("state");
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -74,9 +84,9 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
             }
         });
 
-        mAdapter = new UpdateEnterpriseAdapter(mData);
+        mAdapter = new EventAdapter(mData);
         mAdapter.setAnimationEnable(true);
-        mAdapter.addChildClickViewIds(R.id.navigation,R.id.update,R.id.del);
+        mAdapter.addChildClickViewIds(R.id.navigation,R.id.check_v);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
@@ -86,23 +96,8 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
                             .withParcelable("address",mData.get(position).getPoint())
                             .navigation();
 
-                }else if (view.getId() == R.id.update) {
-                    showToast("修改");
-                }if (view.getId() == R.id.del) {
-                    new MyDialog(mContext)
-                            .setTitleStr("提示")
-                            .setMessageStr("您确定要删除吗?")
-                            .setButtonText("取消","确定")
-                            .setClickListener(new CallPhoneListener() {
-                                @Override
-                                public void onClick(int var1) {
-                                    if (var1 == 2){
-                                        showToast("确定删除");
-                                        adapter.remove(mData.get(position));
-//                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-                            }).show();
+                }else if (view.getId() == R.id.check_v) {
+
                 }
             }
         });
@@ -138,12 +133,12 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
 
     private void getData(){
         for (int i = 1;i<9;i++) {
-            Enterprise enterprise = new Enterprise();
-            enterprise.setName("高大上企业" + i);
+            Event enterprise = new Event();
+            enterprise.setName("突发事件" + i);
             enterprise.setAddress("海南省海口市华龙区奥术大师大大所大所奥术大师大所"+ i);
-            enterprise.setSocialCreditCode(""+ i+ i+ i+ i+ i+ i);
-            enterprise.setLegalPerson("dasc是"+ i);
-            enterprise.setIsStart("是"+ i);
+            enterprise.setType("自然灾害"+ i);
+            enterprise.setLevel("一般"+ i);
+            enterprise.setState(state);
             enterprise.setLatitude(43.888824);
             enterprise.setLongitude(125.300985);
             mData.add(enterprise);

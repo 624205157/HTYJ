@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="#F0EFF5">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            >
+
+            <com.amap.api.maps.MapView
+                android:id="@+id/map"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/location_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/map"
+                tools:text="经度:123123123123 纬度:2313123213213"
+                />
+
+            <TextView
+                android:id="@+id/relocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:text="重新定位"
+                android:textColor="@color/text_color2"
+                android:textSize="14sp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/position_fine_tuning"
+                app:layout_constraintTop_toBottomOf="@+id/location_text" />
+
+            <TextView
+                android:id="@+id/position_fine_tuning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="位置微调"
+                android:textColor="@color/text_color2"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toRightOf="@+id/relocation"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/relocation" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/relocation">
+
+                <TextView
+                    android:id="@+id/name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="资源名称"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toRightOf="@+id/name_tv"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/name_tv"
+                    android:background="@null"
+                    android:hint="请输入资源名称"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <View
+                    android:id="@+id/v_1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/name_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/type_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="资源种类"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_1"
+                    />
+
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/type_tv"
+                    android:background="@null"
+                    android:hint="请选择"
+                    android:textSize="16sp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/text_color"
+                    />
+
+                <View
+                    android:id="@+id/v_2"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/type_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/type"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/address_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="资源地址"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_2"
+                    />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/address_tv"
+                    android:textSize="16sp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/text_color"
+                    />
+
+                <View
+                    android:id="@+id/v_3"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/address_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/address"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/total_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="资源总量"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_3"
+                    />
+
+                <EditText
+                    android:id="@+id/total"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/total_tv"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:background="@null"
+                    android:hint="请输入资源总量"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <View
+                    android:id="@+id/v_4"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/total_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/total"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/remain_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="资源剩余"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_4"
+                    />
+
+                <EditText
+                    android:id="@+id/remain"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/remain_tv"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:background="@null"
+                    android:hint="请输入剩余量"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <View
+                    android:id="@+id/v_5"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/remain_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/remain"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/grid_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="归属网格"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_5"
+                    />
+
+                <TextView
+                    android:id="@+id/grid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/grid_tv"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:background="@null"
+                    android:hint="请选择"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <View
+                    android:id="@+id/v_9"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/grid_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/grid"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="有关图片(最多3个):"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_9"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/photo_recycler1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_margin="10dp"
+                    />
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:id="@+id/submit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl"
+                android:text="录入应急资源信息"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="#8B6DE9"
+                android:layout_margin="10dp"
+                android:padding="15dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </ScrollView>
+
+
+</LinearLayout>

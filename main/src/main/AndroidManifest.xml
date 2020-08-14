@@ -2,22 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.main">
+
     <application
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        tools:replace="android:theme"
-        >
-        <activity android:name=".activity.SplashActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            >
+        tools:replace="android:theme">
+        <activity
+            android:name=".activity.SplashActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
 
 
         <activity
@@ -37,6 +34,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activity.EnterpriseActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".activity.ResourcesActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
 

@@ -19,4 +19,15 @@
     <color name="line">#d1d1d1</color>
     <color name="title1">#4a4a4a</color>
     <color name="title2">#a2a2a2</color>
+
+    <color name="background_solid_1">#33ffffff</color>
+    <color name="background_solid_2">#2252be</color>
+    <color name="background_solid_3">#ffffff</color>
+    <color name="background_solid_4">#ffffff</color>
+    <color name="background_solid_5">#7CDFC9</color>
+    <color name="background_solid_6">#438AED</color>
+    <color name="background_solid_7">#D8D7DD</color>
+    <color name="background_solid_8">#8A6CE8</color>
+    <color name="background_solid_9">#3EDB59</color>
+    <color name="background_solid_10">#9B403F</color>
 </resources>

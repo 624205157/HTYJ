@@ -53,48 +53,38 @@ import butterknife.OnClick;
  * Created by czy on 2020/8/10 11:30.
  * describe: 新增企业信息
  */
-public class AddEnterpriseFragment extends BaseFragment {
+public class AddResourcesFragment extends BaseFragment {
 
 
     @BindView(R2.id.map)
     MapView map;
     @BindView(R2.id.name)
     EditText name;
-    @BindView(R2.id.enterprise_code)
-    EditText enterpriseCode;
+    @BindView(R2.id.type)
+    TextView type;
     @BindView(R2.id.address)
     TextView address;
-    @BindView(R2.id.tel)
-    EditText tel;
-    @BindView(R2.id.fax)
-    EditText fax;
-    @BindView(R2.id.legal_person)
-    EditText legalPerson;
-    @BindView(R2.id.legal_person_tel)
-    EditText legalPersonTel;
-    @BindView(R2.id.key_enterprises)
-    TextView keyEnterprises;
+    @BindView(R2.id.total)
+    EditText total;
+    @BindView(R2.id.remain)
+    EditText remain;
     @BindView(R2.id.grid)
     TextView grid;
     @BindView(R2.id.photo_recycler1)
     RecyclerView photoRecycler1;
-    @BindView(R2.id.photo_recycler2)
-    RecyclerView photoRecycler2;
     @BindView(R2.id.location_text)
     TextView locationText;
-    @BindView(R2.id.is_key_enterprises)
-    Switch isKeyEnterprises;
 
     private OptionsPickerView reasonPicker;
+    private OptionsPickerView reasonPicker2;
     List<String> reasonlist = new ArrayList<>();
+    List<String> reasonlist2 = new ArrayList<>();
 
     private GridImageAdapter adapter;
-    private GridImageAdapter adapter2;
     //已经选择图片
     private List<LocalMedia> selectList = new ArrayList<>();
-    private List<LocalMedia> selectList2 = new ArrayList<>();
     //照片选择最大值
-    private int maxSelectNum = 1;
+    private int maxSelectNum = 3;
 
     AMap aMap = null;
 
@@ -131,7 +121,7 @@ public class AddEnterpriseFragment extends BaseFragment {
 
     @Override
     protected int setContentView() {
-        return R.layout.fragment_add_enterprise;
+        return R.layout.fragment_add_resourses;
     }
 
     @Override
@@ -166,22 +156,12 @@ public class AddEnterpriseFragment extends BaseFragment {
         init();
 
 
-        isKeyEnterprises.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    keyEnterprises.setText("是");
-                } else {
-                    keyEnterprises.setText("否");
-                }
-            }
-        });
 
         //初始化网格归属列表
         initGridList();
     }
 
-    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.cl})
+    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.cl,R2.id.type})
     public void onViewClicked(View view) {
 
         int id = view.getId();
@@ -190,8 +170,11 @@ public class AddEnterpriseFragment extends BaseFragment {
         } else if (id == R.id.position_fine_tuning) {
             startActivityForResult(new Intent(mActivity, PositionFineTuningActivity.class), 0x100);
         } else if (id == R.id.grid) {
-            reasonPicker.show();
+            reasonPicker2.show();
         } else if (id == R.id.cl) {
+
+        } else if (id == R.id.type) {
+            reasonPicker.show();
         }
     }
 
@@ -216,27 +199,6 @@ public class AddEnterpriseFragment extends BaseFragment {
                         .themeStyle(R.style.picture_default_style)
                         .imageEngine(GlideEngine.createGlideEngine())
                         .openExternalPreview(position, selectList);
-            }
-        });
-        FullyGridLayoutManager manager2 = new FullyGridLayoutManager(mContext, 4, GridLayoutManager.VERTICAL, false);
-        photoRecycler2.setLayoutManager(manager2);
-        adapter2 = new GridImageAdapter(mContext, new GridImageAdapter.onAddPicClickListener() {
-            @Override
-            public void onAddPicClick() {
-                initSelectImage(adapter2, selectList2);
-            }
-        });
-        adapter2.setList(selectList2);
-        adapter2.setSelectMax(maxSelectNum);
-        photoRecycler2.setAdapter(adapter2);
-
-        adapter2.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                PictureSelector.create(getActivity())
-                        .themeStyle(R.style.picture_default_style)
-                        .imageEngine(GlideEngine.createGlideEngine())
-                        .openExternalPreview(position, selectList2);
             }
         });
 
@@ -338,21 +300,37 @@ public class AddEnterpriseFragment extends BaseFragment {
      * 初始化网格归属
      */
     private void initGridList(){
-        reasonlist.add("网格1");
-        reasonlist.add("网格2");
-        reasonlist.add("网格33");
-        reasonlist.add("网格44");
-        reasonlist.add("网格55");
-        reasonlist.add("网格66");
-        reasonlist.add("网格77");
-        reasonlist.add("网格88");
+        reasonlist.add("类别1");
+        reasonlist.add("类别2");
+        reasonlist.add("类别33");
+        reasonlist.add("类别44");
+        reasonlist.add("类别55");
+        reasonlist.add("类别66");
+        reasonlist.add("类别77");
+        reasonlist.add("类别88");
         reasonPicker = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                grid.setText(reasonlist.get(options1));
+                type.setText(reasonlist.get(options1));
+            }
+        }).setTitleText("资源种类").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+        reasonPicker.setPicker(reasonlist);
+
+        reasonlist2.add("网格1");
+        reasonlist2.add("网格2");
+        reasonlist2.add("网格33");
+        reasonlist2.add("网格44");
+        reasonlist2.add("网格55");
+        reasonlist2.add("网格66");
+        reasonlist2.add("网格77");
+        reasonlist2.add("网格88");
+        reasonPicker2 = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                grid.setText(reasonlist2.get(options1));
             }
         }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-        reasonPicker.setPicker(reasonlist);
+        reasonPicker2.setPicker(reasonlist2);
     }
 
     @Override
