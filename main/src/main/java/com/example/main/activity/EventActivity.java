@@ -1,5 +1,6 @@
 package com.example.main.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import com.example.commonlib.view.ViewPagerSlide;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.adapter.PagerAdapter;
+import com.example.main.bean.Event;
 import com.example.main.fragment.home.AddEnterpriseFragment;
 import com.example.main.fragment.home.EventListFragment;
 import com.example.main.fragment.home.UpdateEnterpriseFragment;
@@ -43,7 +45,7 @@ public class EventActivity extends RightTitleActivity {
         rightTitle("上报", new RightClickListener() {
             @Override
             public void callBack() {
-
+                startActivity(new Intent(EventActivity.this,ReportEventActivity.class));
             }
         });
         initView();

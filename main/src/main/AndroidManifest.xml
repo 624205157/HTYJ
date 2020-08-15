@@ -40,6 +40,10 @@
             android:name=".activity.ResourcesActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <activity
+            android:name=".activity.ReportEventActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
 
     </application>
 

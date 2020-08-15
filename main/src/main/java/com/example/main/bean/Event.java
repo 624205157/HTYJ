@@ -18,6 +18,9 @@ public class Event {
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
 
+    private String transactor;//处理人
+    private String time;//处理时间
+
     public String getName() {
         return name;
     }
@@ -91,5 +94,21 @@ public class Event {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getTransactor() {
+        return transactor;
+    }
+
+    public void setTransactor(String transactor) {
+        this.transactor = transactor;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

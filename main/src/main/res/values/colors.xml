@@ -30,4 +30,5 @@
     <color name="background_solid_8">#8A6CE8</color>
     <color name="background_solid_9">#3EDB59</color>
     <color name="background_solid_10">#9B403F</color>
+    <color name="background_solid_11">#fffffF</color>
 </resources>
