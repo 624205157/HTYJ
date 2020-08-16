@@ -15,6 +15,7 @@ import com.example.main.R2;
 import com.example.main.activity.EnterpriseActivity;
 import com.example.main.activity.EventActivity;
 import com.example.main.activity.ResourcesActivity;
+import com.example.main.activity.TaskActivity;
 import com.example.main.fragment.BaseFragment;
 
 import butterknife.BindView;
@@ -51,12 +52,15 @@ public class HomeFragment extends BaseFragment {
         if (id == R.id.event) {
             startActivity(new Intent(getActivity(), EventActivity.class));
         } else if (id == R.id.task) {
+            startActivity(new Intent(getActivity(), TaskActivity.class));
         } else if (id == R.id.enterprise) {
             startActivity(new Intent(getActivity(), EnterpriseActivity.class));
         } else if (id == R.id.resources) {
             startActivity(new Intent(getActivity(), ResourcesActivity.class));
         } else if (id == R.id.plan) {
+
         } else if (id == R.id.trajectory) {
+
         }
     }
 
