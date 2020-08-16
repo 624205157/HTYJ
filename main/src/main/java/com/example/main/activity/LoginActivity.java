@@ -1,11 +1,9 @@
 package com.example.main.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 
 
@@ -17,6 +15,7 @@ import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
 import com.example.main.bean.User;
+import com.tencent.liteav.trtcaudiocalldemo.utils.ProfileManager;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -87,16 +86,27 @@ public class LoginActivity extends BaseActivity {
         int id = view.getId();
         if (id == R.id.forget_password) {
         } else if (id == R.id.login) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
             if (TextUtils.isEmpty(userName.getText())) {
                 showToast("用户名不可为空");
                 return;
             }
             if (TextUtils.isEmpty(password.getText())) {
                 showToast("密码不可为空");
-                return;
+//                return;
             }
 //            login();
+            ProfileManager.getInstance().login(userName.getText() + "", "", new ProfileManager.ActionCallback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onFailed(int code, String msg) {
+                }
+            });
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
         }
     }

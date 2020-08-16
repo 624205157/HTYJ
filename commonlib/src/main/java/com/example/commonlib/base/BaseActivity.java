@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.commonlib.R;
+import com.example.commonlib.utils.ShareHelper;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +33,7 @@ import me.yokeyword.fragmentation.SupportActivity;
 public abstract class BaseActivity extends SupportActivity {
 
     private ProgressDialog progressDialog;
+    protected ShareHelper shareHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public abstract class BaseActivity extends SupportActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
         setContentView(setContentView());
+        shareHelper = ShareHelper.getInstance();
         ButterKnife.bind(this);
         onCreate(savedInstanceState,"");
 
