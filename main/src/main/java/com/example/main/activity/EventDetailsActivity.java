@@ -73,4 +73,10 @@ public class EventDetailsActivity extends BaseActivity {
 
         }
     }
+
+    private void showDialog(){
+        View view = getLayoutInflater().inflate(R.layout.dialog_processing_opinion,null);
+
+    }
+
 }
