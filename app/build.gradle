@@ -45,10 +45,13 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":commonlib")
+
     if (!isModule.toBoolean()){
         implementation project(":main")
         implementation project(":map")
         implementation project(":trtcaudiocalldemo")
+        implementation project(':trtcvideocalldemo')
+        implementation project(':TRTClogin')
     }
 
 }

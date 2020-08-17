@@ -59,6 +59,8 @@ dependencies {
     implementation project(':commonlib')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation project(path: ':trtcaudiocalldemo')
+    implementation project(path: ':TRTClogin')
+    implementation project(path: ':trtcvideocalldemo')
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
     annotationProcessor 'com.alibaba:arouter-compiler:1.2.2'

@@ -6,20 +6,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.commonlib.base.BaseActivity;
+import com.tencent.liteav.login.model.ProfileManager;
+import com.tencent.liteav.login.model.UserModel;
 import com.tencent.liteav.trtcaudiocalldemo.ui.TRTCAudioCallActivity;
-import com.tencent.liteav.trtcaudiocalldemo.utils.GenerateTestUserSig;
 import com.example.main.R;
 import com.example.main.R2;
-import com.tencent.liteav.trtcaudiocalldemo.model.ITRTCAudioCall;
-import com.tencent.liteav.trtcaudiocalldemo.model.TRTCAudioCallImpl;
-import com.tencent.liteav.trtcaudiocalldemo.model.TRTCAudioCallListener;
-import com.tencent.liteav.trtcaudiocalldemo.utils.ProfileManager;
-import com.tencent.liteav.trtcaudiocalldemo.utils.UserModel;
+import com.tencent.liteav.trtcvideocalldemo.ui.TRTCVideoCallActivity;
 import com.tencent.trtc.TRTCCloud;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,7 +36,7 @@ public class PersonalInfoActivity extends BaseActivity {
     @BindView(R2.id.tel)
     TextView tel;
 
-    private TRTCCloud mTRTCCloud;
+    List<UserModel> list = new ArrayList<>();
 
     @Override
     protected int setContentView() {
@@ -51,24 +47,24 @@ public class PersonalInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState, String a) {
         addBack();
         setTitleText("人员详情");
+        String userID = ProfileManager.getInstance().getUserModel().userId;
+
+        UserModel userModel = new UserModel();
+        if (TextUtils.equals(userID,"123456")) {
+            userModel.userId = "654321";
+        }else {
+            userModel.userId = "123456";
+        }
+        list.add(userModel);
     }
 
     @OnClick({R2.id.voice, R2.id.video})
     public void onViewClicked(View view) {
         if (view.getId() == R.id.voice) {
-            String userID = ProfileManager.getInstance().getUserModel().userId;
-            List<UserModel> list = new ArrayList<>();
-            UserModel userModel = new UserModel();
-            if (TextUtils.equals(userID,"123456")) {
-                userModel.userId = "654321";
-                }else {
-                userModel.userId = "123456";
-                }
-            list.add(userModel);
 
             TRTCAudioCallActivity.startCallSomeone(PersonalInfoActivity.this, list);
         } else if (view.getId() == R.id.video) {
-
+            TRTCVideoCallActivity.startCallSomeone(PersonalInfoActivity.this, list);
         }
     }
 

@@ -7,18 +7,22 @@ import android.util.Log;
 
 import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.tencent.liteav.trtcaudiocalldemo.utils.GenerateTestUserSig;
-import com.tencent.liteav.trtcaudiocalldemo.utils.ProfileManager;
-import com.tencent.liteav.trtcaudiocalldemo.utils.UserModel;
+import com.example.commonlib.trtc.GenerateTestUserSig;
 import com.tencent.imsdk.session.SessionWrapper;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
+import com.tencent.liteav.login.model.ProfileManager;
+import com.tencent.liteav.login.model.UserModel;
 import com.tencent.liteav.trtcaudiocalldemo.model.ITRTCAudioCall;
 import com.tencent.liteav.trtcaudiocalldemo.model.TRTCAudioCallImpl;
 import com.tencent.liteav.trtcaudiocalldemo.model.TRTCAudioCallListener;
 import com.tencent.liteav.trtcaudiocalldemo.ui.TRTCAudioCallActivity;
+import com.tencent.liteav.trtcvideocalldemo.model.ITRTCVideoCall;
+import com.tencent.liteav.trtcvideocalldemo.model.TRTCVideoCallImpl;
+import com.tencent.liteav.trtcvideocalldemo.model.TRTCVideoCallListener;
+import com.tencent.liteav.trtcvideocalldemo.ui.TRTCVideoCallActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -107,104 +111,104 @@ public class CallService extends Service {
         // </editor-fold>
     };
     //
-//    private ITRTCVideoCall        mITRTCVideoCall;
-//    private TRTCVideoCallListener mTRTCVideoCallListener = new TRTCVideoCallListener() {
-//        // <editor-fold  desc="视频监听代码">
-//        @Override
-//        public void onError(int code, String msg) {
-//        }
-//
-//        @Override
-//        public void onInvited(String sponsor, final List<String> userIdList, boolean isFromGroup, int callType) {
-//            //1. 收到邀请，先到服务器查询
-//            ProfileManager.getInstance().getUserInfoByUserId(sponsor, new ProfileManager.GetUserInfoCallback() {
-//                @Override
-//                public void onSuccess(final UserModel model) {
-//                    if (!CollectionUtils.isEmpty(userIdList)) {
-//                        ProfileManager.getInstance().getUserInfoBatch(userIdList, new ProfileManager.GetUserInfoBatchCallback() {
-//                            @Override
-//                            public void onSuccess(List<UserModel> modelList) {
-//                                TRTCVideoCallActivity.startBeingCall(CallService.this, model, modelList);
-//                            }
-//
-//                            @Override
-//                            public void onFailed(int code, String msg) {
-//                                TRTCVideoCallActivity.startBeingCall(CallService.this, model, null);
-//                            }
-//                        });
-//                    } else {
-//                        TRTCVideoCallActivity.startBeingCall(CallService.this, model, null);
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailed(int code, String msg) {
-//
-//                }
-//            });
-//        }
-//
-//        @Override
-//        public void onGroupCallInviteeListUpdate(List<String> userIdList) {
-//
-//        }
-//
-//        @Override
-//        public void onUserEnter(String userId) {
-//
-//        }
-//
-//        @Override
-//        public void onUserLeave(String userId) {
-//
-//        }
-//
-//        @Override
-//        public void onReject(String userId) {
-//
-//        }
-//
-//        @Override
-//        public void onNoResp(String userId) {
-//
-//        }
-//
-//        @Override
-//        public void onLineBusy(String userId) {
-//
-//        }
-//
-//        @Override
-//        public void onCallingCancel() {
-//
-//        }
-//
-//        @Override
-//        public void onCallingTimeout() {
-//
-//        }
-//
-//        @Override
-//        public void onCallEnd() {
-//
-//        }
-//
-//        @Override
-//        public void onUserVideoAvailable(String userId, boolean isVideoAvailable) {
-//
-//        }
-//
-//        @Override
-//        public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
-//
-//        }
-//
-//        @Override
-//        public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
-//
-//        }
-//        // </editor-fold  desc="视频监听代码">
-//    };
+    private ITRTCVideoCall mITRTCVideoCall;
+    private TRTCVideoCallListener mTRTCVideoCallListener = new TRTCVideoCallListener() {
+        // <editor-fold  desc="视频监听代码">
+        @Override
+        public void onError(int code, String msg) {
+        }
+
+        @Override
+        public void onInvited(String sponsor, final List<String> userIdList, boolean isFromGroup, int callType) {
+            //1. 收到邀请，先到服务器查询
+            ProfileManager.getInstance().getUserInfoByUserId(sponsor, new ProfileManager.GetUserInfoCallback() {
+                @Override
+                public void onSuccess(final UserModel model) {
+                    if (!CollectionUtils.isEmpty(userIdList)) {
+                        ProfileManager.getInstance().getUserInfoBatch(userIdList, new ProfileManager.GetUserInfoBatchCallback() {
+                            @Override
+                            public void onSuccess(List<UserModel> modelList) {
+                                TRTCVideoCallActivity.startBeingCall(CallService.this, model, modelList);
+                            }
+
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                TRTCVideoCallActivity.startBeingCall(CallService.this, model, null);
+                            }
+                        });
+                    } else {
+                        TRTCVideoCallActivity.startBeingCall(CallService.this, model, null);
+                    }
+                }
+
+                @Override
+                public void onFailed(int code, String msg) {
+
+                }
+            });
+        }
+
+        @Override
+        public void onGroupCallInviteeListUpdate(List<String> userIdList) {
+
+        }
+
+        @Override
+        public void onUserEnter(String userId) {
+
+        }
+
+        @Override
+        public void onUserLeave(String userId) {
+
+        }
+
+        @Override
+        public void onReject(String userId) {
+
+        }
+
+        @Override
+        public void onNoResp(String userId) {
+
+        }
+
+        @Override
+        public void onLineBusy(String userId) {
+
+        }
+
+        @Override
+        public void onCallingCancel() {
+
+        }
+
+        @Override
+        public void onCallingTimeout() {
+
+        }
+
+        @Override
+        public void onCallEnd() {
+
+        }
+
+        @Override
+        public void onUserVideoAvailable(String userId, boolean isVideoAvailable) {
+
+        }
+
+        @Override
+        public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
+
+        }
+
+        @Override
+        public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
+
+        }
+        // </editor-fold  desc="视频监听代码">
+    };
 
 
     public CallService() {
@@ -248,7 +252,7 @@ public class CallService extends Service {
                 //1. 登录IM成功
                 ToastUtils.showLong("登录成功");
                 initAudioCallData();
-//                initVideoCallData();
+                initVideoCallData();
 //                initMeetingData();
 //                initVoiceRoom();
             }
@@ -261,8 +265,8 @@ public class CallService extends Service {
         super.onDestroy();
         mITRTCAudioCall.removeListener(mTRTCAudioCallListener);
         TRTCAudioCallImpl.destroySharedInstance();
-//        mITRTCVideoCall.removeListener(mTRTCVideoCallListener);
-//        TRTCVideoCallImpl.destroySharedInstance();
+        mITRTCVideoCall.removeListener(mTRTCVideoCallListener);
+        TRTCVideoCallImpl.destroySharedInstance();
     }
 
     private void initAudioCallData() {
@@ -276,15 +280,15 @@ public class CallService extends Service {
         mITRTCAudioCall.login(appid, userId, userSig, null);
     }
 
-//    private void initVideoCallData() {
-//        mITRTCVideoCall = TRTCVideoCallImpl.sharedInstance(this);
-//        mITRTCVideoCall.init();
-//        mITRTCVideoCall.addListener(mTRTCVideoCallListener);
-//        int    appid   = GenerateTestUserSig.SDKAPPID;
-//        String userId  = ProfileManager.getInstance().getUserModel().userId;
-//        String userSig = ProfileManager.getInstance().getUserModel().userSig;
-//        mITRTCVideoCall.login(appid, userId, userSig, null);
-//    }
+    private void initVideoCallData() {
+        mITRTCVideoCall = TRTCVideoCallImpl.sharedInstance(this);
+        mITRTCVideoCall.init();
+        mITRTCVideoCall.addListener(mTRTCVideoCallListener);
+        int    appid   = GenerateTestUserSig.SDKAPPID;
+        String userId  = ProfileManager.getInstance().getUserModel().userId;
+        String userSig = ProfileManager.getInstance().getUserModel().userSig;
+        mITRTCVideoCall.login(appid, userId, userSig, null);
+    }
 
 //    private void initMeetingData() {
 //        final UserModel userModel = ProfileManager.getInstance().getUserModel();

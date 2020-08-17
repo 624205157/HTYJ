@@ -19,14 +19,14 @@ import androidx.constraintlayout.widget.Group;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.squareup.picasso.Picasso;
+import com.tencent.liteav.login.model.ProfileManager;
+import com.tencent.liteav.login.model.UserModel;
 import com.tencent.liteav.trtcaudiocalldemo.R;
 import com.tencent.liteav.trtcaudiocalldemo.model.ITRTCAudioCall;
 import com.tencent.liteav.trtcaudiocalldemo.model.TRTCAudioCallImpl;
 import com.tencent.liteav.trtcaudiocalldemo.model.TRTCAudioCallListener;
 import com.tencent.liteav.trtcaudiocalldemo.ui.widget.TRTCAudioLayout;
 import com.tencent.liteav.trtcaudiocalldemo.ui.widget.TRTCAudioLayoutManager;
-import com.tencent.liteav.trtcaudiocalldemo.utils.ProfileManager;
-import com.tencent.liteav.trtcaudiocalldemo.utils.UserModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
