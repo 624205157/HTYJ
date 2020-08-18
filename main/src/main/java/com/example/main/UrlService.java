@@ -6,11 +6,13 @@ package com.example.main;
  */
 public class UrlService {
 
-    public static final String URL = "http://www.cccxsw.cn/chenxi/public/index.php/api";
+    public static final String URL = " http://47.107.154.147:9001/api/";
 
 
     public static final String LOGIN = URL + "/User/login";
     public static final String REGISTER = URL + "/User/register";
+
+    public static final String ENTERPRISE = URL + "/enterprise";
 
 
 }

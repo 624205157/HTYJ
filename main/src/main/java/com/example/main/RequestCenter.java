@@ -7,6 +7,7 @@ import com.example.commonlib.okhttp.CommonOkHttpClient;
 import com.example.commonlib.okhttp.listener.DisposeDataHandle;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
 import com.example.commonlib.okhttp.request.CommonRequest;
+import com.example.commonlib.okhttp.request.RequestParams;
 
 import static com.example.main.UrlService.LOGIN;
 import static com.example.main.UrlService.REGISTER;
@@ -38,6 +39,17 @@ public class RequestCenter {
         CommonOkHttpClient.post(CommonRequest.createPostJSONRequest(REGISTER, jsonStr),
                 new DisposeDataHandle(listener));
     }
+
+    /**
+     * 获取企业列表
+     * @param url
+     * @param listener
+     */
+
+    public static void getEnterpriseList(String url, RequestParams params,DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createGetRequest(url,params),new DisposeDataHandle(listener));
+    }
+
 
 
 }

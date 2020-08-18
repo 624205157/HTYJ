@@ -3,6 +3,8 @@ package com.example.main.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by czy on 2020/8/12 12:50.
  * describe: 企业信息
@@ -12,9 +14,20 @@ public class Enterprise {
     private String id;
     private String name;
     private String address;
+    @SerializedName("contact_phone")
+    private String tel;//企业电话
+    @SerializedName("fax_number")
+    private String fax;//传真号
+    @SerializedName("sc_code")
     private String socialCreditCode;//社会信用代码
+    @SerializedName("legal_person")
     private String legalPerson;//法人
+    @SerializedName("legal_phone")
+    private String legalPersonTel;//法人电话
+    @SerializedName("star")
     private String isStart;//是否星标企业
+    @SerializedName("grid_name")
+    private String grid;//网格名称
     private double longitude;//经度
     private double latitude;//纬度
     private Address point = new Address();
@@ -105,4 +118,35 @@ public class Enterprise {
         this.point = point;
     }
 
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getLegalPersonTel() {
+        return legalPersonTel;
+    }
+
+    public void setLegalPersonTel(String legalPersonTel) {
+        this.legalPersonTel = legalPersonTel;
+    }
+
+    public String getGrid() {
+        return grid;
+    }
+
+    public void setGrid(String grid) {
+        this.grid = grid;
+    }
 }

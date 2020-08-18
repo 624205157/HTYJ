@@ -1,10 +1,18 @@
 package com.example.commonlib.okhttp.request;
 
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -64,6 +72,7 @@ public class CommonRequest {
     /**
      * 创建Post请求的Request
      * 传json
+     *
      * @param url
      * @param jsonStr
      * @return 返回一个创建好的Request对象
@@ -74,6 +83,81 @@ public class CommonRequest {
     }
 
 
+    /**
+     * 混合form和图片
+     *
+     * @return 返回一个创建好的Request对象
+     */
+    public static Request createMultipartRequest(String url, RequestParams params, List<File> files) {
 
+        //构建多部件builder
+        MultipartBody.Builder bodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        //获取参数并放到请求体中
+        try {
+            if (params != null) {
+                JSONObject jsonObject = new JSONObject();
+                for (Map.Entry<String, String> entry : params.urlParams.entrySet()) {
+                    //将请求参数逐一遍历添加到我们的请求构建类中
+                    bodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+                    jsonObject.put(entry.getKey(), entry.getValue());
+                }
+                Log.e("TAG", "入参:   " + jsonObject.toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //添加图片集合放到请求体中
+        if (files != null) {
+            for (File f : files) {
+                bodyBuilder.addFormDataPart("files", f.getName(),
+                        RequestBody.create(MediaType.parse("image/png"), f));
+            }
+        }
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(bodyBuilder.build())
+                .build();
+
+        return request;
+    }
+
+    /**
+     * 混合form和图片
+     *
+     * @return 返回一个创建好的Request对象
+     */
+    public static Request createMultipartRequest2(String url, RequestParams params, File license, File identity) {
+
+        //构建多部件builder
+        MultipartBody.Builder bodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        //获取参数并放到请求体中
+        try {
+            if (params != null) {
+                JSONObject jsonObject = new JSONObject();
+                for (Map.Entry<String, String> entry : params.urlParams.entrySet()) {
+                    //将请求参数逐一遍历添加到我们的请求构建类中
+                    bodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+                    jsonObject.put(entry.getKey(), entry.getValue());
+                }
+                Log.e("TAG", "入参:   " + jsonObject.toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        bodyBuilder.addFormDataPart("license", license.getName(),
+                RequestBody.create(MediaType.parse("image/png"), license));
+        bodyBuilder.addFormDataPart("identity", identity.getName(),
+                RequestBody.create(MediaType.parse("image/png"), identity));
+
+        Request request = new Request.Builder()
+                .url(url)
+                .put(bodyBuilder.build())
+                .build();
+
+        return request;
+    }
 
 }

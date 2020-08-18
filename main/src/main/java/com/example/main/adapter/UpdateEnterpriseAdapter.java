@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.main.R;
 import com.example.main.bean.Enterprise;
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by czy on 2020/8/12 12:49.
  * describe:
  */
-public class UpdateEnterpriseAdapter extends BaseQuickAdapter<Enterprise,BaseViewHolder> {
+public class UpdateEnterpriseAdapter extends BaseQuickAdapter<Enterprise,BaseViewHolder>  implements LoadMoreModule {
 
     public UpdateEnterpriseAdapter(List<Enterprise> data) {
         super(R.layout.item_enterprise, data);
