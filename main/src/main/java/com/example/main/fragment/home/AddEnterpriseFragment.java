@@ -3,6 +3,7 @@ package com.example.main.fragment.home;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -28,6 +29,7 @@ import com.amap.api.services.core.PoiItem;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.activity.PositionFineTuningActivity;
@@ -35,6 +37,7 @@ import com.example.main.adapter.GridImageAdapter;
 import com.example.main.fragment.BaseFragment;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
+import com.example.main.utils.Utils;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -99,6 +102,7 @@ public class AddEnterpriseFragment extends BaseFragment {
     AMap aMap = null;
 
     private boolean isLocation = false;
+    private AMapLocation location;
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -109,6 +113,7 @@ public class AddEnterpriseFragment extends BaseFragment {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     aMap.clear();
+                    location = aMapLocation;
                     LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
                     locationText.setText("经度:" + aMapLocation.getLongitude() + " 纬度:" + aMapLocation.getLatitude());
                     address.setText(aMapLocation.getAddress());
@@ -333,6 +338,22 @@ public class AddEnterpriseFragment extends BaseFragment {
                     }
                 });
     }
+
+    private void sendData(){
+        if (TextUtils.isEmpty(name.getText())){
+            showToast("用户名不可为空");
+            return;
+        }
+        RequestParams params = new RequestParams();
+        params.put("name", Utils.getText(name));
+        params.put("sc_code", Utils.getText(enterpriseCode));
+        params.put("address", Utils.getText(address));
+        params.put("contact_phone", Utils.getText(tel));
+        params.put("fax_number", Utils.getText(fax));
+        params.put("legal_person", Utils.getText(legalPerson));
+        params.put("legal_phone", Utils.getText(legalPersonTel));
+    }
+
 
     /**
      * 初始化网格归属

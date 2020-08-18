@@ -169,7 +169,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
         }
 
 
-        RequestCenter.getEnterpriseList(UrlService.ENTERPRISE,params, new DisposeDataListener() {
+        RequestCenter.getEnterpriseList(params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {

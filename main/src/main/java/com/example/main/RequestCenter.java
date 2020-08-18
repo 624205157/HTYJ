@@ -9,6 +9,8 @@ import com.example.commonlib.okhttp.listener.DisposeDataListener;
 import com.example.commonlib.okhttp.request.CommonRequest;
 import com.example.commonlib.okhttp.request.RequestParams;
 
+import java.io.File;
+
 import static com.example.main.UrlService.LOGIN;
 import static com.example.main.UrlService.REGISTER;
 
@@ -42,14 +44,23 @@ public class RequestCenter {
 
     /**
      * 获取企业列表
-     * @param url
      * @param listener
      */
 
-    public static void getEnterpriseList(String url, RequestParams params,DisposeDataListener listener){
-        CommonOkHttpClient.get(CommonRequest.createGetRequest(url,params),new DisposeDataHandle(listener));
+    public static void getEnterpriseList(RequestParams params,DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.ENTERPRISE,params),new DisposeDataHandle(listener));
     }
 
 
-
+    /**
+     * 新增企业
+     * @param url
+     * @param params
+     * @param file1
+     * @param file2
+     * @param listener
+     */
+    public static void addEnterprise(String url, RequestParams params, File file1,File file2, DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createMultipartRequest2(url,params,file1,file2),new DisposeDataHandle(listener));
+    }
 }
