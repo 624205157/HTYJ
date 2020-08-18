@@ -12,7 +12,11 @@ public class UrlService {
     public static final String LOGIN = URL + "/User/login";
     public static final String REGISTER = URL + "/User/register";
 
-    public static final String ENTERPRISE = URL + "/enterprise";
+    public static final String ENTERPRISE = URL + "/enterprise";//企业
+    public static final String DICTIONARY = URL + "system/dictionary";//字典
+    public static final String GRID = URL + "grid";//网格
+
+
 
 
 }

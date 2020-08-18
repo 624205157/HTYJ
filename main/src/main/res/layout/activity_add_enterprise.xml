@@ -6,7 +6,11 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="#F0EFF5">
+
+    <include layout="@layout/title_layout"/>
 
     <ScrollView
         android:layout_width="match_parent"

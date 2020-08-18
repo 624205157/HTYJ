@@ -51,16 +51,33 @@ public class RequestCenter {
         CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.ENTERPRISE,params),new DisposeDataHandle(listener));
     }
 
+    /**
+     * 获取字典
+     * @param listener
+     */
+
+    public static void getDictionary(RequestParams params,DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.DICTIONARY,params),new DisposeDataHandle(listener));
+    }
+  /**
+     * 获取字典
+     * @param listener
+     */
+
+    public static void getGrid(RequestParams params,DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.GRID,params),new DisposeDataHandle(listener));
+    }
+
 
     /**
-     * 新增企业
+     * 新增/修改 企业
      * @param url
      * @param params
      * @param file1
      * @param file2
      * @param listener
      */
-    public static void addEnterprise(String url, RequestParams params, File file1,File file2, DisposeDataListener listener){
-        CommonOkHttpClient.get(CommonRequest.createMultipartRequest2(url,params,file1,file2),new DisposeDataHandle(listener));
+    public static void addEnterprise(RequestParams params, File file1,File file2, DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createMultipartRequest2(UrlService.ENTERPRISE,params,file1,file2),new DisposeDataHandle(listener));
     }
 }

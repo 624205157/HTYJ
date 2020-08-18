@@ -15,6 +15,7 @@ public abstract class RightTitleActivity extends BaseActivity {
     protected void rightTitle(String text,RightClickListener listener){
         TextView textView = findViewById(R.id.right_tv);
         textView.setText(text);
+        textView.setVisibility(View.VISIBLE);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by czy on 2020/8/12 12:50.
  * describe: 企业信息
@@ -25,14 +27,18 @@ public class Enterprise {
     @SerializedName("legal_phone")
     private String legalPersonTel;//法人电话
     @SerializedName("star")
-    private String isStart;//是否星标企业
+    private int isStart;//是否星标企业
     @SerializedName("grid_name")
     private String grid;//网格名称
     private double longitude;//经度
     private double latitude;//纬度
     private Address point = new Address();
+    private List<ImageList> license;//营业执照图片
+    private List<ImageList> identity;//法人图片
+    private String [] exist;//删除图片
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
+
 
 
     public String getId() {
@@ -75,13 +81,6 @@ public class Enterprise {
         this.legalPerson = legalPerson;
     }
 
-    public String getIsStart() {
-        return isStart;
-    }
-
-    public void setIsStart(String isStart) {
-        this.isStart = isStart;
-    }
 
     public double getLongitude() {
         return longitude;
@@ -148,5 +147,37 @@ public class Enterprise {
 
     public void setGrid(String grid) {
         this.grid = grid;
+    }
+
+    public int getIsStart() {
+        return isStart;
+    }
+
+    public void setIsStart(int isStart) {
+        this.isStart = isStart;
+    }
+
+    public String[] getExist() {
+        return exist;
+    }
+
+    public void setExist(String[] exist) {
+        this.exist = exist;
+    }
+
+    public List<ImageList> getLicense() {
+        return license;
+    }
+
+    public void setLicense(List<ImageList> license) {
+        this.license = license;
+    }
+
+    public List<ImageList> getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(List<ImageList> identity) {
+        this.identity = identity;
     }
 }

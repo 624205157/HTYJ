@@ -1,5 +1,6 @@
 package com.example.main.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -26,6 +27,7 @@ import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
 import com.example.main.UrlService;
+import com.example.main.activity.UpdateEnterpriseActivity;
 import com.example.main.adapter.UpdateEnterpriseAdapter;
 import com.example.main.bean.Enterprise;
 import com.example.main.fragment.BaseFragment;
@@ -102,7 +104,9 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
                             .navigation();
 
                 } else if (view.getId() == R.id.update) {
-                    showToast("修改");
+                    Intent intent = new Intent(getActivity(), UpdateEnterpriseActivity.class);
+                    intent.putExtra("id",mData.get(position).getId());
+                    startActivity(intent);
                 }
                 if (view.getId() == R.id.del) {
                     new MyDialog(mContext)

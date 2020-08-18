@@ -29,15 +29,21 @@ import com.amap.api.services.core.PoiItem;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
 import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
 import com.example.main.activity.PositionFineTuningActivity;
 import com.example.main.adapter.GridImageAdapter;
+import com.example.main.bean.Grid;
 import com.example.main.fragment.BaseFragment;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
 import com.example.main.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -46,6 +52,9 @@ import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
 
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +98,7 @@ public class AddEnterpriseFragment extends BaseFragment {
     Switch isKeyEnterprises;
 
     private OptionsPickerView reasonPicker;
-    List<String> reasonlist = new ArrayList<>();
+    List<Grid> gridList = new ArrayList<>();
 
     private GridImageAdapter adapter;
     private GridImageAdapter adapter2;
@@ -102,7 +111,11 @@ public class AddEnterpriseFragment extends BaseFragment {
     AMap aMap = null;
 
     private boolean isLocation = false;
-    private AMapLocation location;
+
+    private LatLng latLng;
+
+    private int isStart = 0;
+    private Grid gridSelect;
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -113,8 +126,7 @@ public class AddEnterpriseFragment extends BaseFragment {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     aMap.clear();
-                    location = aMapLocation;
-                    LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+                    latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
                     locationText.setText("经度:" + aMapLocation.getLongitude() + " 纬度:" + aMapLocation.getLatitude());
                     address.setText(aMapLocation.getAddress());
                     aMap.addMarker(new MarkerOptions().position(latLng));
@@ -133,6 +145,7 @@ public class AddEnterpriseFragment extends BaseFragment {
 
     //声明AMapLocationClientOption对象
     public AMapLocationClientOption mLocationOption = null;
+
 
     @Override
     protected int setContentView() {
@@ -175,8 +188,10 @@ public class AddEnterpriseFragment extends BaseFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    isStart = 1;
                     keyEnterprises.setText("是");
                 } else {
+                    isStart = 0;
                     keyEnterprises.setText("否");
                 }
             }
@@ -186,7 +201,7 @@ public class AddEnterpriseFragment extends BaseFragment {
         initGridList();
     }
 
-    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.cl})
+    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.submit})
     public void onViewClicked(View view) {
 
         int id = view.getId();
@@ -196,7 +211,8 @@ public class AddEnterpriseFragment extends BaseFragment {
             startActivityForResult(new Intent(mActivity, PositionFineTuningActivity.class), 0x100);
         } else if (id == R.id.grid) {
             reasonPicker.show();
-        } else if (id == R.id.cl) {
+        } else if (id == R.id.submit) {
+            sendData();
         }
     }
 
@@ -307,7 +323,7 @@ public class AddEnterpriseFragment extends BaseFragment {
                     PoiItem poiItem = data.getExtras().getParcelable("address");
 
                     aMap.clear();
-                    LatLng latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
+                    latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
                     locationText.setText("经度:" + poiItem.getLatLonPoint().getLongitude() + " 纬度:" + poiItem.getLatLonPoint().getLatitude());
                     address.setText(poiItem.getTitle());
                     aMap.addMarker(new MarkerOptions().position(latLng));
@@ -339,42 +355,104 @@ public class AddEnterpriseFragment extends BaseFragment {
                 });
     }
 
-    private void sendData(){
-        if (TextUtils.isEmpty(name.getText())){
+    private void sendData() {
+        if (TextUtils.isEmpty(name.getText())) {
             showToast("用户名不可为空");
             return;
         }
         RequestParams params = new RequestParams();
-        params.put("name", Utils.getText(name));
-        params.put("sc_code", Utils.getText(enterpriseCode));
-        params.put("address", Utils.getText(address));
-        params.put("contact_phone", Utils.getText(tel));
-        params.put("fax_number", Utils.getText(fax));
-        params.put("legal_person", Utils.getText(legalPerson));
-        params.put("legal_phone", Utils.getText(legalPersonTel));
+        try {
+            params.put("name", Utils.getText(name));
+            params.put("sc_code", Utils.getText(enterpriseCode));
+            params.put("address", Utils.getText(address));
+            params.put("contact_phone", Utils.getText(tel));
+            params.put("fax_number", Utils.getText(fax));
+            params.put("legal_person", Utils.getText(legalPerson));
+            params.put("legal_phone", Utils.getText(legalPersonTel));
+            params.put("longitude", latLng.longitude);
+            params.put("latitude", latLng.latitude);
+            params.put("star", isStart);
+            params.put("grid_id", gridSelect.getId());
+            params.put("grid_name", gridSelect.getName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+//        Enterprise enterprise = new Enterprise();
+//        enterprise.setName(Utils.getText(name));
+//        enterprise.setSocialCreditCode(Utils.getText(enterpriseCode));
+//        enterprise.setAddress(Utils.getText(address));
+//        enterprise.setTel(Utils.getText(tel));
+//        enterprise.setFax(Utils.getText(fax));
+//        enterprise.setLegalPerson(Utils.getText(legalPerson));
+//        enterprise.setLegalPersonTel(Utils.getText(legalPersonTel));
+//        enterprise.setLongitude(latLng.longitude);
+//        enterprise.setLatitude(latLng.latitude);
+//        enterprise.setIsStart(isStart);
+//
+//        Gson gson = new Gson();
+//        String jsonStr = gson.toJson(enterprise);
+
+        RequestCenter.addEnterprise(params, new File(selectList.get(0).getPath()), new File(selectList2.get(0).getPath()), new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    showToast(result.getString("msg"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
 
     /**
      * 初始化网格归属
      */
-    private void initGridList(){
-        reasonlist.add("网格1");
-        reasonlist.add("网格2");
-        reasonlist.add("网格33");
-        reasonlist.add("网格44");
-        reasonlist.add("网格55");
-        reasonlist.add("网格66");
-        reasonlist.add("网格77");
-        reasonlist.add("网格88");
-        reasonPicker = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+    private void initGridList() {
+
+        RequestCenter.getGrid(null, new DisposeDataListener() {
             @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                grid.setText(reasonlist.get(options1));
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (result.getInt("code") == 0) {
+//                        JSONObject data = result.getJSONObject("data");
+                        gridList.clear();
+                        gridList.addAll(new Gson().fromJson(result.getString("data"),new TypeToken<List<Grid>>(){}.getType()));
+
+                        reasonPicker = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+                            @Override
+                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                                gridSelect = gridList.get(options1);
+                                grid.setText(gridSelect.getName());
+                            }
+                        }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+                        reasonPicker.setPicker(gridList);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-        reasonPicker.setPicker(reasonlist);
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
     }
+
 
     @Override
     public void onDestroy() {

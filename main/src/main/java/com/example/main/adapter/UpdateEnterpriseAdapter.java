@@ -33,7 +33,12 @@ public class UpdateEnterpriseAdapter extends BaseQuickAdapter<Enterprise,BaseVie
         holder.setText(R.id.address,"地址: "+enterprise.getAddress());
         holder.setText(R.id.social_credit_code,"社会信用代码: "+enterprise.getSocialCreditCode());
         holder.setText(R.id.legal_person,"法人: "+enterprise.getLegalPerson());
-        holder.setText(R.id.is_start,enterprise.getIsStart());
+        if (enterprise.getIsStart() == 0){
+            holder.setText(R.id.is_start,"否");
+        }else {
+            holder.setText(R.id.is_start,"是");
+        }
+
 
         View view = holder.getView(R.id.cl_1);
         view.setOnClickListener(new View.OnClickListener() {

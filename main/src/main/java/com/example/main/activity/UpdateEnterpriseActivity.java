@@ -3,9 +3,12 @@ package com.example.main.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -27,11 +30,21 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.example.commonlib.base.BaseActivity;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
 import com.example.main.adapter.GridImageAdapter;
+import com.example.main.bean.Enterprise;
+import com.example.main.bean.Grid;
+import com.example.main.fragment.BaseFragment;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
+import com.example.main.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -40,6 +53,9 @@ import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
 
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,42 +63,61 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * Created by czy on 2020/8/14 10:27.
- * describe: 突发事件上报
+ * Created by czy on 2020/8/10 11:30.
+ * describe: 修改企业信息
  */
-public class ReportEventActivity extends BaseActivity {
+public class UpdateEnterpriseActivity extends BaseActivity {
+
+
     @BindView(R2.id.map)
     MapView map;
-    @BindView(R2.id.location_text)
-    TextView locationText;
     @BindView(R2.id.name)
     EditText name;
-    @BindView(R2.id.type)
-    TextView type;
-    @BindView(R2.id.level)
-    TextView level;
+    @BindView(R2.id.enterprise_code)
+    EditText enterpriseCode;
     @BindView(R2.id.address)
     TextView address;
-    @BindView(R2.id.count)
-    EditText count;
+    @BindView(R2.id.tel)
+    EditText tel;
+    @BindView(R2.id.fax)
+    EditText fax;
+    @BindView(R2.id.legal_person)
+    EditText legalPerson;
+    @BindView(R2.id.legal_person_tel)
+    EditText legalPersonTel;
+    @BindView(R2.id.key_enterprises)
+    TextView keyEnterprises;
+    @BindView(R2.id.grid)
+    TextView grid;
     @BindView(R2.id.photo_recycler1)
     RecyclerView photoRecycler1;
-
+    @BindView(R2.id.photo_recycler2)
+    RecyclerView photoRecycler2;
+    @BindView(R2.id.location_text)
+    TextView locationText;
+    @BindView(R2.id.is_key_enterprises)
+    Switch isKeyEnterprises;
 
     private OptionsPickerView reasonPicker;
-    private OptionsPickerView reasonPicker2;
-    List<String> reasonlist = new ArrayList<>();
-    List<String> reasonlist2 = new ArrayList<>();
+    List<Grid> gridList = new ArrayList<>();
+    List<String> gridSelectList = new ArrayList<>();
 
     private GridImageAdapter adapter;
+    private GridImageAdapter adapter2;
     //已经选择图片
     private List<LocalMedia> selectList = new ArrayList<>();
+    private List<LocalMedia> selectList2 = new ArrayList<>();
     //照片选择最大值
-    private int maxSelectNum = 9;
+    private int maxSelectNum = 1;
 
     AMap aMap = null;
 
     private boolean isLocation = false;
+
+    private LatLng latLng;
+
+    private int isStart = 0;
+    private Grid gridSelect;
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -93,11 +128,8 @@ public class ReportEventActivity extends BaseActivity {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     aMap.clear();
-                    LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
-                    locationText.setText("经度:" + aMapLocation.getLongitude() + " 纬度:" + aMapLocation.getLatitude());
-                    address.setText(aMapLocation.getAddress());
-                    aMap.addMarker(new MarkerOptions().position(latLng));
-                    aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18, 0, 30)));
+                    latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+                    moveMap(latLng, aMapLocation.getAddress());
                     mLocationClient.stopLocation();
                     isLocation = false;
                 } else {
@@ -110,18 +142,27 @@ public class ReportEventActivity extends BaseActivity {
         }
     };
 
+    private void moveMap(LatLng latLng, String addressStr) {
+        locationText.setText("经度:" + latLng.longitude + " 纬度:" + latLng.latitude);
+        address.setText(addressStr);
+        aMap.addMarker(new MarkerOptions().position(latLng));
+        aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18, 0, 30)));
+    }
+
     //声明AMapLocationClientOption对象
     public AMapLocationClientOption mLocationOption = null;
 
+
     @Override
     protected int setContentView() {
-        return R.layout.activity_report_event;
+        return R.layout.activity_add_enterprise;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
         addBack();
-        setTitleText("突发事件上报");
+        setTitleText("企业信息变更");
+
         map.onCreate(savedInstanceState);// 此方法必须重写
 
         if (aMap == null) {
@@ -142,33 +183,47 @@ public class ReportEventActivity extends BaseActivity {
 
         //获取最近3s内精度最高的一次定位结果：
 //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会，默认为false。
-        mLocationOption.setOnceLocationLatest(true);
+//        mLocationOption.setOnceLocationLatest(true);
 
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
 
-        getPermission();
+//        getPermission();
 
         init();
 
 
+        isKeyEnterprises.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    isStart = 1;
+                    keyEnterprises.setText("是");
+                } else {
+                    isStart = 0;
+                    keyEnterprises.setText("否");
+                }
+            }
+        });
 
         //初始化网格归属列表
         initGridList();
+
     }
 
-    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.type, R2.id.level, R2.id.submit})
+
+    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.submit})
     public void onViewClicked(View view) {
+
         int id = view.getId();
         if (id == R.id.relocation) {
             getPermission();
         } else if (id == R.id.position_fine_tuning) {
             startActivityForResult(new Intent(this, PositionFineTuningActivity.class), 0x100);
-        } else if (id == R.id.type) {
+        } else if (id == R.id.grid) {
             reasonPicker.show();
-        } else if (id == R.id.level) {
-            reasonPicker2.show();
         } else if (id == R.id.submit) {
+            sendData();
         }
     }
 
@@ -189,18 +244,39 @@ public class ReportEventActivity extends BaseActivity {
         adapter.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                PictureSelector.create(ReportEventActivity.this)
+                PictureSelector.create(UpdateEnterpriseActivity.this)
                         .themeStyle(R.style.picture_default_style)
                         .imageEngine(GlideEngine.createGlideEngine())
                         .openExternalPreview(position, selectList);
+            }
+        });
+        FullyGridLayoutManager manager2 = new FullyGridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
+        photoRecycler2.setLayoutManager(manager2);
+        adapter2 = new GridImageAdapter(this, new GridImageAdapter.onAddPicClickListener() {
+            @Override
+            public void onAddPicClick() {
+                initSelectImage(adapter2, selectList2);
+            }
+        });
+        adapter2.setList(selectList2);
+        adapter2.setSelectMax(maxSelectNum);
+        photoRecycler2.setAdapter(adapter2);
+
+        adapter2.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                PictureSelector.create(UpdateEnterpriseActivity.this)
+                        .themeStyle(R.style.picture_default_style)
+                        .imageEngine(GlideEngine.createGlideEngine())
+                        .openExternalPreview(position, selectList2);
             }
         });
 
 
     }
 
-
     private void initSelectImage(GridImageAdapter adapter, List<LocalMedia> selectList) {
+
         PictureSelector.create(this)
                 .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                 .imageEngine(GlideEngine.createGlideEngine())
@@ -259,11 +335,9 @@ public class ReportEventActivity extends BaseActivity {
                     PoiItem poiItem = data.getExtras().getParcelable("address");
 
                     aMap.clear();
-                    LatLng latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
-                    locationText.setText("经度:" + poiItem.getLatLonPoint().getLongitude() + " 纬度:" + poiItem.getLatLonPoint().getLatitude());
-                    address.setText(poiItem.getTitle());
-                    aMap.addMarker(new MarkerOptions().position(latLng));
-                    aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18, 0, 30)));
+                    latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
+
+                    moveMap(latLng, poiItem.getTitle());
                     break;
             }
         }
@@ -291,37 +365,156 @@ public class ReportEventActivity extends BaseActivity {
                 });
     }
 
-    /**
-     * 初始化弹框list
-     */
-    private void initGridList(){
-        reasonlist.add("类别1");
-        reasonlist.add("类别2");
-        reasonlist.add("类别33");
-        reasonlist.add("类别44");
-        reasonlist.add("类别55");
-        reasonlist.add("类别66");
-        reasonlist.add("类别77");
-        reasonlist.add("类别88");
-        reasonPicker = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
+    private void getData() {
+        RequestParams params = new RequestParams();
+        params.put("id", getIntent().getStringExtra("id"));
+        RequestCenter.getEnterpriseList(params, new DisposeDataListener() {
             @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                type.setText(reasonlist.get(options1));
-            }
-        }).setTitleText("事件类型").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-        reasonPicker.setPicker(reasonlist);
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (result.getInt("code") == 0) {
+                        JSONObject data = (JSONObject) result.getJSONObject("data").getJSONArray("list").get(0);
+                        Enterprise enterprise = new Gson().fromJson(data.toString(), new TypeToken<Enterprise>() {
+                        }.getType());
+                        name.setText(enterprise.getName());
+                        enterpriseCode.setText(enterprise.getSocialCreditCode());
 
-        reasonlist2.add("一般");
-        reasonlist2.add("紧急");
-        reasonlist2.add("特急");
-        reasonPicker2 = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                level.setText(reasonlist2.get(options1));
+                        tel.setText(enterprise.getTel());
+                        fax.setText(enterprise.getFax());
+                        legalPerson.setText(enterprise.getLegalPerson());
+                        legalPersonTel.setText(enterprise.getLegalPersonTel());
+                        if (enterprise.getIsStart() == 0) {
+                            isKeyEnterprises.setChecked(false);
+                        } else {
+                            isKeyEnterprises.setChecked(true);
+                        }
+                        LatLng latLng = new LatLng(enterprise.getLatitude(), enterprise.getLongitude());
+                        moveMap(latLng, enterprise.getAddress());
+                        LocalMedia license = new LocalMedia();
+                        license.setPath(enterprise.getLicense().get(0).getUrl());
+                        selectList.add(license);
+                        LocalMedia identity = new LocalMedia();
+                        identity.setPath(enterprise.getIdentity().get(0).getUrl());
+                        selectList2.add(license);
+
+                        adapter.setList(selectList);
+                        adapter.notifyDataSetChanged();
+
+                        adapter2.setList(selectList2);
+                        adapter2.notifyDataSetChanged();
+
+
+                        if (TextUtils.isEmpty(enterprise.getGrid())) {
+                            return;
+                        }
+                        for (Grid grids : gridList) {
+                            if (TextUtils.equals(grids.getName(), enterprise.getGrid())) {
+                                reasonPicker.setSelectOptions(gridList.indexOf(grids));
+                                grid.setText(grids.getName());
+                                return;
+                            }
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }).setTitleText("紧急程度").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-        reasonPicker2.setPicker(reasonlist2);
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
+
+    private void sendData() {
+        if (TextUtils.isEmpty(name.getText())) {
+            showToast("用户名不可为空");
+            return;
+        }
+        RequestParams params = new RequestParams();
+        try {
+            params.put("name", Utils.getText(name));
+            params.put("sc_code", Utils.getText(enterpriseCode));
+            params.put("address", Utils.getText(address));
+            params.put("contact_phone", Utils.getText(tel));
+            params.put("fax_number", Utils.getText(fax));
+            params.put("legal_person", Utils.getText(legalPerson));
+            params.put("legal_phone", Utils.getText(legalPersonTel));
+            params.put("longitude", latLng.longitude);
+            params.put("latitude", latLng.latitude);
+            params.put("star", isStart);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestCenter.addEnterprise(params, new File(selectList.get(0).getPath()), new File(selectList2.get(0).getPath()), new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    showToast(result.getString("msg"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+    }
+
+
+    /**
+     * 初始化网格归属
+     */
+    private void initGridList() {
+
+        RequestCenter.getGrid(null, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (result.getInt("code") == 0) {
+//                        JSONObject data = result.getJSONObject("data");
+                        gridList.clear();
+                        gridSelectList.clear();
+                        gridList.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Grid>>() {
+                        }.getType()));
+                        for (Grid grid : gridList) {
+                            gridSelectList.add(grid.getName());
+                        }
+                        reasonPicker = new OptionsPickerBuilder(UpdateEnterpriseActivity.this, new OnOptionsSelectListener() {
+                            @Override
+                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                                gridSelect = gridList.get(options1);
+                                grid.setText(gridSelect.getName());
+                            }
+                        }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+                        reasonPicker.setPicker(gridSelectList);
+                        //字典项查完再查询反显数据
+                        getData();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
+    }
+
 
     @Override
     public void onDestroy() {
@@ -353,5 +546,4 @@ public class ReportEventActivity extends BaseActivity {
         //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态
         map.onSaveInstanceState(outState);
     }
-
 }
