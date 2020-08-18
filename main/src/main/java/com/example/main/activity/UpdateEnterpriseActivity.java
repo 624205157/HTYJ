@@ -396,7 +396,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                         selectList.add(license);
                         LocalMedia identity = new LocalMedia();
                         identity.setPath(enterprise.getIdentity().get(0).getUrl());
-                        selectList2.add(license);
+                        selectList2.add(identity);
 
                         adapter.setList(selectList);
                         adapter.notifyDataSetChanged();
