@@ -115,7 +115,7 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
         //少于8张，显示继续添加的图标
         if (getItemViewType(position) == TYPE_CAMERA) {
             //      viewHolder.mImg.setImageResource(R.drawable.addimg);
-            String url = "res://com.hulian.oa/" + R.drawable.addimg;
+            String url = "res://com.czy.htyj/" + R.drawable.addimg;
             Uri uri = Uri.parse(url);
             viewHolder.mImg.setImageURI(uri);
             viewHolder.mImg.setOnClickListener(new View.OnClickListener() {

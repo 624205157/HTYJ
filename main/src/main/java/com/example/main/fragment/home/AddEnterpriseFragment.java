@@ -99,6 +99,7 @@ public class AddEnterpriseFragment extends BaseFragment {
 
     private OptionsPickerView reasonPicker;
     List<Grid> gridList = new ArrayList<>();
+    List<String> gridNameList = new ArrayList<>();
 
     private GridImageAdapter adapter;
     private GridImageAdapter adapter2;
@@ -115,7 +116,7 @@ public class AddEnterpriseFragment extends BaseFragment {
     private LatLng latLng;
 
     private int isStart = 0;
-    private Grid gridSelect;
+    private Grid gridSelect = new Grid();
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -373,9 +374,9 @@ public class AddEnterpriseFragment extends BaseFragment {
             params.put("fax_number", Utils.getText(fax));
             params.put("legal_person", Utils.getText(legalPerson));
             params.put("legal_phone", Utils.getText(legalPersonTel));
-            params.put("longitude", latLng.longitude);
-            params.put("latitude", latLng.latitude);
-            params.put("star", isStart);
+            params.put("longitude", latLng.longitude + "");
+            params.put("latitude", latLng.latitude+ "");
+            params.put("star", isStart + "");
             params.put("grid_id", gridSelect.getId());
             params.put("grid_name", gridSelect.getName());
 
@@ -413,7 +414,7 @@ public class AddEnterpriseFragment extends BaseFragment {
 
             @Override
             public void onFailure(OkHttpException responseObj) {
-
+                showToast(responseObj.getMessage());
             }
         });
     }
@@ -435,7 +436,10 @@ public class AddEnterpriseFragment extends BaseFragment {
 //                        JSONObject data = result.getJSONObject("data");
                         gridList.clear();
                         gridList.addAll(new Gson().fromJson(result.getString("data"),new TypeToken<List<Grid>>(){}.getType()));
-
+                        gridNameList.clear();
+                        for (Grid grid:gridList){
+                            gridNameList.add(grid.getName());
+                        }
                         reasonPicker = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
                             @Override
                             public void onOptionsSelect(int options1, int options2, int options3, View v) {
@@ -443,7 +447,7 @@ public class AddEnterpriseFragment extends BaseFragment {
                                 grid.setText(gridSelect.getName());
                             }
                         }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-                        reasonPicker.setPicker(gridList);
+                        reasonPicker.setPicker(gridNameList);
                     }
 
                 } catch (Exception e) {

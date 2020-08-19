@@ -1,6 +1,7 @@
 package com.example.commonlib.okhttp.request;
 
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
@@ -136,6 +138,7 @@ public class CommonRequest {
         try {
             if (params != null) {
                 JSONObject jsonObject = new JSONObject();
+
                 for (Map.Entry<String, String> entry : params.urlParams.entrySet()) {
                     //将请求参数逐一遍历添加到我们的请求构建类中
                     bodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
@@ -146,12 +149,14 @@ public class CommonRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        bodyBuilder.addFormDataPart("license", license.getName(),
-                RequestBody.create(MediaType.parse("image/png"), license));
-        bodyBuilder.addFormDataPart("identity", identity.getName(),
-                RequestBody.create(MediaType.parse("image/png"), identity));
-
+        if(license!=null) {
+            bodyBuilder.addFormDataPart("license", license.getName(),
+                    RequestBody.create(MediaType.parse("image/png"), license));
+        }
+        if(identity!=null) {
+            bodyBuilder.addFormDataPart("identity", identity.getName(),
+                    RequestBody.create(MediaType.parse("image/png"), identity));
+        }
         Request request = new Request.Builder()
                 .url(url)
                 .put(bodyBuilder.build())

@@ -42,7 +42,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
-
+        userName.setText("654321");
     }
 
 

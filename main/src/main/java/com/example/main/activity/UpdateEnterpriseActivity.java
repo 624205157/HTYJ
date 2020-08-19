@@ -118,7 +118,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
     private LatLng latLng;
 
     private int isStart = 0;
-    private Grid gridSelect;
+    private Grid gridSelect = new Grid();
 
     private List<String> exist = new ArrayList<>();//删除图片
 
@@ -386,6 +386,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                 });
     }
 
+    private Enterprise enterprise;
     private void getData() {
         RequestParams params = new RequestParams();
         params.put("id", getIntent().getStringExtra("id"));
@@ -396,7 +397,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                     JSONObject result = new JSONObject(responseObj.toString());
                     if (result.getInt("code") == 0) {
                         JSONObject data = (JSONObject) result.getJSONObject("data").getJSONArray("list").get(0);
-                        Enterprise enterprise = new Gson().fromJson(data.toString(), new TypeToken<Enterprise>() {
+                        enterprise = new Gson().fromJson(data.toString(), new TypeToken<Enterprise>() {
                         }.getType());
                         name.setText(enterprise.getName());
                         enterpriseCode.setText(enterprise.getSocialCreditCode());
@@ -410,7 +411,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                         } else {
                             isKeyEnterprises.setChecked(true);
                         }
-                        LatLng latLng = new LatLng(enterprise.getLatitude(), enterprise.getLongitude());
+                        latLng = new LatLng(enterprise.getLatitude(), enterprise.getLongitude());
                         moveMap(latLng, enterprise.getAddress());
                         LocalMedia license = new LocalMedia();
                         license.setPath(enterprise.getLicense().get(0).getUrl());
@@ -435,6 +436,8 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                             if (TextUtils.equals(grids.getName(), enterprise.getGrid())) {
                                 reasonPicker.setSelectOptions(gridList.indexOf(grids));
                                 grid.setText(grids.getName());
+                                gridSelect.setName(grids.getName());
+                                gridSelect.setId(grids.getId());
                                 return;
                             }
                         }
@@ -459,6 +462,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
         }
         RequestParams params = new RequestParams();
         try {
+            params.put("id",enterprise.getId());
             params.put("name", Utils.getText(name));
             params.put("sc_code", Utils.getText(enterpriseCode));
             params.put("address", Utils.getText(address));
@@ -466,20 +470,26 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             params.put("fax_number", Utils.getText(fax));
             params.put("legal_person", Utils.getText(legalPerson));
             params.put("legal_phone", Utils.getText(legalPersonTel));
-            params.put("longitude", latLng.longitude);
-            params.put("latitude", latLng.latitude);
-            params.put("star", isStart);
-            String []exists  = new String[exist.size()];
+            params.put("longitude", latLng.longitude + "");
+            params.put("latitude", latLng.latitude+ "");
+            params.put("star", isStart+ "");
+            params.put("grid_id", gridSelect.getId());
+            params.put("grid_name", gridSelect.getName());
+//            for (int i =0;i<exist.size();i++){
+//                params.put("exist["+i+"]", exist.get(i));
+//            }
+            String a="";
             for (int i =0;i<exist.size();i++){
-                exists[i] = exist.get(i);
+                a+= exist.get(i)+",";
             }
-            params.put("exist", exists);
+
+            params.put("exist",a.substring(0,a.length()-1));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        RequestCenter.addEnterprise(params, new File(selectList.get(0).getPath()), new File(selectList2.get(0).getPath()), new DisposeDataListener() {
+        RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList2), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
