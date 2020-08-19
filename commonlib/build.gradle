@@ -71,7 +71,7 @@ dependencies {
 
     api "com.google.android.material:material:1.0.0"
 
-    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.8'
+//    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.8'
 
     api 'com.facebook.fresco:fresco:0.14.1'
 

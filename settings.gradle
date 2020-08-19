@@ -6,3 +6,7 @@ include ':main'
 include ':trtcaudiocalldemo'
 include ':trtcvideocalldemo'
 include ':TRTClogin'
+
+include ':picture_library'
+include ':ucrop'
+

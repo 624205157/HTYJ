@@ -15,7 +15,7 @@ import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.activity.phone.PersonalInfoActivity;
 import com.example.main.adapter.PhoneAdapter;
-import com.example.main.bean.People;
+import com.example.main.bean.ImageList;
 import com.example.main.fragment.BaseFragment;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private PhoneAdapter adapter;
-    private List<People> mData = new ArrayList<>();
+    private List<ImageList.People> mData = new ArrayList<>();
 
     @Override
     protected int setContentView() {
@@ -79,7 +79,7 @@ public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private void getData() {
-        People people = new People();
+        ImageList.People people = new ImageList.People();
         people.setName("莎啦啦");
         people.setAddress("(前进街道)");
         people.setTel("13524564182");

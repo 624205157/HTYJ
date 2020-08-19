@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.services.core.PoiItem;
 import com.example.main.R;
-import com.example.main.lisenter.OnItemClickLisenter;
+import com.example.main.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class SearchAddressAdapter extends RecyclerView.Adapter<SearchAddressAdap
     private List<PoiItem> mList;
     private String userInput = "";
     private int selectPosition = -1;
-    private OnItemClickLisenter mOnItemClickLisenter;
+    private OnItemClickListener mOnItemClickListener;
 
     public SearchAddressAdapter(Context context, List<PoiItem> list) {
         this.mContext = context;
@@ -48,8 +48,8 @@ public class SearchAddressAdapter extends RecyclerView.Adapter<SearchAddressAdap
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickLisenter(OnItemClickLisenter onItemClickLisenter) {
-        this.mOnItemClickLisenter = onItemClickLisenter;
+    public void setOnItemClickLisenter(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -100,8 +100,8 @@ public class SearchAddressAdapter extends RecyclerView.Adapter<SearchAddressAdap
             public void onClick(View view) {
                 int position = (Integer) view.getTag();
                 setSelectPosition(position);
-                if (null != mOnItemClickLisenter) {
-                    mOnItemClickLisenter.onItemClick(position);
+                if (null != mOnItemClickListener) {
+                    mOnItemClickListener.onItemClick(position);
                 }
             }
         });

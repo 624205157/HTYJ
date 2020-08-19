@@ -64,4 +64,5 @@ dependencies {
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
     annotationProcessor 'com.alibaba:arouter-compiler:1.2.2'
+    implementation project(path: ':picture_library')
 }

@@ -123,6 +123,7 @@ public class AddEnterpriseFragment extends BaseFragment {
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
+            cancelDialog();
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     aMap.clear();
@@ -199,6 +200,9 @@ public class AddEnterpriseFragment extends BaseFragment {
 
         //初始化网格归属列表
         initGridList();
+
+        buildDialog("");
+
     }
 
     @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.submit})
@@ -395,7 +399,7 @@ public class AddEnterpriseFragment extends BaseFragment {
 //        Gson gson = new Gson();
 //        String jsonStr = gson.toJson(enterprise);
 
-        RequestCenter.addEnterprise(params, new File(selectList.get(0).getPath()), new File(selectList2.get(0).getPath()), new DisposeDataListener() {
+        RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList2), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
@@ -415,6 +419,7 @@ public class AddEnterpriseFragment extends BaseFragment {
     }
 
 
+
     /**
      * 初始化网格归属
      */
@@ -423,6 +428,7 @@ public class AddEnterpriseFragment extends BaseFragment {
         RequestCenter.getGrid(null, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     if (result.getInt("code") == 0) {

@@ -20,7 +20,7 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.example.main.R;
 import com.example.main.adapter.SearchAddressAdapter;
-import com.example.main.lisenter.OnItemClickLisenter;
+import com.example.main.listener.OnItemClickListener;
 import com.example.main.utils.DatasKey;
 import com.example.main.utils.SPUtils;
 import com.google.gson.Gson;
@@ -41,7 +41,7 @@ public class SearchActivity extends AppCompatActivity {
     private PoiSearch.OnPoiSearchListener mOnPoiSearchListener;
 
     private View.OnClickListener mOnClickListener;
-    private OnItemClickLisenter mOnItemClickLisenter;
+    private OnItemClickListener mOnItemClickListener;
 
     private Gson gson;
     public AMapLocation location;
@@ -139,7 +139,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        mOnItemClickLisenter = new OnItemClickLisenter() {
+        mOnItemClickListener = new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 PoiItem poiItem = mList.get(position);
@@ -151,7 +151,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         };
-        mSearchAddressAdapter.setOnItemClickLisenter(mOnItemClickLisenter);
+        mSearchAddressAdapter.setOnItemClickLisenter(mOnItemClickListener);
 
         mOnPoiSearchListener = new PoiSearch.OnPoiSearchListener() {
             @Override

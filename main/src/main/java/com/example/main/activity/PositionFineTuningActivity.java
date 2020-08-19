@@ -45,7 +45,7 @@ import com.amap.api.services.poisearch.PoiSearch;
 import com.example.commonlib.base.BaseActivity;
 import com.example.main.R;
 import com.example.main.adapter.AddressAdapter;
-import com.example.main.lisenter.OnItemClickLisenter;
+import com.example.main.listener.OnItemClickListener;
 import com.example.main.utils.DataConversionUtils;
 import com.example.main.utils.DatasKey;
 import com.example.main.utils.SPUtils;
@@ -274,7 +274,7 @@ public class PositionFineTuningActivity extends BaseActivity {
         };
 
         //recycleview列表监听器
-        mAddressAdapter.setOnItemClickLisenter(new OnItemClickLisenter() {
+        mAddressAdapter.setOnItemClickLisenter(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 try {

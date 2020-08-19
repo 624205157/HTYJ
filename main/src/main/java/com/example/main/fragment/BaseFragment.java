@@ -1,6 +1,7 @@
 package com.example.main.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public abstract class BaseFragment extends SupportFragment {
     protected Activity mActivity;//界面
 
     private Unbinder unbinder;
+
+    private ProgressDialog progressDialog;
 
     /**
      * 当视图被加载到Activity中时候调用
@@ -207,5 +210,45 @@ public abstract class BaseFragment extends SupportFragment {
 //        BaseFragment fragment = (BaseFragment) getTopChildFragment();
 //        fragment.onActivityResult(requestCode, resultCode, data);
 //    }
+
+    /**
+     * 加载框
+     */
+    public void buildDialog(String msg) {
+        if (TextUtils.isEmpty(msg)){
+            msg = "加载中...";
+        }
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        progressDialog.setMessage(msg);
+        progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+    }
+
+    /**
+     * @Description: TODO 取消加载框
+     * @author Sunday
+     * @date 2015年12月25日
+     */
+    public void cancelDialog() {
+        new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (Exception e) {
+// TODO: handle exception
+                } finally {
+                    if (progressDialog != null)
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                }
+            }
+        }.start();
+
+    }
 
 }

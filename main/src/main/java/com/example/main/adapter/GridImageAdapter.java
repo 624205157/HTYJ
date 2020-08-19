@@ -14,13 +14,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.main.R;
+import com.example.main.listener.DelCallBackListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridImageAdapter extends        RecyclerView.Adapter<GridImageAdapter.ViewHolder> {
+public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.ViewHolder> {
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
     private LayoutInflater mInflater;
@@ -34,6 +35,15 @@ public class GridImageAdapter extends        RecyclerView.Adapter<GridImageAdapt
 
     public interface onAddPicClickListener {
         void onAddPicClick();
+    }
+
+    /**
+     * 删除监听
+     */
+    private DelCallBackListener delCallBackListener;
+
+    public void setDelCallBackListener(DelCallBackListener delCallBackListener){
+        this.delCallBackListener = delCallBackListener;
     }
 
     public GridImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
@@ -104,7 +114,7 @@ public class GridImageAdapter extends        RecyclerView.Adapter<GridImageAdapt
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         //少于8张，显示继续添加的图标
         if (getItemViewType(position) == TYPE_CAMERA) {
-      //      viewHolder.mImg.setImageResource(R.drawable.addimg);
+            //      viewHolder.mImg.setImageResource(R.drawable.addimg);
             String url = "res://com.hulian.oa/" + R.drawable.addimg;
             Uri uri = Uri.parse(url);
             viewHolder.mImg.setImageURI(uri);
@@ -124,6 +134,7 @@ public class GridImageAdapter extends        RecyclerView.Adapter<GridImageAdapt
                     // 这里有时会返回-1造成数据下标越界,具体可参考getAdapterPosition()源码，
                     // 通过源码分析应该是bindViewHolder()暂未绘制完成导致，知道原因的也可联系我~感谢
                     if (index != RecyclerView.NO_POSITION) {
+                        delCallBackListener.del(index);
                         list.remove(index);
                         notifyItemRemoved(index);
                         notifyItemRangeChanged(index, list.size());
@@ -139,16 +150,16 @@ public class GridImageAdapter extends        RecyclerView.Adapter<GridImageAdapt
                 // 原图
                 path = media.getPath();
             }
-                RequestOptions options = new RequestOptions()
-                        .centerCrop()
-                        .placeholder(R.color.color_f6)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL);
-                Glide.with(viewHolder.itemView.getContext())
-                        .load(path)
-                        .apply(options)
-                        .into(viewHolder.mImg);
-            Uri uri=Uri.parse(path);
-            viewHolder.mImg.setImageURI(Uri.parse("file://"+path));
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.color.color_f6)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(viewHolder.itemView.getContext())
+                    .load(path)
+                    .apply(options)
+                    .into(viewHolder.mImg);
+            Uri uri = Uri.parse(path);
+            viewHolder.mImg.setImageURI(Uri.parse("file://" + path));
             //itemView 的点击事件
             if (mItemClickListener != null) {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +170,7 @@ public class GridImageAdapter extends        RecyclerView.Adapter<GridImageAdapt
                     }
                 });
             }
-            }
+        }
     }
 
     protected OnItemClickListener mItemClickListener;

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.services.core.PoiItem;
 import com.example.main.R;
-import com.example.main.lisenter.OnItemClickLisenter;
+import com.example.main.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.MyHolder
     private Context mContext;
     private List<PoiItem> mList;
     private int selectPosition = -1;
-    private OnItemClickLisenter mOnItemClickLisenter;
+    private OnItemClickListener mOnItemClickListener;
 
     public AddressAdapter(Context context, List<PoiItem> list) {
         this.mContext = context;
@@ -47,8 +47,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.MyHolder
         return selectPosition;
     }
 
-    public void setOnItemClickLisenter(OnItemClickLisenter onItemClickLisenter) {
-        this.mOnItemClickLisenter = onItemClickLisenter;
+    public void setOnItemClickLisenter(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -74,8 +74,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.MyHolder
             public void onClick(View view) {
                 int position = (Integer) view.getTag();
                 setSelectPosition(position);
-                if (null != mOnItemClickLisenter) {
-                    mOnItemClickLisenter.onItemClick(position);
+                if (null != mOnItemClickListener) {
+                    mOnItemClickListener.onItemClick(position);
                 }
             }
         });

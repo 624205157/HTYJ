@@ -15,8 +15,10 @@
             <option value="$PROJECT_DIR$/commonlib" />
             <option value="$PROJECT_DIR$/main" />
             <option value="$PROJECT_DIR$/map" />
+            <option value="$PROJECT_DIR$/picture_library" />
             <option value="$PROJECT_DIR$/trtcaudiocalldemo" />
             <option value="$PROJECT_DIR$/trtcvideocalldemo" />
+            <option value="$PROJECT_DIR$/ucrop" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -40,6 +40,7 @@ import com.example.main.adapter.GridImageAdapter;
 import com.example.main.bean.Enterprise;
 import com.example.main.bean.Grid;
 import com.example.main.fragment.BaseFragment;
+import com.example.main.listener.DelCallBackListener;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
 import com.example.main.utils.Utils;
@@ -118,6 +119,8 @@ public class UpdateEnterpriseActivity extends BaseActivity {
 
     private int isStart = 0;
     private Grid gridSelect;
+
+    private List<String> exist = new ArrayList<>();//删除图片
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -237,6 +240,15 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                 initSelectImage(adapter, selectList);
             }
         });
+        adapter.setDelCallBackListener(new DelCallBackListener() {
+            @Override
+            public void del(int position) {
+                if (!TextUtils.isEmpty(selectList.get(position).getUid())){
+                    exist.add(selectList.get(position).getUid());
+                }
+
+            }
+        });
         adapter.setList(selectList);
         adapter.setSelectMax(maxSelectNum);
         photoRecycler1.setAdapter(adapter);
@@ -256,6 +268,15 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             @Override
             public void onAddPicClick() {
                 initSelectImage(adapter2, selectList2);
+            }
+        });
+        adapter2.setDelCallBackListener(new DelCallBackListener() {
+            @Override
+            public void del(int position) {
+                if (!TextUtils.isEmpty(selectList2.get(position).getUid())){
+                    exist.add(selectList2.get(position).getUid());
+                }
+
             }
         });
         adapter2.setList(selectList2);
@@ -393,9 +414,11 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                         moveMap(latLng, enterprise.getAddress());
                         LocalMedia license = new LocalMedia();
                         license.setPath(enterprise.getLicense().get(0).getUrl());
+                        license.setUid(enterprise.getLicense().get(0).getUid());
                         selectList.add(license);
                         LocalMedia identity = new LocalMedia();
                         identity.setPath(enterprise.getIdentity().get(0).getUrl());
+                        identity.setUid(enterprise.getIdentity().get(0).getUid());
                         selectList2.add(identity);
 
                         adapter.setList(selectList);
@@ -446,6 +469,11 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             params.put("longitude", latLng.longitude);
             params.put("latitude", latLng.latitude);
             params.put("star", isStart);
+            String []exists  = new String[exist.size()];
+            for (int i =0;i<exist.size();i++){
+                exists[i] = exist.get(i);
+            }
+            params.put("exist", exists);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -457,6 +485,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     showToast(result.getString("msg"));
+                    finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -465,7 +494,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
 
             @Override
             public void onFailure(OkHttpException responseObj) {
-
+                showToast(responseObj.getMessage());
             }
         });
     }

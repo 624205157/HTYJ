@@ -494,7 +494,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cl"
-                android:text="录入企业信息"
+                android:text="确认修改"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:gravity="center"
