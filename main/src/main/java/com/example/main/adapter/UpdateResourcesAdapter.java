@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.main.R;
 import com.example.main.bean.Enterprise;
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by czy on 2020/8/12 12:49.
  * describe:
  */
-public class UpdateResourcesAdapter extends BaseQuickAdapter<Resources,BaseViewHolder> {
+public class UpdateResourcesAdapter extends BaseQuickAdapter<Resources,BaseViewHolder>  implements LoadMoreModule {
 
     public UpdateResourcesAdapter(List<Resources> data) {
         super(R.layout.item_resources, data);

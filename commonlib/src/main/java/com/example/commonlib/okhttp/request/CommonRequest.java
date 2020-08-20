@@ -132,7 +132,7 @@ public class CommonRequest {
 
         Request request = new Request.Builder()
                 .url(url)
-                .post(bodyBuilder.build())
+                .put(bodyBuilder.build())
                 .build();
 
         return request;

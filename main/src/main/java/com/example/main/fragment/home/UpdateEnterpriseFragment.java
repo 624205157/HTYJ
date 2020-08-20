@@ -35,7 +35,6 @@ import com.example.main.fragment.BaseFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -194,7 +193,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
         }
 
 
-        RequestCenter.getEnterpriseList(params, new DisposeDataListener() {
+        RequestCenter.getDataList(UrlService.ENTERPRISE,params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
@@ -224,18 +223,6 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
             }
         });
 
-//        for (int i = 1;i<9;i++) {
-//            Enterprise enterprise = new Enterprise();
-//            enterprise.setName("高大上企业" + i);
-//            enterprise.setAddress("海南省海口市华龙区奥术大师大大所大所奥术大师大所"+ i);
-//            enterprise.setSocialCreditCode(""+ i+ i+ i+ i+ i+ i);
-//            enterprise.setLegalPerson("dasc是"+ i);
-//            enterprise.setIsStart("是"+ i);
-//            enterprise.setLatitude(43.888824);
-//            enterprise.setLongitude(125.300985);
-//            mData.add(enterprise);
-//        }
-//
 
     }
 

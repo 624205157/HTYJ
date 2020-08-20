@@ -1,8 +1,10 @@
 package com.example.main.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -15,15 +17,27 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.chad.library.adapter.base.listener.OnLoadMoreListener;
 import com.example.commonlib.listener.CallPhoneListener;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.commonlib.view.MyDialog;
 import com.example.main.R;
 import com.example.main.R2;
-import com.example.main.adapter.UpdateEnterpriseAdapter;
+import com.example.main.RequestCenter;
+import com.example.main.UrlService;
+import com.example.main.activity.UpdateEnterpriseActivity;
+import com.example.main.activity.UpdateResourcesActivity;
 import com.example.main.adapter.UpdateResourcesAdapter;
-import com.example.main.bean.Enterprise;
+import com.example.main.bean.DeleteData;
 import com.example.main.bean.Resources;
 import com.example.main.fragment.BaseFragment;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +48,7 @@ import butterknife.BindView;
  * Created by czy on 2020/8/10 11:32.
  * describe: 维护应急资源
  */
-public class UpdateResourcesFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UpdateResourcesFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
     @BindView(R2.id.search)
     EditText search;
     @BindView(R2.id.recyclerview)
@@ -46,6 +60,8 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
     private List<Resources> mData = new ArrayList<>();
 
     Handler handler = new Handler();
+
+    private int pageNum = 0;
 
     @Override
     protected int setContentView() {
@@ -78,6 +94,7 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
 
         mAdapter = new UpdateResourcesAdapter(mData);
         mAdapter.setAnimationEnable(true);
+        mAdapter.getLoadMoreModule().setOnLoadMoreListener(this);
         mAdapter.addChildClickViewIds(R.id.navigation,R.id.update,R.id.del);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
@@ -89,7 +106,9 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
                             .navigation();
 
                 }else if (view.getId() == R.id.update) {
-                    showToast("修改");
+                    Intent intent = new Intent(getActivity(), UpdateResourcesActivity.class);
+                    intent.putExtra("id",mData.get(position).getId());
+                    startActivity(intent);
                 }if (view.getId() == R.id.del) {
                     new MyDialog(mContext)
                             .setTitleStr("提示")
@@ -99,8 +118,7 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
                                 @Override
                                 public void onClick(int var1) {
                                     if (var1 == 2){
-                                        showToast("确定删除");
-                                        adapter.remove(mData.get(position));
+                                        deleteData(mData.get(position).getId(),adapter,position);
 //                                        adapter.notifyDataSetChanged();
                                     }
                                 }
@@ -115,16 +133,43 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
 
 
         refresh.setOnRefreshListener(this);
+        getData();
+
+    }
+
+    private void deleteData(String id,BaseQuickAdapter adapter,int position){
+        DeleteData deleteData = new DeleteData(id);
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(deleteData);
 
 
+        RequestCenter.deleteData(UrlService.RESOURCE, jsonStr, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                showToast("删除成功");
+                adapter.remove(mData.get(position));
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
     SearchTask mSearchTesk = new SearchTask();
 
     @Override
     public void onRefresh() {
+        pageNum = 0;
+        mData.clear();
         getData();
         refresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onLoadMore() {
+
     }
 
     /**
@@ -139,20 +184,45 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
     }
 
     private void getData(){
-        for (int i = 1;i<9;i++) {
-            Resources enterprise = new Resources();
-            enterprise.setName("高大上企业" + i);
-            enterprise.setAddress("海南省海口市华龙区奥术大师大大所大所奥术大师大所"+ i);
-            enterprise.setType("防护用品"+ i);
-            enterprise.setTotal("18"+ i);
-            enterprise.setLatitude(43.888824);
-            enterprise.setLongitude(125.300985);
-            mData.add(enterprise);
+
+        RequestParams params = new RequestParams();
+        try {
+            params.put("pageNum",++pageNum);
+            params.put("pageable","y");
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        mAdapter.setList(mData);
+        RequestCenter.getDataList(UrlService.RESOURCE,params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    JSONObject data = result.getJSONObject("data");
 
-        mAdapter.notifyDataSetChanged();
+                    if (TextUtils.equals(result.getString("code"),"0")){
+                        mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Resources>>() {
+                        }.getType()));
+                        mAdapter.setList(mData);
+
+                        mAdapter.notifyDataSetChanged();
+
+                    }
+
+                    if (data.getInt("pages") == pageNum){
+                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
     }
 
 }

@@ -46,8 +46,8 @@ public class RequestCenter {
      * @param listener
      */
 
-    public static void getEnterpriseList(RequestParams params,DisposeDataListener listener){
-        CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.ENTERPRISE,params),new DisposeDataHandle(listener));
+    public static void getDataList(String url, RequestParams params, DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createGetRequest(url,params),new DisposeDataHandle(listener));
     }
 
     /**
@@ -105,6 +105,6 @@ public class RequestCenter {
      * @param listener
      */
     public static void addResources(RequestParams params, List<File> files, DisposeDataListener listener){
-        CommonOkHttpClient.get(CommonRequest.createMultipartRequest(UrlService.ENTERPRISE,params,files),new DisposeDataHandle(listener));
+        CommonOkHttpClient.get(CommonRequest.createMultipartRequest(UrlService.RESOURCE,params,files),new DisposeDataHandle(listener));
     }
 }

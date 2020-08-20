@@ -154,6 +154,11 @@ public class LocalMedia implements Parcelable {
 
     }
 
+    public LocalMedia(String uid, String path) {
+        this.uid = uid;
+        this.path = path;
+    }
+
     public LocalMedia(String path, long duration, int chooseModel, String mimeType) {
         this.path = path;
         this.duration = duration;
