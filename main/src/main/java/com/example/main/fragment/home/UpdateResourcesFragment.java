@@ -31,8 +31,10 @@ import com.example.main.activity.UpdateEnterpriseActivity;
 import com.example.main.activity.UpdateResourcesActivity;
 import com.example.main.adapter.UpdateResourcesAdapter;
 import com.example.main.bean.DeleteData;
+import com.example.main.bean.Enterprise;
 import com.example.main.bean.Resources;
 import com.example.main.fragment.BaseFragment;
+import com.example.main.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -78,12 +80,8 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    handler.removeCallbacks(mSearchTesk);
-                    handler.postDelayed(mSearchTesk, 500);
-                } else {
-                    handler.removeCallbacks(mSearchTesk);
-                }
+                handler.removeCallbacks(mSearchTesk);
+                handler.postDelayed(mSearchTesk, 500);
             }
 
             @Override
@@ -95,30 +93,31 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
         mAdapter = new UpdateResourcesAdapter(mData);
         mAdapter.setAnimationEnable(true);
         mAdapter.getLoadMoreModule().setOnLoadMoreListener(this);
-        mAdapter.addChildClickViewIds(R.id.navigation,R.id.update,R.id.del);
+        mAdapter.addChildClickViewIds(R.id.navigation, R.id.update, R.id.del);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.navigation) {
                     showToast("导航");
                     ARouter.getInstance().build("/map/navigation")
-                            .withParcelable("address",mData.get(position).getPoint())
+                            .withParcelable("address", mData.get(position).getPoint())
                             .navigation();
 
-                }else if (view.getId() == R.id.update) {
+                } else if (view.getId() == R.id.update) {
                     Intent intent = new Intent(getActivity(), UpdateResourcesActivity.class);
-                    intent.putExtra("id",mData.get(position).getId());
+                    intent.putExtra("id", mData.get(position).getId());
                     startActivity(intent);
-                }if (view.getId() == R.id.del) {
+                }
+                if (view.getId() == R.id.del) {
                     new MyDialog(mContext)
                             .setTitleStr("提示")
                             .setMessageStr("您确定要删除吗?")
-                            .setButtonText("取消","确定")
+                            .setButtonText("取消", "确定")
                             .setClickListener(new CallPhoneListener() {
                                 @Override
                                 public void onClick(int var1) {
-                                    if (var1 == 2){
-                                        deleteData(mData.get(position).getId(),adapter,position);
+                                    if (var1 == 2) {
+                                        deleteData(mData.get(position).getId(), adapter, position);
 //                                        adapter.notifyDataSetChanged();
                                     }
                                 }
@@ -137,7 +136,7 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
 
     }
 
-    private void deleteData(String id,BaseQuickAdapter adapter,int position){
+    private void deleteData(String id, BaseQuickAdapter adapter, int position) {
         DeleteData deleteData = new DeleteData(id);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(deleteData);
@@ -169,7 +168,7 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
 
     @Override
     public void onLoadMore() {
-
+        getData();
     }
 
     /**
@@ -179,28 +178,42 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
 
         @Override
         public void run() {
-            showToast("搜索" + search.getText().toString());
+            String searchStr = search.getText().toString();
+            if (!TextUtils.isEmpty(searchStr)) {
+                RequestParams params = new RequestParams();
+                if (Utils.isContainChinese(searchStr)) {
+                    params.put("name", searchStr);
+                } else {
+                    params.put("sc_code", searchStr);
+                }
+                params.put("pageable", "n");
+                getSearch(params);
+            } else {
+                pageNum = 0;
+                mData.clear();
+                getData();
+            }
         }
     }
 
-    private void getData(){
+    private void getData() {
 
         RequestParams params = new RequestParams();
         try {
-            params.put("pageNum",++pageNum);
-            params.put("pageable","y");
-        }catch (Exception e){
+            params.put("pageNum", ++pageNum);
+            params.put("pageable", "y");
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        RequestCenter.getDataList(UrlService.RESOURCE,params, new DisposeDataListener() {
+        RequestCenter.getDataList(UrlService.RESOURCE, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     JSONObject data = result.getJSONObject("data");
 
-                    if (TextUtils.equals(result.getString("code"),"0")){
+                    if (TextUtils.equals(result.getString("code"), "0")) {
                         mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Resources>>() {
                         }.getType()));
                         mAdapter.setList(mData);
@@ -209,7 +222,7 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
 
                     }
 
-                    if (data.getInt("pages") == pageNum){
+                    if (data.getInt("pages") == pageNum) {
                         mAdapter.getLoadMoreModule().setEnableLoadMore(false);
                     }
                 } catch (JSONException e) {
@@ -223,6 +236,34 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
             }
         });
 
+    }
+
+    private void getSearch(RequestParams params) {
+        mData.clear();
+        RequestCenter.getDataList(UrlService.RESOURCE, params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        mData.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Resources>>() {
+                        }.getType()));
+                        mAdapter.setList(mData);
+                        mAdapter.notifyDataSetChanged();
+                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
 }
