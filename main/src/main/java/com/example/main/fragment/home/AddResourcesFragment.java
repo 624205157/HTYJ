@@ -3,11 +3,10 @@ package com.example.main.fragment.home;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -28,13 +27,21 @@ import com.amap.api.services.core.PoiItem;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
 import com.example.main.activity.PositionFineTuningActivity;
 import com.example.main.adapter.GridImageAdapter;
+import com.example.main.bean.Grid;
 import com.example.main.fragment.BaseFragment;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
+import com.example.main.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -42,6 +49,8 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +60,7 @@ import butterknife.OnClick;
 
 /**
  * Created by czy on 2020/8/10 11:30.
- * describe: 新增企业信息
+ * describe: 新增应急资源
  */
 public class AddResourcesFragment extends BaseFragment {
 
@@ -75,10 +84,15 @@ public class AddResourcesFragment extends BaseFragment {
     @BindView(R2.id.location_text)
     TextView locationText;
 
+
     private OptionsPickerView reasonPicker;
     private OptionsPickerView reasonPicker2;
-    List<String> reasonlist = new ArrayList<>();
-    List<String> reasonlist2 = new ArrayList<>();
+    private List<String> typeNameList = new ArrayList<>();
+    private List<String> gridNameList = new ArrayList<>();
+    private List<Grid> gridList = new ArrayList<>();
+    private List<Grid> typeList = new ArrayList<>();
+    private Grid gridSelect = new Grid();
+    private Grid typeSelect = new Grid();
 
     private GridImageAdapter adapter;
     //已经选择图片
@@ -89,6 +103,7 @@ public class AddResourcesFragment extends BaseFragment {
     AMap aMap = null;
 
     private boolean isLocation = false;
+    private LatLng latLng;
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -99,7 +114,7 @@ public class AddResourcesFragment extends BaseFragment {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     aMap.clear();
-                    LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+                    latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
                     locationText.setText("经度:" + aMapLocation.getLongitude() + " 纬度:" + aMapLocation.getLatitude());
                     address.setText(aMapLocation.getAddress());
                     aMap.addMarker(new MarkerOptions().position(latLng));
@@ -159,6 +174,8 @@ public class AddResourcesFragment extends BaseFragment {
 
         //初始化网格归属列表
         initGridList();
+
+        buildDialog("");
     }
 
     @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.cl,R2.id.type})
@@ -170,10 +187,12 @@ public class AddResourcesFragment extends BaseFragment {
         } else if (id == R.id.position_fine_tuning) {
             startActivityForResult(new Intent(mActivity, PositionFineTuningActivity.class), 0x100);
         } else if (id == R.id.grid) {
+            if (reasonPicker2!=null)
             reasonPicker2.show();
-        } else if (id == R.id.cl) {
-
+        } else if (id == R.id.submit) {
+            sendData();
         } else if (id == R.id.type) {
+            if (reasonPicker!=null)
             reasonPicker.show();
         }
     }
@@ -264,7 +283,7 @@ public class AddResourcesFragment extends BaseFragment {
                     PoiItem poiItem = data.getExtras().getParcelable("address");
 
                     aMap.clear();
-                    LatLng latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
+                    latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
                     locationText.setText("经度:" + poiItem.getLatLonPoint().getLongitude() + " 纬度:" + poiItem.getLatLonPoint().getLatitude());
                     address.setText(poiItem.getTitle());
                     aMap.addMarker(new MarkerOptions().position(latLng));
@@ -296,41 +315,123 @@ public class AddResourcesFragment extends BaseFragment {
                 });
     }
 
+    private void sendData() {
+        if (TextUtils.isEmpty(name.getText())) {
+            showToast("资源名不可为空");
+            return;
+        }
+        RequestParams params = new RequestParams();
+        try {
+            params.put("name", Utils.getText(name));
+            params.put("category_id", typeSelect.getId());
+            params.put("address", Utils.getText(address));
+            params.put("total", Utils.getText(total));
+            params.put("surplus", Utils.getText(remain));
+            params.put("longitude", latLng.longitude + "");
+            params.put("latitude", latLng.latitude+ "");
+            params.put("grid_id", gridSelect.getId());
+            params.put("grid_name", gridSelect.getName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        RequestCenter.addResources(params, Utils.getFileList(selectList), new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    showToast(result.getString("msg"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+                showToast(responseObj.getMessage());
+            }
+        });
+    }
     /**
      * 初始化网格归属
      */
     private void initGridList(){
-        reasonlist.add("类别1");
-        reasonlist.add("类别2");
-        reasonlist.add("类别33");
-        reasonlist.add("类别44");
-        reasonlist.add("类别55");
-        reasonlist.add("类别66");
-        reasonlist.add("类别77");
-        reasonlist.add("类别88");
-        reasonPicker = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                type.setText(reasonlist.get(options1));
-            }
-        }).setTitleText("资源种类").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-        reasonPicker.setPicker(reasonlist);
 
-        reasonlist2.add("网格1");
-        reasonlist2.add("网格2");
-        reasonlist2.add("网格33");
-        reasonlist2.add("网格44");
-        reasonlist2.add("网格55");
-        reasonlist2.add("网格66");
-        reasonlist2.add("网格77");
-        reasonlist2.add("网格88");
-        reasonPicker2 = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+        RequestCenter.getGrid(null, new DisposeDataListener() {
             @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                grid.setText(reasonlist2.get(options1));
+            public void onSuccess(Object responseObj) {
+                cancelDialog();
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (result.getInt("code") == 0) {
+//                        JSONObject data = result.getJSONObject("data");
+                        gridList.clear();
+                        gridList.addAll(new Gson().fromJson(result.getString("data"),new TypeToken<List<Grid>>(){}.getType()));
+                        typeNameList.clear();
+                        for (Grid grid:gridList){
+                            typeNameList.add(grid.getName());
+                        }
+                        reasonPicker2 = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+                            @Override
+                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                                gridSelect = gridList.get(options1);
+                                grid.setText(gridSelect.getName());
+                            }
+                        }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+                        reasonPicker2.setPicker(typeNameList);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-        reasonPicker2.setPicker(reasonlist2);
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
+        RequestParams params = new RequestParams();
+        params.put("pid","EMERGENCY_RESOURCE_TYPE");//资源种类
+        RequestCenter.getType(params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                cancelDialog();
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (result.getInt("code") == 0) {
+//                        JSONObject data = result.getJSONObject("data");
+                        typeList.clear();
+                        typeList.addAll(new Gson().fromJson(result.getString("data"),new TypeToken<List<Grid>>(){}.getType()));
+                        gridNameList.clear();
+                        for (Grid grid: typeList){
+                            gridNameList.add(grid.getName());
+                        }
+                        reasonPicker = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+                            @Override
+                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                                typeSelect = typeList.get(options1);
+                                type.setText(typeSelect.getName());
+                            }
+                        }).setTitleText("资源种类").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+                        reasonPicker.setPicker(gridNameList);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
     @Override

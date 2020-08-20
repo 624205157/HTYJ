@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +24,18 @@ public class Utils {
     public static File getFile(List<LocalMedia> list){
         try {
             return new File(list.get(0).getPath());
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    public static List<File> getFileList(List<LocalMedia> list){
+        try {
+            List<File> fileList = new ArrayList<>();
+            for (LocalMedia localMedia:list){
+                fileList.add(new File(localMedia.getPath()));
+            }
+            return fileList;
         }catch (Exception e){
             return null;
         }

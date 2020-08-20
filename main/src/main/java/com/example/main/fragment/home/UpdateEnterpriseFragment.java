@@ -29,11 +29,13 @@ import com.example.main.RequestCenter;
 import com.example.main.UrlService;
 import com.example.main.activity.UpdateEnterpriseActivity;
 import com.example.main.adapter.UpdateEnterpriseAdapter;
+import com.example.main.bean.DeleteData;
 import com.example.main.bean.Enterprise;
 import com.example.main.fragment.BaseFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -117,8 +119,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
                                 @Override
                                 public void onClick(int var1) {
                                     if (var1 == 2) {
-                                        showToast("确定删除");
-                                        adapter.remove(mData.get(position));
+                                        deleteData(mData.get(position).getId(),adapter,position);
 //                                        adapter.notifyDataSetChanged();
                                     }
                                 }
@@ -135,6 +136,26 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
         refresh.setOnRefreshListener(this);
         getData();
 
+    }
+
+    private void deleteData(String id,BaseQuickAdapter adapter,int position){
+        DeleteData deleteData = new DeleteData(id);
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(deleteData);
+
+
+        RequestCenter.deleteData(UrlService.ENTERPRISE, jsonStr, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                showToast("删除成功");
+                adapter.remove(mData.get(position));
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
     SearchTask mSearchTesk = new SearchTask();

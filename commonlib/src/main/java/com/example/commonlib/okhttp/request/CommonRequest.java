@@ -84,6 +84,19 @@ public class CommonRequest {
         return new Request.Builder().url(url).post(requestBody).build();
     }
 
+    /**
+     * 创建delete请求的Request
+     *
+     * @param url
+     * @param jsonStr
+     * @return 通过传入的参数返回一个Get类型的请求
+     */
+    public static Request createDeleteRequest(String url, String jsonStr) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+        return new Request.Builder().url(url).delete(requestBody).build();
+
+    }
+
 
     /**
      * 混合form和图片

@@ -10,6 +10,7 @@ import com.example.commonlib.okhttp.request.CommonRequest;
 import com.example.commonlib.okhttp.request.RequestParams;
 
 import java.io.File;
+import java.util.List;
 
 import static com.example.main.UrlService.LOGIN;
 import static com.example.main.UrlService.REGISTER;
@@ -23,7 +24,6 @@ public class RequestCenter {
 
     /**
      * 登录账号
-     * @param params
      * @param listener
      */
     public static void requestLogin(String jsonStr, DisposeDataListener listener){
@@ -34,7 +34,6 @@ public class RequestCenter {
 
     /**
      * 注册账号
-     * @param params
      * @param listener
      */
     public static void requestRegister(String jsonStr, DisposeDataListener listener){
@@ -60,7 +59,7 @@ public class RequestCenter {
         CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.DICTIONARY,params),new DisposeDataHandle(listener));
     }
   /**
-     * 获取字典
+     * 获取字典 网格
      * @param listener
      */
 
@@ -68,10 +67,27 @@ public class RequestCenter {
         CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.GRID,params),new DisposeDataHandle(listener));
     }
 
+    /**
+     * 获取字典 类别
+     * @param listener
+     */
+
+    public static void getType(RequestParams params,DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.TYPE,params),new DisposeDataHandle(listener));
+    }
+ /**
+     * 删除企业
+     * @param listener
+     */
+
+    public static void deleteData(String url,String jsonStr,DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createDeleteRequest(url,jsonStr),new DisposeDataHandle(listener));
+    }
+
+
 
     /**
      * 新增/修改 企业
-     * @param url
      * @param params
      * @param file1
      * @param file2
@@ -79,5 +95,16 @@ public class RequestCenter {
      */
     public static void addEnterprise(RequestParams params, File file1,File file2, DisposeDataListener listener){
         CommonOkHttpClient.get(CommonRequest.createMultipartRequest2(UrlService.ENTERPRISE,params,file1,file2),new DisposeDataHandle(listener));
+    }
+
+    /**
+     * 新增/修改 应急资源
+     * @param params
+     * @param file1
+     * @param file2
+     * @param listener
+     */
+    public static void addResources(RequestParams params, List<File> files, DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createMultipartRequest(UrlService.ENTERPRISE,params,files),new DisposeDataHandle(listener));
     }
 }

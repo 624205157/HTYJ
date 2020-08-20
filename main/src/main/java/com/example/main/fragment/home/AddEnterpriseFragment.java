@@ -98,8 +98,9 @@ public class AddEnterpriseFragment extends BaseFragment {
     Switch isKeyEnterprises;
 
     private OptionsPickerView reasonPicker;
-    List<Grid> gridList = new ArrayList<>();
-    List<String> gridNameList = new ArrayList<>();
+    private List<Grid> gridList = new ArrayList<>();
+    private List<String> gridNameList = new ArrayList<>();
+    private Grid gridSelect = new Grid();
 
     private GridImageAdapter adapter;
     private GridImageAdapter adapter2;
@@ -116,7 +117,7 @@ public class AddEnterpriseFragment extends BaseFragment {
     private LatLng latLng;
 
     private int isStart = 0;
-    private Grid gridSelect = new Grid();
+
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -385,20 +386,6 @@ public class AddEnterpriseFragment extends BaseFragment {
         }
 
 
-//        Enterprise enterprise = new Enterprise();
-//        enterprise.setName(Utils.getText(name));
-//        enterprise.setSocialCreditCode(Utils.getText(enterpriseCode));
-//        enterprise.setAddress(Utils.getText(address));
-//        enterprise.setTel(Utils.getText(tel));
-//        enterprise.setFax(Utils.getText(fax));
-//        enterprise.setLegalPerson(Utils.getText(legalPerson));
-//        enterprise.setLegalPersonTel(Utils.getText(legalPersonTel));
-//        enterprise.setLongitude(latLng.longitude);
-//        enterprise.setLatitude(latLng.latitude);
-//        enterprise.setIsStart(isStart);
-//
-//        Gson gson = new Gson();
-//        String jsonStr = gson.toJson(enterprise);
 
         RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList2), new DisposeDataListener() {
             @Override
