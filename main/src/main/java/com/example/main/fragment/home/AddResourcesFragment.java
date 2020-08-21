@@ -178,7 +178,7 @@ public class AddResourcesFragment extends BaseFragment {
         buildDialog("");
     }
 
-    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.cl,R2.id.type})
+    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.submit,R2.id.type})
     public void onViewClicked(View view) {
 
         int id = view.getId();
@@ -199,7 +199,7 @@ public class AddResourcesFragment extends BaseFragment {
 
     private void init() {
 
-        FullyGridLayoutManager manager = new FullyGridLayoutManager(mContext, 4, GridLayoutManager.VERTICAL, false);
+        FullyGridLayoutManager manager = new FullyGridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false);
         photoRecycler1.setLayoutManager(manager);
         adapter = new GridImageAdapter(mContext, new GridImageAdapter.onAddPicClickListener() {
             @Override
@@ -330,7 +330,7 @@ public class AddResourcesFragment extends BaseFragment {
             params.put("longitude", latLng.longitude + "");
             params.put("latitude", latLng.latitude+ "");
             params.put("grid_id", gridSelect.getId());
-            params.put("grid_name", gridSelect.getName());
+//            params.put("grid_name", gridSelect.getName());
 
         } catch (Exception e) {
             e.printStackTrace();

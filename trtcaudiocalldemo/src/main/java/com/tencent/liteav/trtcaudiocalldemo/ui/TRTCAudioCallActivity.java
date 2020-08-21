@@ -105,6 +105,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    stopPlayFromRawFile();//结束响铃
                     showCallingView();
                     TRTCAudioLayout layout = mLayoutManagerTRTC.findAudioCallLayout(userId);
                     if (layout != null) {
@@ -304,6 +305,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         mITRTCAudioCall.removeListener(mTRTCAudioCallListener);
         stopTimeCount();
         mTimeHandlerThread.quit();
+        stopPlayFromRawFile();//结束响铃
     }
 
     private void initListener() {
@@ -594,4 +596,6 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         }
         mPlayer = null;
     }
+
+
 }

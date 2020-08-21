@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.main.R;
-import com.example.main.listener.DelCallBackListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.luck.picture.lib.entity.LocalMedia;
 
@@ -37,14 +36,6 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
         void onAddPicClick();
     }
 
-    /**
-     * 删除监听
-     */
-    private DelCallBackListener delCallBackListener;
-
-    public void setDelCallBackListener(DelCallBackListener delCallBackListener){
-        this.delCallBackListener = delCallBackListener;
-    }
 
     public GridImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
         this.context = context;
@@ -134,7 +125,6 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
                     // 这里有时会返回-1造成数据下标越界,具体可参考getAdapterPosition()源码，
                     // 通过源码分析应该是bindViewHolder()暂未绘制完成导致，知道原因的也可联系我~感谢
                     if (index != RecyclerView.NO_POSITION) {
-                        delCallBackListener.del(index);
                         list.remove(index);
                         notifyItemRemoved(index);
                         notifyItemRangeChanged(index, list.size());
@@ -158,8 +148,8 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
                     .load(path)
                     .apply(options)
                     .into(viewHolder.mImg);
-            Uri uri = Uri.parse(path);
-            viewHolder.mImg.setImageURI(Uri.parse("file://" + path));
+//            Uri uri = Uri.parse(path);
+//            viewHolder.mImg.setImageURI(Uri.parse("file://" + path));
             //itemView 的点击事件
             if (mItemClickListener != null) {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

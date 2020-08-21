@@ -224,7 +224,7 @@ public class AddEnterpriseFragment extends BaseFragment {
 
     private void init() {
 
-        FullyGridLayoutManager manager = new FullyGridLayoutManager(mContext, 4, GridLayoutManager.VERTICAL, false);
+        FullyGridLayoutManager manager = new FullyGridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false);
         photoRecycler1.setLayoutManager(manager);
         adapter = new GridImageAdapter(mContext, new GridImageAdapter.onAddPicClickListener() {
             @Override
@@ -245,7 +245,7 @@ public class AddEnterpriseFragment extends BaseFragment {
                         .openExternalPreview(position, selectList);
             }
         });
-        FullyGridLayoutManager manager2 = new FullyGridLayoutManager(mContext, 4, GridLayoutManager.VERTICAL, false);
+        FullyGridLayoutManager manager2 = new FullyGridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false);
         photoRecycler2.setLayoutManager(manager2);
         adapter2 = new GridImageAdapter(mContext, new GridImageAdapter.onAddPicClickListener() {
             @Override

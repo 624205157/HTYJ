@@ -32,10 +32,10 @@ import com.example.main.adapter.UpdateEnterpriseAdapter;
 import com.example.main.bean.DeleteData;
 import com.example.main.bean.Enterprise;
 import com.example.main.fragment.BaseFragment;
+import com.example.main.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,12 +78,8 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    handler.removeCallbacks(mSearchTesk);
-                    handler.postDelayed(mSearchTesk, 500);
-                } else {
-                    handler.removeCallbacks(mSearchTesk);
-                }
+                handler.removeCallbacks(mSearchTesk);
+                handler.postDelayed(mSearchTesk, 1000);
             }
 
             @Override
@@ -107,7 +103,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
 
                 } else if (view.getId() == R.id.update) {
                     Intent intent = new Intent(getActivity(), UpdateEnterpriseActivity.class);
-                    intent.putExtra("id",mData.get(position).getId());
+                    intent.putExtra("id", mData.get(position).getId());
                     startActivity(intent);
                 }
                 if (view.getId() == R.id.del) {
@@ -119,7 +115,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
                                 @Override
                                 public void onClick(int var1) {
                                     if (var1 == 2) {
-                                        deleteData(mData.get(position).getId(),adapter,position);
+                                        deleteData(mData.get(position).getId(), adapter, position);
 //                                        adapter.notifyDataSetChanged();
                                     }
                                 }
@@ -138,7 +134,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
 
     }
 
-    private void deleteData(String id,BaseQuickAdapter adapter,int position){
+    private void deleteData(String id, BaseQuickAdapter adapter, int position) {
         DeleteData deleteData = new DeleteData(id);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(deleteData);
@@ -180,28 +176,46 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
 
         @Override
         public void run() {
-            showToast("搜索" + search.getText().toString());
+
+
+            String searchStr = search.getText().toString();
+            if (!TextUtils.isEmpty(searchStr)) {
+                RequestParams params = new RequestParams();
+                if (Utils.isContainChinese(searchStr)) {
+                    params.put("name", searchStr);
+                } else {
+                    params.put("sc_code", searchStr);
+                }
+                params.put("pageable", "n");
+                getSearch(params);
+            } else {
+                pageNum = 0;
+                mData.clear();
+                getData();
+            }
+
+
         }
     }
 
     private void getData() {
         RequestParams params = new RequestParams();
         try {
-            params.put("pageNum",++pageNum);
-            params.put("pageable","y");
-        }catch (Exception e){
+            params.put("pageNum", ++pageNum);
+            params.put("pageable", "y");
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        RequestCenter.getEnterpriseList(params, new DisposeDataListener() {
+        RequestCenter.getDataList(UrlService.ENTERPRISE, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     JSONObject data = result.getJSONObject("data");
 
-                    if (TextUtils.equals(result.getString("code"),"0")){
+                    if (TextUtils.equals(result.getString("code"), "0")) {
                         mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Enterprise>>() {
                         }.getType()));
                         mAdapter.setList(mData);
@@ -210,7 +224,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
 
                     }
 
-                    if (data.getInt("pages") == pageNum){
+                    if (data.getInt("pages") == pageNum) {
                         mAdapter.getLoadMoreModule().setEnableLoadMore(false);
                     }
                 } catch (JSONException e) {
@@ -224,19 +238,35 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
             }
         });
 
-//        for (int i = 1;i<9;i++) {
-//            Enterprise enterprise = new Enterprise();
-//            enterprise.setName("高大上企业" + i);
-//            enterprise.setAddress("海南省海口市华龙区奥术大师大大所大所奥术大师大所"+ i);
-//            enterprise.setSocialCreditCode(""+ i+ i+ i+ i+ i+ i);
-//            enterprise.setLegalPerson("dasc是"+ i);
-//            enterprise.setIsStart("是"+ i);
-//            enterprise.setLatitude(43.888824);
-//            enterprise.setLongitude(125.300985);
-//            mData.add(enterprise);
-//        }
-//
 
+    }
+
+    private void getSearch(RequestParams params) {
+        mData.clear();
+        RequestCenter.getDataList(UrlService.ENTERPRISE, params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        mData.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Enterprise>>() {
+                        }.getType()));
+                        mAdapter.setList(mData);
+                        mAdapter.notifyDataSetChanged();
+                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
 }

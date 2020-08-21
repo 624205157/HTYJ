@@ -174,7 +174,7 @@ public class ReportEventActivity extends BaseActivity {
 
     private void init() {
 
-        FullyGridLayoutManager manager = new FullyGridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
+        FullyGridLayoutManager manager = new FullyGridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
         photoRecycler1.setLayoutManager(manager);
         adapter = new GridImageAdapter(this, new GridImageAdapter.onAddPicClickListener() {
             @Override

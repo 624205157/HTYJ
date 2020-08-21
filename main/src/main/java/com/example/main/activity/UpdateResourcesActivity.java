@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -38,8 +36,9 @@ import com.example.main.R2;
 import com.example.main.RequestCenter;
 import com.example.main.UrlService;
 import com.example.main.adapter.GridImageAdapter;
-import com.example.main.bean.Enterprise;
 import com.example.main.bean.Grid;
+import com.example.main.bean.ImageList;
+import com.example.main.bean.Resources;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
 import com.example.main.utils.Utils;
@@ -64,60 +63,50 @@ import butterknife.OnClick;
 
 /**
  * Created by czy on 2020/8/10 11:30.
- * describe: 修改企业信息
+ * describe: 更新应急资源
  */
-public class UpdateEnterpriseActivity extends BaseActivity {
+public class UpdateResourcesActivity  extends BaseActivity {
 
 
     @BindView(R2.id.map)
     MapView map;
     @BindView(R2.id.name)
     EditText name;
-    @BindView(R2.id.enterprise_code)
-    EditText enterpriseCode;
+    @BindView(R2.id.type)
+    TextView type;
     @BindView(R2.id.address)
     TextView address;
-    @BindView(R2.id.tel)
-    EditText tel;
-    @BindView(R2.id.fax)
-    EditText fax;
-    @BindView(R2.id.legal_person)
-    EditText legalPerson;
-    @BindView(R2.id.legal_person_tel)
-    EditText legalPersonTel;
-    @BindView(R2.id.key_enterprises)
-    TextView keyEnterprises;
+    @BindView(R2.id.total)
+    EditText total;
+    @BindView(R2.id.remain)
+    EditText remain;
     @BindView(R2.id.grid)
     TextView grid;
     @BindView(R2.id.photo_recycler1)
     RecyclerView photoRecycler1;
-    @BindView(R2.id.photo_recycler2)
-    RecyclerView photoRecycler2;
     @BindView(R2.id.location_text)
     TextView locationText;
-    @BindView(R2.id.is_key_enterprises)
-    Switch isKeyEnterprises;
+
 
     private OptionsPickerView reasonPicker;
-    List<Grid> gridList = new ArrayList<>();
-    List<String> gridSelectList = new ArrayList<>();
+    private OptionsPickerView reasonPicker2;
+    private List<String> typeNameList = new ArrayList<>();
+    private List<String> gridNameList = new ArrayList<>();
+    private List<Grid> gridList = new ArrayList<>();
+    private List<Grid> typeList = new ArrayList<>();
+    private Grid gridSelect = new Grid();
+    private Grid typeSelect = new Grid();
 
     private GridImageAdapter adapter;
-    private GridImageAdapter adapter2;
     //已经选择图片
     private List<LocalMedia> selectList = new ArrayList<>();
-    private List<LocalMedia> selectList2 = new ArrayList<>();
     //照片选择最大值
-    private int maxSelectNum = 1;
+    private int maxSelectNum = 3;
 
     AMap aMap = null;
 
     private boolean isLocation = false;
-
     private LatLng latLng;
-
-    private int isStart = 0;
-    private Grid gridSelect = new Grid();
 
 
     //声明AMapLocationClient类对象
@@ -153,16 +142,15 @@ public class UpdateEnterpriseActivity extends BaseActivity {
     //声明AMapLocationClientOption对象
     public AMapLocationClientOption mLocationOption = null;
 
-
     @Override
     protected int setContentView() {
-        return R.layout.activity_add_enterprise;
+        return R.layout.activity_add_resourses;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
         addBack();
-        setTitleText("企业信息变更");
+        setTitleText("资源信息变更");
 
         map.onCreate(savedInstanceState);// 此方法必须重写
 
@@ -184,7 +172,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
 
         //获取最近3s内精度最高的一次定位结果：
 //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会，默认为false。
-//        mLocationOption.setOnceLocationLatest(true);
+        mLocationOption.setOnceLocationLatest(true);
 
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
@@ -194,18 +182,6 @@ public class UpdateEnterpriseActivity extends BaseActivity {
         init();
 
 
-        isKeyEnterprises.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    isStart = 1;
-                    keyEnterprises.setText("是");
-                } else {
-                    isStart = 0;
-                    keyEnterprises.setText("否");
-                }
-            }
-        });
 
         //初始化网格归属列表
         initGridList();
@@ -214,18 +190,22 @@ public class UpdateEnterpriseActivity extends BaseActivity {
     }
 
 
-    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.submit})
+    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.submit,R2.id.type})
     public void onViewClicked(View view) {
 
         int id = view.getId();
         if (id == R.id.relocation) {
             getPermission();
         } else if (id == R.id.position_fine_tuning) {
-            startActivityForResult(new Intent(this, PositionFineTuningActivity.class), 0x100);
+            startActivityForResult(new Intent(UpdateResourcesActivity.this, PositionFineTuningActivity.class), 0x100);
         } else if (id == R.id.grid) {
-            reasonPicker.show();
+            if (reasonPicker2!=null)
+            reasonPicker2.show();
         } else if (id == R.id.submit) {
             sendData();
+        } else if (id == R.id.type) {
+            if (reasonPicker!=null)
+            reasonPicker.show();
         }
     }
 
@@ -246,31 +226,10 @@ public class UpdateEnterpriseActivity extends BaseActivity {
         adapter.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                PictureSelector.create(UpdateEnterpriseActivity.this)
+                PictureSelector.create(UpdateResourcesActivity.this)
                         .themeStyle(R.style.picture_default_style)
                         .imageEngine(GlideEngine.createGlideEngine())
                         .openExternalPreview(position, selectList);
-            }
-        });
-        FullyGridLayoutManager manager2 = new FullyGridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
-        photoRecycler2.setLayoutManager(manager2);
-        adapter2 = new GridImageAdapter(this, new GridImageAdapter.onAddPicClickListener() {
-            @Override
-            public void onAddPicClick() {
-                initSelectImage(adapter2, selectList2);
-            }
-        });
-        adapter2.setList(selectList2);
-        adapter2.setSelectMax(maxSelectNum);
-        photoRecycler2.setAdapter(adapter2);
-
-        adapter2.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                PictureSelector.create(UpdateEnterpriseActivity.this)
-                        .themeStyle(R.style.picture_default_style)
-                        .imageEngine(GlideEngine.createGlideEngine())
-                        .openExternalPreview(position, selectList2);
             }
         });
 
@@ -278,7 +237,6 @@ public class UpdateEnterpriseActivity extends BaseActivity {
     }
 
     private void initSelectImage(GridImageAdapter adapter, List<LocalMedia> selectList) {
-
         PictureSelector.create(this)
                 .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                 .imageEngine(GlideEngine.createGlideEngine())
@@ -338,8 +296,10 @@ public class UpdateEnterpriseActivity extends BaseActivity {
 
                     aMap.clear();
                     latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
-
-                    moveMap(latLng, poiItem.getTitle());
+                    locationText.setText("经度:" + poiItem.getLatLonPoint().getLongitude() + " 纬度:" + poiItem.getLatLonPoint().getLatitude());
+                    address.setText(poiItem.getTitle());
+                    aMap.addMarker(new MarkerOptions().position(latLng));
+                    aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18, 0, 30)));
                     break;
             }
         }
@@ -367,62 +327,57 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                 });
     }
 
-    private Enterprise enterprise;
+    private Resources resources;
 
     private void getData() {
         RequestParams params = new RequestParams();
         params.put("id", getIntent().getStringExtra("id"));
-        RequestCenter.getDataList(UrlService.ENTERPRISE, params, new DisposeDataListener() {
+        RequestCenter.getDataList(UrlService.RESOURCE,params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     if (result.getInt("code") == 0) {
                         JSONObject data = (JSONObject) result.getJSONObject("data").getJSONArray("list").get(0);
-                        enterprise = new Gson().fromJson(data.toString(), new TypeToken<Enterprise>() {
+                        resources = new Gson().fromJson(data.toString(), new TypeToken<Resources>() {
                         }.getType());
-                        name.setText(enterprise.getName());
-                        enterpriseCode.setText(enterprise.getSocialCreditCode());
+                        name.setText(resources.getName());
+                        total.setText(resources.getTotal());
+                        remain.setText(resources.getSurplus());
+                        latLng = new LatLng(resources.getLatitude(), resources.getLongitude());
+                        moveMap(latLng, resources.getAddress());
 
-                        tel.setText(enterprise.getTel());
-                        fax.setText(enterprise.getFax());
-                        legalPerson.setText(enterprise.getLegalPerson());
-                        legalPersonTel.setText(enterprise.getLegalPersonTel());
-                        if (enterprise.getIsStart() == 0) {
-                            isKeyEnterprises.setChecked(false);
-                        } else {
-                            isKeyEnterprises.setChecked(true);
+                        for (ImageList imageList :resources.getAttachments()){
+                            selectList.add(new LocalMedia(imageList.getUid(),imageList.getUrl()));
                         }
-                        latLng = new LatLng(enterprise.getLatitude(), enterprise.getLongitude());
-                        moveMap(latLng, enterprise.getAddress());
-                        LocalMedia license = new LocalMedia();
-                        license.setPath(enterprise.getLicense().get(0).getUrl());
-                        license.setUid(enterprise.getLicense().get(0).getUid());
-                        selectList.add(license);
-                        LocalMedia identity = new LocalMedia();
-                        identity.setPath(enterprise.getIdentity().get(0).getUrl());
-                        identity.setUid(enterprise.getIdentity().get(0).getUid());
-                        selectList2.add(identity);
 
                         adapter.setList(selectList);
                         adapter.notifyDataSetChanged();
 
-                        adapter2.setList(selectList2);
-                        adapter2.notifyDataSetChanged();
 
-
-                        if (TextUtils.isEmpty(enterprise.getGrid())) {
-                            return;
-                        }
-                        for (Grid grids : gridList) {
-                            if (TextUtils.equals(grids.getName(), enterprise.getGrid())) {
-                                reasonPicker.setSelectOptions(gridList.indexOf(grids));
-                                grid.setText(grids.getName());
-                                gridSelect.setName(grids.getName());
-                                gridSelect.setId(grids.getId());
-                                return;
+                        if (!TextUtils.isEmpty(resources.getGrid())) {
+                            for (Grid grids : gridList) {
+                                if (TextUtils.equals(grids.getName(), resources.getGrid())) {
+                                    reasonPicker2.setSelectOptions(gridList.indexOf(grids));
+                                    grid.setText(grids.getName());
+                                    gridSelect.setName(grids.getName());
+                                    gridSelect.setId(grids.getId());
+                                }
                             }
                         }
+
+                        if (!TextUtils.isEmpty(resources.getType())) {
+                            for (Grid grids : typeList) {
+                                if (TextUtils.equals(grids.getName(), resources.getType())) {
+                                    reasonPicker.setSelectOptions(typeList.indexOf(grids));
+                                    type.setText(grids.getName());
+                                    typeSelect.setName(grids.getName());
+                                    typeSelect.setId(grids.getId());
+                                }
+                            }
+                        }
+
                     }
 
                 } catch (Exception e) {
@@ -437,28 +392,31 @@ public class UpdateEnterpriseActivity extends BaseActivity {
         });
     }
 
+
     private void sendData() {
         if (TextUtils.isEmpty(name.getText())) {
-            showToast("用户名不可为空");
+            showToast("资源名不可为空");
             return;
         }
         RequestParams params = new RequestParams();
         try {
-            params.put("id", enterprise.getId());
+            params.put("id",resources.getId());
             params.put("name", Utils.getText(name));
-            params.put("sc_code", Utils.getText(enterpriseCode));
+            params.put("category_id", typeSelect.getId());
+            params.put("category_name", typeSelect.getName());
             params.put("address", Utils.getText(address));
-            params.put("contact_phone", Utils.getText(tel));
-            params.put("fax_number", Utils.getText(fax));
-            params.put("legal_person", Utils.getText(legalPerson));
-            params.put("legal_phone", Utils.getText(legalPersonTel));
+            params.put("total", Utils.getText(total));
+            params.put("surplus", Utils.getText(remain));
             params.put("longitude", latLng.longitude + "");
-            params.put("latitude", latLng.latitude + "");
-            params.put("star", isStart + "");
+            params.put("latitude", latLng.latitude+ "");
             params.put("grid_id", gridSelect.getId());
             params.put("grid_name", gridSelect.getName());
+
+
             String exist="";
+
             if (selectList.size()>0){
+
                 Iterator<LocalMedia> it_b=selectList.iterator();
                 while(it_b.hasNext()){
                     LocalMedia localMedia=it_b.next();
@@ -467,42 +425,19 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                         it_b.remove();
                     }
                 }
-            }
 
-            if (selectList2.size()>0){
-                Iterator<LocalMedia> it_b=selectList2.iterator();
-                while(it_b.hasNext()){
-                    LocalMedia localMedia=it_b.next();
-                    if (!TextUtils.isEmpty(localMedia.getUid())){
-                        exist+= localMedia.getUid()+",";
-                        it_b.remove();
-                    }
-                }
             }
 
 
-            params.put("exist", exist.substring(0, exist.length() - 1));
-
+            params.put("exist",exist.substring(0,exist.length()-1));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (selectList.size() > 0) {
-            for (LocalMedia localMedia : selectList) {
-                if (!TextUtils.isEmpty(localMedia.getUid())) {
-                    selectList.remove(localMedia);
-                }
-            }
-        }
-        if (selectList2.size() > 0) {
-            for (LocalMedia localMedia : selectList2) {
-                if (!TextUtils.isEmpty(localMedia.getUid())) {
-                    selectList2.remove(localMedia);
-                }
-            }
-        }
 
-        RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList2), new DisposeDataListener() {
+
+
+        RequestCenter.addResources(params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
@@ -521,35 +456,77 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             }
         });
     }
-
-
     /**
      * 初始化网格归属
      */
-    private void initGridList() {
+    private void initGridList(){
 
         RequestCenter.getGrid(null, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     if (result.getInt("code") == 0) {
 //                        JSONObject data = result.getJSONObject("data");
                         gridList.clear();
-                        gridSelectList.clear();
-                        gridList.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Grid>>() {
-                        }.getType()));
-                        for (Grid grid : gridList) {
-                            gridSelectList.add(grid.getName());
+                        gridList.addAll(new Gson().fromJson(result.getString("data"),new TypeToken<List<Grid>>(){}.getType()));
+                        typeNameList.clear();
+                        for (Grid grid:gridList){
+                            typeNameList.add(grid.getName());
                         }
-                        reasonPicker = new OptionsPickerBuilder(UpdateEnterpriseActivity.this, new OnOptionsSelectListener() {
+                        reasonPicker2 = new OptionsPickerBuilder(UpdateResourcesActivity.this, new OnOptionsSelectListener() {
                             @Override
                             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                                 gridSelect = gridList.get(options1);
                                 grid.setText(gridSelect.getName());
                             }
                         }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-                        reasonPicker.setPicker(gridSelectList);
+                        reasonPicker2.setPicker(typeNameList);
+                    }
+
+                    getTypeList();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
+
+    }
+
+    private void getTypeList(){
+        RequestParams params = new RequestParams();
+        params.put("pid","EMERGENCY_RESOURCE_TYPE");//资源种类
+        RequestCenter.getType(params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                cancelDialog();
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (result.getInt("code") == 0) {
+//                        JSONObject data = result.getJSONObject("data");
+                        typeList.clear();
+                        typeList.addAll(new Gson().fromJson(result.getString("data"),new TypeToken<List<Grid>>(){}.getType()));
+                        gridNameList.clear();
+                        for (Grid grid: typeList){
+                            gridNameList.add(grid.getName());
+                        }
+                        reasonPicker = new OptionsPickerBuilder(UpdateResourcesActivity.this, new OnOptionsSelectListener() {
+                            @Override
+                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                                typeSelect = typeList.get(options1);
+                                type.setText(typeSelect.getName());
+                            }
+                        }).setTitleText("资源种类").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+                        reasonPicker.setPicker(gridNameList);
+
                         //字典项查完再查询反显数据
                         getData();
                     }
@@ -564,9 +541,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
 
             }
         });
-
     }
-
 
     @Override
     public void onDestroy() {

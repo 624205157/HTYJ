@@ -3,6 +3,10 @@ package com.example.main.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 /**
  * Created by czy on 2020/8/13 17:27.
  * describe: 资源
@@ -12,10 +16,16 @@ public class Resources {
     private String id;
     private String name;
     private String address;
+    @SerializedName("category_name")
     private String type;
     private String total;
     private double longitude;//经度
     private double latitude;//纬度
+    private String surplus;//剩余量
+    @SerializedName("grid_name")
+    private String grid;
+
+    private List<ImageList> attachments;
 
     private Address point = new Address();
 
@@ -96,5 +106,29 @@ public class Resources {
 
     public void setPoint(Address point) {
         this.point = point;
+    }
+
+    public String getSurplus() {
+        return surplus;
+    }
+
+    public void setSurplus(String surplus) {
+        this.surplus = surplus;
+    }
+
+    public List<ImageList> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<ImageList> attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getGrid() {
+        return grid;
+    }
+
+    public void setGrid(String grid) {
+        this.grid = grid;
     }
 }
