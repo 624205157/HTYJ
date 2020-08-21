@@ -2,6 +2,9 @@ package com.tencent.liteav.trtcvideocalldemo.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -29,6 +32,7 @@ import com.tencent.liteav.trtcvideocalldemo.model.TRTCVideoCallListener;
 import com.tencent.liteav.trtcvideocalldemo.ui.videolayout.TRTCVideoLayout;
 import com.tencent.liteav.trtcvideocalldemo.ui.videolayout.TRTCVideoLayoutManager;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,11 +140,13 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
                                     videoLayout.getUserNameTv().setText(oldModel.userName);
                                 }
                             }
+                            stopPlayFromRawFile();//结束响铃
                         }
 
                         @Override
                         public void onFailed(int code, String msg) {
                             ToastUtils.showLong(getString(R.string.trtcvideocall_toast_get_user_info_fail, userId));
+                            stopPlayFromRawFile();//结束响铃
                         }
                     });
                 }
@@ -370,6 +376,8 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         //自己的资料
         mSelfModel = ProfileManager.getInstance().getUserModel();
         mCallType = intent.getIntExtra(PARAM_TYPE, TYPE_BEING_CALLED);
+
+        playFromRawFile(this);//播放铃声
         if (mCallType == TYPE_BEING_CALLED) {
             // 作为被叫
             mSponsorUserModel = (UserModel) intent.getSerializableExtra(PARAM_BEINGCALL_USER);
@@ -454,6 +462,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         mDialingLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stopPlayFromRawFile();//结束响铃
                 //2.接听电话
                 mITRTCVideoCall.accept();
                 showCallingView();
@@ -597,5 +606,51 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         public IntentParams(List<UserModel> userModels) {
             mUserModels = userModels;
         }
+    }
+
+
+    private MediaPlayer mPlayer;
+    /**
+     * 播放来电和呼出铃声
+     *
+     * @param mContext
+     */
+    private void playFromRawFile(Context mContext) {
+        //1.获取模式
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        final int ringerMode = am.getRingerMode();
+        //2.普通模式可以呼叫普通模式： AudioManager.RINGER_MODE_NORMAL 静音模式：AudioManager.RINGER_MODE_VIBRATE 震动模式：AudioManager.RINGER_MODE_SILENT
+        if (ringerMode == AudioManager.RINGER_MODE_NORMAL) {
+            try {
+                mPlayer = new MediaPlayer();
+                AssetFileDescriptor file = mContext.getResources().openRawResourceFd(R.raw.avchat_ring);
+                try {
+                    mPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(), file.getLength());
+                    file.close();
+                    if (!mPlayer.isPlaying()) {
+                        mPlayer.prepare();
+                        mPlayer.start();
+                        mPlayer.setLooping(true);//循环播放
+                    }
+                } catch (IOException e) {
+                    mPlayer = null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
+
+    }
+
+    /**
+     * 结束播放来电和呼出铃声
+     */
+    private void stopPlayFromRawFile() {
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
+        mPlayer = null;
     }
 }
