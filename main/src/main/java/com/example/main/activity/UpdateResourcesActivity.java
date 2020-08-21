@@ -437,7 +437,7 @@ public class UpdateResourcesActivity  extends BaseActivity {
 
 
 
-        RequestCenter.addResources(params, Utils.getFileList(selectList), new DisposeDataListener() {
+        RequestCenter.addUpdateData(UrlService.RESOURCE,params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {

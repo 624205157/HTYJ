@@ -3,6 +3,7 @@ package com.example.main.fragment.home;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -15,11 +16,23 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
+import com.example.main.UrlService;
 import com.example.main.adapter.EventAdapter;
 import com.example.main.bean.Event;
+import com.example.main.bean.Resources;
 import com.example.main.fragment.BaseFragment;
+import com.example.main.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +65,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
     private List<Event> mData = new ArrayList<>();
 
     Handler handler = new Handler();
+    private int pageNum = 0;
 
     @Override
     protected int setContentView() {
@@ -109,6 +123,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
         refresh.setOnRefreshListener(this);
 
+        getData();
 
     }
 
@@ -116,6 +131,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        mData.clear();
         getData();
         refresh.setRefreshing(false);
     }
@@ -127,26 +143,94 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
         @Override
         public void run() {
-            showToast("搜索" + search.getText().toString());
+            String searchStr = search.getText().toString();
+            if (!TextUtils.isEmpty(searchStr)) {
+                RequestParams params = new RequestParams();
+                if (Utils.isContainChinese(searchStr)) {
+                    params.put("name", searchStr);
+                } else {
+                    params.put("sc_code", searchStr);
+                }
+                params.put("pageable", "n");
+                getSearch(params);
+            } else {
+                pageNum = 0;
+                mData.clear();
+                getData();
+            }
         }
     }
 
     private void getData(){
-        for (int i = 1;i<9;i++) {
-            Event enterprise = new Event();
-            enterprise.setName("突发事件" + i);
-            enterprise.setAddress("海南省海口市华龙区奥术大师大大所大所奥术大师大所"+ i);
-            enterprise.setType("自然灾害"+ i);
-            enterprise.setLevel("一般"+ i);
-            enterprise.setState(state);
-            enterprise.setLatitude(43.888824);
-            enterprise.setLongitude(125.300985);
-            mData.add(enterprise);
+
+        RequestParams params = new RequestParams();
+        try {
+            params.put("pageNum", ++pageNum);
+            params.put("pageable", "y");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        mAdapter.setList(mData);
+        RequestCenter.getDataList(UrlService.EVENT, params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    JSONObject data = result.getJSONObject("data");
 
-        mAdapter.notifyDataSetChanged();
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Event>>() {
+                        }.getType()));
+                        mAdapter.setList(mData);
+
+                        mAdapter.notifyDataSetChanged();
+
+                    }
+
+                    if (data.getInt("pages") == pageNum) {
+                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
+
     }
+
+    private void getSearch(RequestParams params) {
+        mData.clear();
+        RequestCenter.getDataList(UrlService.EVENT, params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        mData.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Event>>() {
+                        }.getType()));
+                        mAdapter.setList(mData);
+                        mAdapter.notifyDataSetChanged();
+                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+    }
+
 
 }

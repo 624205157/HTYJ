@@ -33,6 +33,7 @@ import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
+import com.example.main.UrlService;
 import com.example.main.activity.PositionFineTuningActivity;
 import com.example.main.adapter.GridImageAdapter;
 import com.example.main.bean.Grid;
@@ -338,7 +339,7 @@ public class AddResourcesFragment extends BaseFragment {
 
 
 
-        RequestCenter.addResources(params, Utils.getFileList(selectList), new DisposeDataListener() {
+        RequestCenter.addUpdateData(UrlService.RESOURCE,params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {

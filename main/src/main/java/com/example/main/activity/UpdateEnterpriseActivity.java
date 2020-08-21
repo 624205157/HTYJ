@@ -376,6 +376,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
+                    cancelDialog();
                     JSONObject result = new JSONObject(responseObj.toString());
                     if (result.getInt("code") == 0) {
                         JSONObject data = (JSONObject) result.getJSONObject("data").getJSONArray("list").get(0);
@@ -442,6 +443,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             showToast("用户名不可为空");
             return;
         }
+        buildDialog("");
         RequestParams params = new RequestParams();
         try {
             params.put("id", enterprise.getId());
@@ -487,25 +489,26 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        if (selectList.size() > 0) {
-            for (LocalMedia localMedia : selectList) {
-                if (!TextUtils.isEmpty(localMedia.getUid())) {
-                    selectList.remove(localMedia);
-                }
-            }
-        }
-        if (selectList2.size() > 0) {
-            for (LocalMedia localMedia : selectList2) {
-                if (!TextUtils.isEmpty(localMedia.getUid())) {
-                    selectList2.remove(localMedia);
-                }
-            }
-        }
+//        if (selectList.size() > 0) {
+//            for (LocalMedia localMedia : selectList) {
+//                if (!TextUtils.isEmpty(localMedia.getUid())) {
+//                    selectList.remove(localMedia);
+//                }
+//            }
+//        }
+//        if (selectList2.size() > 0) {
+//            for (LocalMedia localMedia : selectList2) {
+//                if (!TextUtils.isEmpty(localMedia.getUid())) {
+//                    selectList2.remove(localMedia);
+//                }
+//            }
+//        }
 
         RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList2), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
+                    cancelDialog();
                     JSONObject result = new JSONObject(responseObj.toString());
                     showToast(result.getString("msg"));
                     finish();

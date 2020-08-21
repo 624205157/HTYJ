@@ -1,5 +1,7 @@
 package com.example.main.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by czy on 2020/8/13 20:18.
  * describe: 事件
@@ -8,9 +10,12 @@ public class Event {
 
     private String name;
     private String address;
-    private String type;
-    private String level;
-    private String state;
+    @SerializedName("category_name")
+    private String type;//事件类型
+    @SerializedName("degree_name")
+    private String level;//紧急程度
+    private String state;//1=已办结，0=处理中
+    private String content;//事件内容
 
     private double longitude;//经度
     private double latitude;//纬度
@@ -18,8 +23,7 @@ public class Event {
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
 
-    private String transactor;//处理人
-    private String time;//处理时间
+    private Processes processes;
 
     public String getName() {
         return name;
@@ -96,19 +100,19 @@ public class Event {
         this.address = address;
     }
 
-    public String getTransactor() {
-        return transactor;
+    public String getContent() {
+        return content;
     }
 
-    public void setTransactor(String transactor) {
-        this.transactor = transactor;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getTime() {
-        return time;
+    public Processes getProcesses() {
+        return processes;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setProcesses(Processes processes) {
+        this.processes = processes;
     }
 }

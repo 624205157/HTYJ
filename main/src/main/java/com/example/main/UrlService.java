@@ -13,7 +13,8 @@ public class UrlService {
     public static final String REGISTER = URL + "/User/register";
 
     public static final String ENTERPRISE = URL + "enterprise";//企业
-    public static final String RESOURCE = URL + "resource";//企业
+    public static final String RESOURCE = URL + "resource";//资源
+    public static final String EVENT = URL + "event";//事件
     public static final String DICTIONARY = URL + "system/dictionary";//字典
     public static final String GRID = URL + "grid";//网格
     public static final String TYPE = URL + "system/dictionary";//类别

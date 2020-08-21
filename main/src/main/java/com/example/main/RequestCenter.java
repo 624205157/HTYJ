@@ -104,7 +104,7 @@ public class RequestCenter {
      * @param file2
      * @param listener
      */
-    public static void addResources(RequestParams params, List<File> files, DisposeDataListener listener){
-        CommonOkHttpClient.get(CommonRequest.createMultipartRequest(UrlService.RESOURCE,params,files),new DisposeDataHandle(listener));
+    public static void addUpdateData(String url, RequestParams params, List<File> files, DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createMultipartRequest(url,params,files),new DisposeDataHandle(listener));
     }
 }

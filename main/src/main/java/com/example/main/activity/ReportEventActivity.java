@@ -3,6 +3,7 @@ package com.example.main.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -27,11 +28,19 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.example.commonlib.base.BaseActivity;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
 import com.example.main.adapter.GridImageAdapter;
+import com.example.main.bean.Grid;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
+import com.example.main.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -39,6 +48,8 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +82,13 @@ public class ReportEventActivity extends BaseActivity {
 
     private OptionsPickerView reasonPicker;
     private OptionsPickerView reasonPicker2;
-    List<String> reasonlist = new ArrayList<>();
-    List<String> reasonlist2 = new ArrayList<>();
+    private List<String> categoryNameList = new ArrayList<>();
+    private List<String> degreeNameList = new ArrayList<>();
+    private List<Grid> categoryList = new ArrayList<>();
+    private List<Grid> degreeList = new ArrayList<>();
+    private Grid category = new Grid();
+    private Grid degree = new Grid();
+
 
     private GridImageAdapter adapter;
     //已经选择图片
@@ -84,6 +100,7 @@ public class ReportEventActivity extends BaseActivity {
 
     private boolean isLocation = false;
 
+    private LatLng latLng;
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
     //声明定位回调监听器
@@ -93,7 +110,7 @@ public class ReportEventActivity extends BaseActivity {
             if (aMapLocation != null) {
                 if (aMapLocation.getErrorCode() == 0) {
                     aMap.clear();
-                    LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+                    latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
                     locationText.setText("经度:" + aMapLocation.getLongitude() + " 纬度:" + aMapLocation.getLatitude());
                     address.setText(aMapLocation.getAddress());
                     aMap.addMarker(new MarkerOptions().position(latLng));
@@ -150,7 +167,6 @@ public class ReportEventActivity extends BaseActivity {
         getPermission();
 
         init();
-
 
 
         //初始化网格归属列表
@@ -259,7 +275,7 @@ public class ReportEventActivity extends BaseActivity {
                     PoiItem poiItem = data.getExtras().getParcelable("address");
 
                     aMap.clear();
-                    LatLng latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
+                    latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
                     locationText.setText("经度:" + poiItem.getLatLonPoint().getLongitude() + " 纬度:" + poiItem.getLatLonPoint().getLatitude());
                     address.setText(poiItem.getTitle());
                     aMap.addMarker(new MarkerOptions().position(latLng));
@@ -291,36 +307,127 @@ public class ReportEventActivity extends BaseActivity {
                 });
     }
 
+    private void sendData() {
+        if (TextUtils.isEmpty(name.getText())) {
+            showToast("事件名称不可为空");
+            return;
+        }
+        RequestParams params = new RequestParams();
+        try {
+            params.put("name", Utils.getText(name));
+            params.put("address", Utils.getText(address));
+            params.put("content", Utils.getText(count));
+            params.put("category_id", category.getId());
+            params.put("category_name", category.getName());
+            params.put("degree_id", degree.getId());
+            params.put("degree_name", degree.getName());
+            params.put("longitude", latLng.longitude + "");
+            params.put("latitude", latLng.latitude + "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList), new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    showToast(result.getString("msg"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+                showToast(responseObj.getMessage());
+            }
+        });
+    }
+
     /**
      * 初始化弹框list
      */
-    private void initGridList(){
-        reasonlist.add("类别1");
-        reasonlist.add("类别2");
-        reasonlist.add("类别33");
-        reasonlist.add("类别44");
-        reasonlist.add("类别55");
-        reasonlist.add("类别66");
-        reasonlist.add("类别77");
-        reasonlist.add("类别88");
-        reasonPicker = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                type.setText(reasonlist.get(options1));
-            }
-        }).setTitleText("事件类型").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-        reasonPicker.setPicker(reasonlist);
+    private void initGridList() {
 
-        reasonlist2.add("一般");
-        reasonlist2.add("紧急");
-        reasonlist2.add("特急");
-        reasonPicker2 = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
+        RequestParams params = new RequestParams();
+        params.put("pid", "EMERGENCY_TYPE");//事件类型
+        RequestCenter.getType(params, new DisposeDataListener() {
             @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                level.setText(reasonlist2.get(options1));
+            public void onSuccess(Object responseObj) {
+                cancelDialog();
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (result.getInt("code") == 0) {
+//                        JSONObject data = result.getJSONObject("data");
+                        categoryList.clear();
+                        categoryList.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Grid>>() {
+                        }.getType()));
+                        categoryNameList.clear();
+                        for (Grid grid : categoryList) {
+                            categoryNameList.add(grid.getName());
+                        }
+                        reasonPicker = new OptionsPickerBuilder(ReportEventActivity.this, new OnOptionsSelectListener() {
+                            @Override
+                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                                category = categoryList.get(options1);
+                                type.setText(category.getName());
+                            }
+                        }).setTitleText("事件类型").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+                        reasonPicker.setPicker(categoryNameList);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }).setTitleText("紧急程度").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-        reasonPicker2.setPicker(reasonlist2);
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
+        RequestParams params2 = new RequestParams();
+        params2.put("pid", "EMERGENCY_DEGREE");//事件类型
+        RequestCenter.getType(params2, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                cancelDialog();
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (result.getInt("code") == 0) {
+//                        JSONObject data = result.getJSONObject("data");
+                        degreeList.clear();
+                        degreeList.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Grid>>() {
+                        }.getType()));
+                        degreeNameList.clear();
+                        for (Grid grid : degreeList) {
+                            degreeNameList.add(grid.getName());
+                        }
+                        reasonPicker2 = new OptionsPickerBuilder(ReportEventActivity.this, new OnOptionsSelectListener() {
+                            @Override
+                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                                degree = degreeList.get(options1);
+                                type.setText(degree.getName());
+                            }
+                        }).setTitleText("紧急程度").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+                        reasonPicker2.setPicker(degreeNameList);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
     @Override
