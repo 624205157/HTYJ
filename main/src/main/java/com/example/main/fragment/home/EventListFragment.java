@@ -1,5 +1,6 @@
 package com.example.main.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -23,6 +24,7 @@ import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
 import com.example.main.UrlService;
+import com.example.main.activity.EventDetailsActivity;
 import com.example.main.adapter.EventAdapter;
 import com.example.main.bean.Event;
 import com.example.main.bean.Resources;
@@ -111,7 +113,10 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
                             .navigation();
 
                 }else if (view.getId() == R.id.check_v) {
-
+                    Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
+                    intent.putExtra("id",mData.get(position).getId());
+                    intent.putExtra("state",mData.get(position).getState());
+                    startActivity(intent);
                 }
             }
         });

@@ -7,6 +7,7 @@ package com.example.main;
 public class UrlService {
 
     public static final String URL = " http://47.107.154.147:9001/api/";
+//    public static final String URL = " http://47.95.199.76:8899/api/";
 
 
     public static final String LOGIN = URL + "/User/login";

@@ -97,6 +97,19 @@ public class CommonRequest {
 
     }
 
+    /**
+     * 创建 patch 请求的Request
+     *
+     * @param url
+     * @param jsonStr
+     * @return 通过传入的参数返回一个Get类型的请求
+     */
+    public static Request createPatchRequest(String url, String jsonStr) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+        return new Request.Builder().url(url).patch(requestBody).build();
+
+    }
+
 
     /**
      * 混合form和图片
@@ -162,11 +175,11 @@ public class CommonRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if(license!=null) {
+        if (license != null) {
             bodyBuilder.addFormDataPart("license", license.getName(),
                     RequestBody.create(MediaType.parse("image/png"), license));
         }
-        if(identity!=null) {
+        if (identity != null) {
             bodyBuilder.addFormDataPart("identity", identity.getName(),
                     RequestBody.create(MediaType.parse("image/png"), identity));
         }

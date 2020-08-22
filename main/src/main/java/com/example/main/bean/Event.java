@@ -2,12 +2,15 @@ package com.example.main.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by czy on 2020/8/13 20:18.
  * describe: 事件
  */
 public class Event {
 
+    private String id;
     private String name;
     private String address;
     @SerializedName("category_name")
@@ -21,9 +24,11 @@ public class Event {
     private double latitude;//纬度
     private Address point = new Address();
 
+    private List<ImageList> attachments;
+
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
 
-    private Processes processes;
+    private List<Processes> processes;
 
     public String getName() {
         return name;
@@ -108,11 +113,27 @@ public class Event {
         this.content = content;
     }
 
-    public Processes getProcesses() {
+    public List<Processes> getProcesses() {
         return processes;
     }
 
-    public void setProcesses(Processes processes) {
+    public void setProcesses(List<Processes> processes) {
         this.processes = processes;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<ImageList> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<ImageList> attachments) {
+        this.attachments = attachments;
     }
 }

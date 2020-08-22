@@ -76,7 +76,7 @@ public class RequestCenter {
         CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.TYPE,params),new DisposeDataHandle(listener));
     }
  /**
-     * 删除企业
+     * 删除
      * @param listener
      */
 
@@ -100,11 +100,20 @@ public class RequestCenter {
     /**
      * 新增/修改 应急资源
      * @param params
-     * @param file1
-     * @param file2
      * @param listener
      */
     public static void addUpdateData(String url, RequestParams params, List<File> files, DisposeDataListener listener){
         CommonOkHttpClient.get(CommonRequest.createMultipartRequest(url,params,files),new DisposeDataHandle(listener));
     }
+
+    /**
+     * 更新状态
+     * @param listener
+     */
+    public static void patchData(String url, String jsonStr, DisposeDataListener listener){
+        CommonOkHttpClient.get(CommonRequest.createPatchRequest(url,jsonStr),new DisposeDataHandle(listener));
+    }
+
+
+
 }

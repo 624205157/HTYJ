@@ -21,7 +21,7 @@ import java.util.List;
  * Created by czy on 2020/8/12 12:49.
  * describe:
  */
-public class UpdateEnterpriseAdapter extends BaseQuickAdapter<Enterprise,BaseViewHolder>  implements LoadMoreModule {
+public class UpdateEnterpriseAdapter extends BaseQuickAdapter<Enterprise, BaseViewHolder> implements LoadMoreModule {
 
     public UpdateEnterpriseAdapter(List<Enterprise> data) {
         super(R.layout.item_enterprise, data);
@@ -29,14 +29,14 @@ public class UpdateEnterpriseAdapter extends BaseQuickAdapter<Enterprise,BaseVie
 
     @Override
     protected void convert(@NotNull BaseViewHolder holder, Enterprise enterprise) {
-        holder.setText(R.id.name,enterprise.getName());
-        holder.setText(R.id.address,"地址: "+enterprise.getAddress());
-        holder.setText(R.id.social_credit_code,"社会信用代码: "+enterprise.getSocialCreditCode());
-        holder.setText(R.id.legal_person,"法人: "+enterprise.getLegalPerson());
-        if (enterprise.getIsStart() == 0){
-            holder.setText(R.id.is_start,"否");
-        }else {
-            holder.setText(R.id.is_start,"是");
+        holder.setText(R.id.name, enterprise.getName());
+        holder.setText(R.id.address, "地址: " + enterprise.getAddress());
+        holder.setText(R.id.social_credit_code, "社会信用代码: " + enterprise.getSocialCreditCode());
+        holder.setText(R.id.legal_person, "法人: " + enterprise.getLegalPerson());
+        if (enterprise.getIsStart() == 0) {
+            holder.setText(R.id.is_start, "否");
+        } else {
+            holder.setText(R.id.is_start, "是");
         }
 
 
@@ -44,33 +44,34 @@ public class UpdateEnterpriseAdapter extends BaseQuickAdapter<Enterprise,BaseVie
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clear();
+                clear(enterprise);
 
-                if (enterprise.isHidden()){
+                if (enterprise.isHidden()) {
                     enterprise.setHidden(false);
-                }else {
+                } else {
                     enterprise.setHidden(true);
                 }
                 notifyDataSetChanged();
             }
         });
 
-        if (enterprise.isHidden()){
-            holder.setGone(R.id.cl_2,false);
+        if (enterprise.isHidden()) {
+            holder.setGone(R.id.cl_2, false);
             view.setBackgroundColor(Color.parseColor("#eeeeee"));
-            holder.setImageResource(R.id.hidden,R.mipmap.up_img);
-        }else {
-            holder.setGone(R.id.cl_2,true);
+            holder.setImageResource(R.id.hidden, R.mipmap.up_img);
+        } else {
+            holder.setGone(R.id.cl_2, true);
             view.setBackgroundColor(Color.parseColor("#ffffff"));
-            holder.setImageResource(R.id.hidden,R.mipmap.down_img);
+            holder.setImageResource(R.id.hidden, R.mipmap.down_img);
 
         }
 
     }
 
-    private void clear(){
-        for (Enterprise enterprise:getData()){
-            enterprise.setHidden(false);
+    private void clear(Enterprise data) {
+        for (Enterprise enterprise : getData()) {
+            if (enterprise != data)
+                enterprise.setHidden(false);
         }
     }
 

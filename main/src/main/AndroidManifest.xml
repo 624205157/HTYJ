@@ -55,8 +55,12 @@
             android:name=".activity.UpdateEnterpriseActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
- <activity
+        <activity
             android:name=".activity.UpdateResourcesActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".activity.EventDetailsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
 

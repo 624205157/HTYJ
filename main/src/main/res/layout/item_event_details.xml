@@ -2,14 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_color"
-        android:text="办结"
+        tools:text="办结"
         android:textSize="16sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/v_1"
@@ -25,7 +26,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/text_color"
         android:textSize="14sp"
-        android:text="(处理人: 管理员)"
+        tools:text="(处理人: 管理员)"
         app:layout_constraintTop_toTopOf="@+id/state"
         app:layout_constraintBottom_toBottomOf="@+id/state"
         app:layout_constraintLeft_toRightOf="@+id/state"
@@ -37,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_color"
-        android:text="2020年8月15日11:42:02"
+        tools:text="2020年8月15日11:42:02"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/state"
         app:layout_constraintLeft_toLeftOf="@+id/state"
@@ -71,6 +72,7 @@
         android:background="@color/line_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/state"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

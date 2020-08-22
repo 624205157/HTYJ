@@ -83,6 +83,7 @@
         app:layout_constraintTop_toBottomOf="@+id/deal_with_rg"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         >
 
         <TextView
@@ -107,6 +108,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="提交处理意见"
