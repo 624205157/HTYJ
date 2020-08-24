@@ -2,6 +2,8 @@ package com.example.main.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.fragment.app.Fragment;
 
@@ -23,10 +25,14 @@ import butterknife.BindView;
  * describe: 任务
  */
 public class TaskActivity extends RightTitleActivity {
-    @BindView(R2.id.tab)
-    TabLayout tabView;
     @BindView(R2.id.fragment)
     ViewPagerSlide pager;
+    @BindView(R2.id.tab)
+    RadioGroup tab;
+    @BindView(R2.id.tab_1)
+    RadioButton tab1;
+    @BindView(R2.id.tab_2)
+    RadioButton tab2;
 
 
 
@@ -56,19 +62,24 @@ public class TaskActivity extends RightTitleActivity {
         fragments.add(TaskListFragment.newInstance("0"));
         fragments.add(TaskListFragment.newInstance("1"));
 
-        titleList.add("待办事件");
-        titleList.add("已办事件");
+        tab1.setText("待办事件");
+        tab2.setText("已办事件");
 
-        for (int i = 0; i < titleList.size(); i++) {
-            tabView.addTab(tabView.newTab().setText(titleList.get(i)));
-        }
         PagerAdapter myPagerAdapter = new PagerAdapter(getSupportFragmentManager());
         myPagerAdapter.setFragments(fragments);
         myPagerAdapter.setTitles(titleList);
         pager.setAdapter(myPagerAdapter);
-        // 使用 TabLayout 和 ViewPager 相关联
-        tabView.setupWithViewPager(pager);
 
+        tab.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.tab_1) {
+                    pager.setCurrentItem(0);
+                } else if (checkedId == R.id.tab_2) {
+                    pager.setCurrentItem(1);
+                }
+            }
+        });
     }
 
 }

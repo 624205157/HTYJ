@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/radiobutton_background_unchecked2"
+        android:state_checked="false" />
+    <item android:drawable="@drawable/radiobutton_background_checked2"
+        android:state_checked="true" />
+</selector>
