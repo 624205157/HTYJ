@@ -27,8 +27,7 @@ public class SplashActivity extends Activity {
 
     private Handler mHandler = new Handler();
     private Runnable runnable = () -> {
-        toLogin();
-
+        toMainActivity();
     };
 
 
@@ -37,13 +36,20 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         mHandler.postDelayed(runnable, 3000);
-        findViewById(R.id.pass).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.cut).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mHandler.removeCallbacks(runnable);
                 toLogin();
             }
         });
 
+        findViewById(R.id.pass).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toMainActivity();
+            }
+        });
 
     }
 
@@ -54,7 +60,9 @@ public class SplashActivity extends Activity {
     }
 
     private void toMainActivity(){
-
+        startActivity(new Intent(SplashActivity.this,
+                MainActivity.class));
+        finish();
     }
 
     /**

@@ -20,7 +20,7 @@ import butterknife.BindView;
 
 /**
  * Created by czy on 2020/8/10 10:35.
- * describe: 事件
+ * describe: 任务
  */
 public class TaskActivity extends RightTitleActivity {
     @BindView(R2.id.tab)

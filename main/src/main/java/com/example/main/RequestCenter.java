@@ -50,14 +50,14 @@ public class RequestCenter {
         CommonOkHttpClient.get(CommonRequest.createGetRequest(url,params),new DisposeDataHandle(listener));
     }
 
-    /**
-     * 获取字典
-     * @param listener
-     */
-
-    public static void getDictionary(RequestParams params,DisposeDataListener listener){
-        CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.DICTIONARY,params),new DisposeDataHandle(listener));
-    }
+//    /**
+//     * 获取字典
+//     * @param listener
+//     */
+//
+//    public static void getDictionary(RequestParams params,DisposeDataListener listener){
+//        CommonOkHttpClient.get(CommonRequest.createGetRequest(UrlService.DICTIONARY,params),new DisposeDataHandle(listener));
+//    }
   /**
      * 获取字典 网格
      * @param listener

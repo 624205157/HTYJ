@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="#F0EFF5">
+
+    <include layout="@layout/title_layout"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            >
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+
+                <TextView
+                    android:id="@+id/name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="事件名称"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toRightOf="@+id/name_tv"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/name_tv"
+                    android:background="@null"
+                    android:hint="请输入事件名称"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <View
+                    android:id="@+id/v_1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/name_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/type_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="任务类型"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_1"
+                    />
+
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/type_tv"
+                    android:background="@null"
+                    android:hint="请选择"
+                    android:textSize="16sp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/text_color"
+                    />
+
+                <View
+                    android:id="@+id/v_2"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/type_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/type"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/grid_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="下发网络"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_2"
+                    />
+
+                <TextView
+                    android:id="@+id/grid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/grid_tv"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:background="@null"
+                    android:hint="请选择"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <View
+                    android:id="@+id/v_3"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/grid_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/grid"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/state_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="是否已办结"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_3"
+                    />
+
+                <TextView
+                    android:id="@+id/state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintTop_toTopOf="@+id/state_text"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:text="否"
+                    />
+
+                <Switch
+                    android:id="@+id/state_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:track="@drawable/switch_selector_green"
+                    android:thumb="@drawable/switch_white_circle_selector"
+                    app:layout_constraintTop_toTopOf="@+id/state"
+                    app:layout_constraintBottom_toBottomOf="@+id/state"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="20dp"
+                    />
+
+
+                <View
+                    android:id="@+id/v_4"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/state_text"
+                    app:layout_constraintTop_toBottomOf="@+id/state_text"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <TextView
+                android:id="@+id/count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="任务描述:"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"
+                android:textColor="@color/text_color"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl"
+                />
+
+            <TextView
+                android:id="@+id/count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:background="@drawable/background_solid_11"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/count_tv"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:gravity="top"
+                />
+
+
+
+            <TextView
+                android:id="@+id/submit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/count"
+                app:layout_constraintBottom_toTopOf="@+id/state_recycler"
+                android:text="反  馈"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:background="#8B6DE9"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+
+                />
+
+
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/state_recycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/submit"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:visibility="gone"
+                />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </ScrollView>
+
+
+</LinearLayout>

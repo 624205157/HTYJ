@@ -1,8 +1,10 @@
 package com.example.main.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -15,13 +17,26 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.chad.library.adapter.base.listener.OnLoadMoreListener;
 import com.example.commonlib.listener.CallPhoneListener;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.commonlib.view.MyDialog;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
+import com.example.main.UrlService;
+import com.example.main.activity.TaskDetailsActivity;
 import com.example.main.adapter.TaskAdapter;
+import com.example.main.bean.Enterprise;
 import com.example.main.bean.Task;
 import com.example.main.fragment.BaseFragment;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +45,9 @@ import butterknife.BindView;
 
 /**
  * Created by czy on 2020/8/10 11:32.
- * describe: 事件列表
+ * describe: 任务列表
  */
-public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
     @BindView(R2.id.search)
     EditText search;
     @BindView(R2.id.recyclerview)
@@ -55,6 +70,8 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
     Handler handler = new Handler();
 
+    private int pageNum = 0;
+
     @Override
     protected int setContentView() {
         return R.layout.fragment_update_enterprise;
@@ -62,6 +79,8 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     protected void lazyLoad(Bundle savedInstanceState) {
+
+        state = getArguments().getString("state");
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -87,12 +106,14 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
         mAdapter = new TaskAdapter(mData);
         mAdapter.setAnimationEnable(true);
+        mAdapter.getLoadMoreModule().setOnLoadMoreListener(this);
         mAdapter.addChildClickViewIds(R.id.update, R.id.del);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.update) {
                     showToast("修改");
+                    startActivity(new Intent(getActivity(), TaskDetailsActivity.class));
                 }
                 if (view.getId() == R.id.del) {
                     new MyDialog(mContext)
@@ -126,8 +147,15 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
+        pageNum = 0;
+        mData.clear();
         getData();
         refresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onLoadMore() {
+        getData();
     }
 
     /**
@@ -142,17 +170,47 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     private void getData() {
-        for (int i = 1; i < 9; i++) {
-            Task data = new Task();
-            data.setName("检查XXX" + i);
-            data.setTime("2020年8月16日13:35:19");
-            data.setState(state);
-            mData.add(data);
+
+        RequestParams params = new RequestParams();
+        try {
+            params.put("pageNum", ++pageNum);
+            params.put("pageable", "y");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        mAdapter.setList(mData);
 
-        mAdapter.notifyDataSetChanged();
+        RequestCenter.getDataList(UrlService.TASK, null, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    JSONObject data = result.getJSONObject("data");
+
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Enterprise>>() {
+                        }.getType()));
+                        mAdapter.setList(mData);
+
+                        mAdapter.notifyDataSetChanged();
+
+                    }
+
+                    if (data.getInt("pages") == pageNum) {
+                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
     }
 
 }

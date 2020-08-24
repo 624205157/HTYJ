@@ -1,5 +1,7 @@
 package com.example.main.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -10,9 +12,11 @@ public class Task {
 
     private String id;
     private String name;
+    @SerializedName("start_time")
     private String time;//下发时间
     private String state;
     private String type;//任务类型
+    @SerializedName("remark")
     private String count;//任务描述
     private String people;//下发人
     private List<Grid> gridList;//下发网格

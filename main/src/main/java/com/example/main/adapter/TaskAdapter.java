@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.main.R;
 import com.example.main.bean.Event;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by czy on 2020/8/12 12:49.
  * describe:
  */
-public class TaskAdapter extends BaseQuickAdapter<Task,BaseViewHolder> {
+public class TaskAdapter extends BaseQuickAdapter<Task,BaseViewHolder> implements LoadMoreModule {
 
     public TaskAdapter(List<Task> data) {
         super(R.layout.item_task, data);
@@ -28,15 +29,14 @@ public class TaskAdapter extends BaseQuickAdapter<Task,BaseViewHolder> {
     protected void convert(@NotNull BaseViewHolder holder, Task data) {
         holder.setText(R.id.name,data.getName());
         holder.setText(R.id.time,"下发时间: "+data.getTime());
-        if (TextUtils.equals(data.getState(),"0")){
-            holder.setText(R.id.level,"进展状态: 处理中");
-            holder.setText(R.id.check,"详情及处理");
-            holder.setGone(R.id.wait,false);
+        if (TextUtils.equals(data.getState(),"3")){
+            holder.setText(R.id.level,"未开始");
             holder.setGone(R.id.finish,true);
+        }else if (TextUtils.equals(data.getState(),"2")){
+            holder.setText(R.id.level,"进行中");
+            holder.setGone(R.id.finish,false);
         }else if (TextUtils.equals(data.getState(),"1")){
-            holder.setText(R.id.level,"进展状态: 已办结");
-            holder.setText(R.id.check,"查看详情");
-            holder.setGone(R.id.wait,true);
+            holder.setText(R.id.level,"已完成");
             holder.setGone(R.id.finish,false);
         }
 
