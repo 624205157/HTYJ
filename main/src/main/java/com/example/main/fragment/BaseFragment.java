@@ -34,7 +34,7 @@ public abstract class BaseFragment extends SupportFragment {
     protected final String TAG = "BaseFragment";
     private View view;
     protected ShareHelper shareHelper;
-    protected String firmID = "";
+//    protected String firmID = "";
 
     protected Context mContext;//上下文
     protected Activity mActivity;//界面
@@ -76,7 +76,7 @@ public abstract class BaseFragment extends SupportFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isCanLoadData(null);
-        refreshData();
+//        refreshData();
     }
 
     /**
@@ -94,7 +94,7 @@ public abstract class BaseFragment extends SupportFragment {
             return;
         }
         if (getUserVisibleHint()) {
-            firmID = (String) shareHelper.query("firmID","");
+//            firmID = (String) shareHelper.query("firmID","");
             lazyLoad(savedInstanceState);
             isLoad = true;
         } else {
@@ -193,9 +193,9 @@ public abstract class BaseFragment extends SupportFragment {
     }
 
 
-    protected void refreshData() {
-        firmID = (String) shareHelper.query("firmID","");
-    }
+//    protected void refreshData() {
+//        firmID = (String) shareHelper.query("firmID","");
+//    }
 
     private TextView title;
 

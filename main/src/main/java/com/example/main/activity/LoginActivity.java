@@ -61,9 +61,7 @@ public class LoginActivity extends BaseActivity {
                     String message = jsonObject.getString("message");
                     showToast(message);
                     if (TextUtils.equals("200", code)) {
-                        ARouter.getInstance().build("/show/img")
-                                .withString("type", "公司简介")
-                                .navigation();
+
 //                        finish();
                     }
                 } catch (Exception e) {
@@ -96,6 +94,11 @@ public class LoginActivity extends BaseActivity {
 //                return;
             }
 //            login();
+            shareHelper.save("username", userName.getText() + "").commit();
+            shareHelper.save("password", password.getText() + "").commit();
+            /**
+             * 腾讯云登录
+             */
             ProfileManager.getInstance().login(userName.getText() + "", "", new ProfileManager.ActionCallback() {
                 @Override
                 public void onSuccess() {

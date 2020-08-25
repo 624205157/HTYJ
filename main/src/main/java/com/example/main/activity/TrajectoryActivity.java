@@ -36,7 +36,8 @@ public class TrajectoryActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
 
-
+        addBack();
+        setTitleText("轨迹管理");
         isOpen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

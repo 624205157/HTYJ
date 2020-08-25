@@ -71,6 +71,10 @@
             android:name=".activity.GridDetailsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <activity
+            android:name=".activity.TrajectoryActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
 
     </application>
 

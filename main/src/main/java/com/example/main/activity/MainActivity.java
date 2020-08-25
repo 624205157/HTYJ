@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.RadioGroup;
 
 import com.example.commonlib.base.BaseActivity;
@@ -17,6 +18,7 @@ import com.example.main.fragment.Fragment3;
 import com.example.main.fragment.Fragment4;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
+import com.tencent.liteav.login.model.ProfileManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,7 +169,26 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onResult(boolean allGranted, List<String> grantedList, List<String> deniedList) {
                         if (allGranted) {
+                            //判断是否已登录
+                            String username = (String) shareHelper.query("username","");
+                            if (!TextUtils.isEmpty( username)){
+                                /**
+                                 * 腾讯云登录
+                                 */
+                                ProfileManager.getInstance().login(username, "", new ProfileManager.ActionCallback() {
+                                    @Override
+                                    public void onSuccess() {
 
+                                    }
+
+                                    @Override
+                                    public void onFailed(int code, String msg) {
+                                    }
+                                });
+                            }else {
+                                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                                finish();
+                            }
                         } else {
                             String text = "";
                             for (String a : deniedList) {

@@ -16,6 +16,7 @@ import com.example.main.activity.EnterpriseActivity;
 import com.example.main.activity.EventActivity;
 import com.example.main.activity.ResourcesActivity;
 import com.example.main.activity.TaskActivity;
+import com.example.main.activity.TrajectoryActivity;
 import com.example.main.fragment.BaseFragment;
 
 import butterknife.BindView;
@@ -60,7 +61,7 @@ public class HomeFragment extends BaseFragment {
         } else if (id == R.id.plan) {
 
         } else if (id == R.id.trajectory) {
-
+            startActivity(new Intent(getActivity(), TrajectoryActivity.class));
         }
     }
 
