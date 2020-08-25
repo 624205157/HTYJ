@@ -1,5 +1,11 @@
 package com.example.main.utils;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.telecom.PhoneAccountHandle;
+import android.telecom.TelecomManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -57,5 +63,35 @@ public class Utils {
             return true;
         }
         return false;
+    }
+
+    public static boolean isMultiSim(Context context){
+        boolean result = false;
+        TelecomManager telecomManager = (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
+        if(telecomManager != null){
+            @SuppressLint("MissingPermission") List<PhoneAccountHandle> phoneAccountHandleList = telecomManager.getCallCapablePhoneAccounts();
+            int simNum = 0;
+            for (int i = 0;i<phoneAccountHandleList.size();i++ ){
+                if (!TextUtils.isEmpty(phoneAccountHandleList.get(i).getId())){
+                    simNum++;
+                }
+            }
+            result = simNum >= 2;
+        }
+        return result;
+    }
+
+    public static void call(Context context, int id, String telNum){
+        TelecomManager telecomManager = (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
+
+        if(telecomManager != null){
+            @SuppressLint("MissingPermission") List<PhoneAccountHandle> phoneAccountHandleList = telecomManager.getCallCapablePhoneAccounts();
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + telNum));
+            intent.putExtra(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandleList.get(id));
+            context.startActivity(intent);
+        }
     }
 }

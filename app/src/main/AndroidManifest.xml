@@ -11,12 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:theme"
-        >
+        tools:replace="android:theme">
 
+        <!--        <meta-data-->
+        <!--            android:name="com.amap.api.v2.apikey"-->
+        <!--            android:value="fb96e12a76ab5fe7c85c24b23c9d830a" -->
+        <!--            />-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="fb96e12a76ab5fe7c85c24b23c9d830a" />
+            android:value="e8103e248dae6d96f796e3d1f32029f6" />
 
         <service
             android:name=".CallService"

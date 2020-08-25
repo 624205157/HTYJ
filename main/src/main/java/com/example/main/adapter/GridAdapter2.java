@@ -45,7 +45,7 @@ public class GridAdapter2 extends BaseQuickAdapter<Grid, BaseViewHolder>  {
         }
         holder.setText(R.id.users,"负责人: " +users);
 
-        if (TextUtils.isEmpty(pid)){
+        if (!TextUtils.isEmpty(pid)){
             holder.setGone(R.id.next,true);
         }else {
             holder.setGone(R.id.next,false);

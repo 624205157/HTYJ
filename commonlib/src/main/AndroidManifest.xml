@@ -25,6 +25,9 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
 
 <!--    腾讯云信-->
     <uses-permission android:name="android.permission.INTERNET" />

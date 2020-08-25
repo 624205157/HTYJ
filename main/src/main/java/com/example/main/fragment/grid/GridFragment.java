@@ -28,6 +28,7 @@ import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
 import com.example.main.UrlService;
+import com.example.main.activity.GridDetailsActivity;
 import com.example.main.adapter.GridAdapter2;
 import com.example.main.bean.Grid;
 import com.example.main.fragment.BaseFragment;
@@ -107,9 +108,13 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.next) {
-                    start(GridFragment.newInstance(mData.get(position).getPid()));
+                    start(GridFragment.newInstance(mData.get(position).getId()));
                 } else if (view.getId() == R.id.details) {
-
+                    Intent intent = new Intent(getActivity(), GridDetailsActivity.class);
+                    intent.putExtra("id",mData.get(position).getId());
+                    intent.putExtra("name",mData.get(position).getName());
+                    intent.putExtra("polygon",mData.get(position).getPolygon());
+                    startActivity(intent);
                 }
             }
         });
@@ -149,6 +154,8 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         RequestParams params = new RequestParams();
         if (!TextUtils.isEmpty(getArguments().getString("pid"))) {
             params.put("pid", getArguments().getString("pid"));
+        }else {
+            params.put("pid", "root");
         }
 
         RequestCenter.getDataList(UrlService.GRID, params, new DisposeDataListener() {
@@ -183,6 +190,8 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private void getSearch(RequestParams params) {
         if (!TextUtils.isEmpty(getArguments().getString("pid"))) {
             params.put("pid", getArguments().getString("pid"));
+        }else {
+            params.put("pid", "root");
         }
         mData.clear();
         RequestCenter.getDataList(UrlService.GRID, params, new DisposeDataListener() {

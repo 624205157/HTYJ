@@ -16,6 +16,12 @@ public class Address implements Parcelable {
 
     }
 
+    public Address(double latitude,double longitude,String name){
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.name = name;
+    }
+
     protected Address(Parcel in) {
         name = in.readString();
         longitude = in.readDouble();

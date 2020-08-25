@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="5dp"
     android:orientation="horizontal"
-    android:background="#5B8BEA"
     >
 
     <TextView
@@ -13,14 +12,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="XXX企业"
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
         />
 
-    <Button
+    <TextView
         android:id="@+id/navigation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="导航"
+        android:textSize="14sp"
+        android:textColor="@color/white"
         android:layout_marginLeft="5dp"
+        android:background="#5B8BEA"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         />
 
 

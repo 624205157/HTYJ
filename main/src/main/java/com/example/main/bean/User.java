@@ -13,6 +13,9 @@ public class User {
     private String tel;
     private String isLeader;//是否为负责人
 
+    public User(){
+    }
+
     public User(String username, String password){
         this.username = username;
         this.password = password;
