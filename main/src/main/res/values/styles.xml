@@ -33,5 +33,16 @@
     </style>
 
 
+    <style name="EditTextNumStyle">
+        <item name="singleLine">true</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">11</item>
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="singleLine">true</item>
+        <item name="android:inputType">text</item>
+    </style>
+
 
 </resources>

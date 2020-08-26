@@ -99,6 +99,7 @@
                     android:textSize="16sp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="20dp"
+                    style="@style/EditTextStyle"
                     />
 
                 <View
@@ -138,6 +139,8 @@
                     android:textSize="16sp"
                     android:layout_marginRight="20dp"
                     android:textColor="@color/text_color"
+                    android:digits="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    style="@style/EditTextStyle"
                     />
 
                 <View
@@ -213,6 +216,7 @@
                     android:background="@null"
                     android:hint="请输入企业联系电话"
                     android:layout_marginRight="20dp"
+                    style="@style/EditTextNumStyle"
                     />
 
                 <View
@@ -251,6 +255,7 @@
                     android:background="@null"
                     android:hint="请输入传真号"
                     android:layout_marginRight="20dp"
+                    style="@style/EditTextNumStyle"
                     />
 
                 <View
@@ -289,6 +294,7 @@
                     android:background="@null"
                     android:hint="请输入法人姓名"
                     android:layout_marginRight="20dp"
+                    style="@style/EditTextStyle"
                     />
 
                 <View
@@ -327,6 +333,7 @@
                     android:background="@null"
                     android:hint="请输入法人联系电话"
                     android:layout_marginRight="20dp"
+                    style="@style/EditTextNumStyle"
                     />
 
                 <View
