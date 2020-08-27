@@ -20,6 +20,7 @@ android {
             abiFilters "armeabi-v7a"
         }
 
+
     }
 
     buildTypes {
@@ -34,55 +35,46 @@ android {
         targetCompatibility = rootProject.ext.javaVersion
     }
 
+    sourceSets{
+        main{
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    api fileTree(include: ['*.jar'], dir: 'libs')
     api 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.13'
     api 'androidx.appcompat:appcompat:1.1.0'
     api 'com.squareup.okhttp3:okhttp:4.7.1'
-
     api 'com.google.code.gson:gson:2.8.6'
-
     api 'com.jakewharton:butterknife:10.2.1'
-
-
     api 'androidx.recyclerview:recyclerview:1.2.0-alpha03'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
-
     api 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     api 'com.squareup.picasso:picasso:2.71828'
-
     api 'com.permissionx.guolindev:permissionx:1.2.2'
-
     api 'com.alibaba:arouter-api:1.5.0'
-
     api 'me.yokeyword:fragmentationx:1.0.2'
-
     //3D地图so及jar
-    api 'com.amap.api:3dmap:latest.integration'
+//    api 'com.amap.api:3dmap:latest.integration'
     //定位功能
-    api 'com.amap.api:location:latest.integration'
+//    api 'com.amap.api:location:latest.integration'
     //搜索功能
-    api 'com.amap.api:search:latest.integration'
-
-    api "com.google.android.material:material:1.0.0"
-
-//    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.8'
-
+//    api 'com.amap.api:search:latest.integration'
+    api 'com.google.android.material:material:1.0.0'
+    //    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.8'
     api 'com.facebook.fresco:fresco:0.14.1'
-
     // 引入multidex库
     api 'com.android.support:multidex:1.0.3'
-
     api 'com.contrarywind:Android-PickerView:4.1.8'
-
-    api "com.tencent.liteav:LiteAVSDK_TRTC:latest.release"
+    api 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
     api 'com.tencent.imsdk:imsdk:latest.release'
     //依赖一个utils类
     api 'com.blankj:utilcode:1.25.9'
-
+    api files('libs/AMap3DMap_7.6.0_AMapSearch_7.6.0_AMapTrack_1.3.0_AMapLocation_5.1.0_20200819.jar')
 }

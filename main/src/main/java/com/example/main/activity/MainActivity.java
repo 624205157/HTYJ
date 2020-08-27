@@ -5,12 +5,17 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RadioGroup;
 
 import com.example.commonlib.base.BaseActivity;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.commonlib.utils.ShareHelper;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
 import com.example.main.fragment.BaseFragment;
 import com.example.main.fragment.Fragment1;
 import com.example.main.fragment.Fragment2;
@@ -48,6 +53,22 @@ public class MainActivity extends BaseActivity {
         shareHelper = ShareHelper.getInstance();
         getPermission();
         initData();
+
+//        RequestParams params = new RequestParams();
+//        params.put("key","49e0db5b3745d3fce02a4292ad7ce212");
+//        params.put("name","轨迹测试");
+//        {"data":{"name":"轨迹测试","sid":184215},"errcode":10000,"errdetail":null,"errmsg":"OK"}
+//        RequestCenter.getServiceId(params, new DisposeDataListener() {
+//            @Override
+//            public void onSuccess(Object responseObj) {
+//                Log.e("轨迹测试",responseObj.toString());
+//            }
+//
+//            @Override
+//            public void onFailure(OkHttpException responseObj) {
+//
+//            }
+//        });
     }
 
 

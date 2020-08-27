@@ -115,5 +115,8 @@ public class RequestCenter {
     }
 
 
+    public static void getServiceId(RequestParams params,DisposeDataListener listener){
+    CommonOkHttpClient.get(CommonRequest.createPostRequest("https://tsapi.amap.com/v1/track/service/add",params),new DisposeDataHandle(listener));
+    }
 
 }
