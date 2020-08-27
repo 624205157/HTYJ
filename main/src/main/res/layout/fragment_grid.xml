@@ -73,7 +73,7 @@
             android:layout_marginLeft="5dp"
             android:hint="请输入名称"
             android:textColor="@color/text_color"
-
+            style="@style/EditTextStyle"
             />
 
 

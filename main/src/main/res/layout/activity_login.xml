@@ -79,6 +79,8 @@
                 android:textColor="#333333"
                 android:textColorHint="#999999"
                 android:textSize="16sp"
+                android:inputType="textEmailAddress"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/user_name_img"
                 app:layout_constraintRight_toRightOf="parent"
