@@ -38,10 +38,16 @@ import com.amap.api.track.query.model.AddTerminalRequest;
 import com.amap.api.track.query.model.AddTerminalResponse;
 import com.amap.api.track.query.model.AddTrackRequest;
 import com.amap.api.track.query.model.AddTrackResponse;
+import com.amap.api.track.query.model.DistanceResponse;
 import com.amap.api.track.query.model.HistoryTrackRequest;
 import com.amap.api.track.query.model.HistoryTrackResponse;
+import com.amap.api.track.query.model.LatestPointRequest;
+import com.amap.api.track.query.model.LatestPointResponse;
+import com.amap.api.track.query.model.OnTrackListener;
+import com.amap.api.track.query.model.ParamErrorResponse;
 import com.amap.api.track.query.model.QueryTerminalRequest;
 import com.amap.api.track.query.model.QueryTerminalResponse;
+import com.amap.api.track.query.model.QueryTrackResponse;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
@@ -109,13 +115,8 @@ public class TrajectoryActivity extends BaseActivity {
 
         username = (String) shareHelper.query("username", "");
         aMapTrackClient = new AMapTrackClient(getApplicationContext());
+        aMapTrackClient.setInterval(10, 60);
 
-        if ((boolean) shareHelper.query("tra", false)) {
-            //查询储存的轨迹开关
-            isOpen.setChecked(true);
-        } else {
-            isOpen.setChecked(false);
-        }
 
         map.getMap().moveCamera(CameraUpdateFactory.zoomTo(14));
         map.onCreate(savedInstanceState);
@@ -125,11 +126,21 @@ public class TrajectoryActivity extends BaseActivity {
                 new MyLocationStyle()
                         .interval(2000)
                         .myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
+                        .strokeColor(Color.argb(0, 0, 0, 0))// 设置圆形的边框颜色
+                        .radiusFillColor(Color.argb(0, 0, 0, 0))// 设置圆形的填充颜色
         );
 
         queryTerminal();
 
         initView();
+
+//        findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                test();
+//            }
+//        });
+
     }
 
     private void initView() {
@@ -137,20 +148,17 @@ public class TrajectoryActivity extends BaseActivity {
         pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                long startTime;
-//                long stopTime;
-                if (Utils.isToday(date)) {
-                    startTime = Utils.date2TimeStamp(Utils.getDateStr(date, "yyyy-MM-dd") , "yyyy-MM-dd HH:mm:ss");
-//                    stopTime = Utils.date2TimeStamp(Utils.getDateStr(date,"yyyy-MM-dd HH:mm:ss"),"yyyy-MM-dd HH:mm:ss");
-                } else {
-                    startTime = Utils.date2TimeStamp(Utils.getDateStr(date, "yyyy-MM-dd"), "yyyy-MM-dd HH:mm:ss");
-//                    stopTime = Utils.date2TimeStamp(Utils.getDateStr(date,"yyyy-MM-dd")+ " 23:59:59","yyyy-MM-dd HH:mm:ss");
-                }
-                queryHistoryTrack(startTime, startTime + 24 * 60 * 60 * 1000);
+                queryHistoryTrack(date);
 
             }
         }).build();
     }
+
+    private void getTodayTrack() {
+        Date date = new Date();
+        queryHistoryTrack(date);
+    }
+
 
     @OnClick({R2.id.time})
     public void onViewClicked(View view) {
@@ -172,25 +180,22 @@ public class TrajectoryActivity extends BaseActivity {
 
         @Override
         public void onStartTrackCallback(int status, String msg) {
-            if (status == ErrorCode.TrackListen.START_TRACK_SUCEE || status == ErrorCode.TrackListen.START_TRACK_SUCEE_NO_NETWORK) {
-                // 成功启动
-                Toast.makeText(TrajectoryActivity.this, "启动服务成功", Toast.LENGTH_SHORT).show();
-            } else if (status == ErrorCode.TrackListen.START_TRACK_ALREADY_STARTED) {
-                // 已经启动
-                Toast.makeText(TrajectoryActivity.this, "服务已经启动", Toast.LENGTH_SHORT).show();
+            if (status == ErrorCode.TrackListen.START_TRACK_SUCEE ||
+                    status == ErrorCode.TrackListen.START_TRACK_SUCEE_NO_NETWORK ||
+                    status == ErrorCode.TrackListen.START_TRACK_ALREADY_STARTED) {
+                // 服务启动成功，继续开启收集上报
+                aMapTrackClient.startGather(this);
             } else {
-                Log.w(TAG, "error onStartTrackCallback, status: " + status + ", msg: " + msg);
-                Toast.makeText(TrajectoryActivity.this,
-                        "error onStartTrackCallback, status: " + status + ", msg: " + msg,
-                        Toast.LENGTH_LONG).show();
+                showToast("轨迹上报服务服务启动异常，" + msg);
             }
         }
 
         @Override
         public void onStopTrackCallback(int status, String msg) {
             if (status == ErrorCode.TrackListen.STOP_TRACK_SUCCE) {
+                shareHelper.save("tra", false).commit();
                 // 成功停止
-                Toast.makeText(TrajectoryActivity.this, "停止服务成功", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(TrajectoryActivity.this, "停止服务成功", Toast.LENGTH_SHORT).show();
             } else {
                 Log.w(TAG, "error onStopTrackCallback, status: " + status + ", msg: " + msg);
                 Toast.makeText(TrajectoryActivity.this,
@@ -202,10 +207,9 @@ public class TrajectoryActivity extends BaseActivity {
 
         @Override
         public void onStartGatherCallback(int status, String msg) {
-            if (status == ErrorCode.TrackListen.START_GATHER_SUCEE) {
-                Toast.makeText(TrajectoryActivity.this, "定位采集开启成功", Toast.LENGTH_SHORT).show();
-            } else if (status == ErrorCode.TrackListen.START_GATHER_ALREADY_STARTED) {
-                Toast.makeText(TrajectoryActivity.this, "定位采集已经开启", Toast.LENGTH_SHORT).show();
+            if (status == ErrorCode.TrackListen.START_GATHER_SUCEE
+                    || status == ErrorCode.TrackListen.START_GATHER_ALREADY_STARTED) {
+//                Toast.makeText(TrajectoryActivity.this, "定位采集已经开启", Toast.LENGTH_SHORT).show();
                 shareHelper.save("tra", true).commit();
             } else {
                 Log.w(TAG, "error onStartGatherCallback, status: " + status + ", msg: " + msg);
@@ -218,7 +222,7 @@ public class TrajectoryActivity extends BaseActivity {
         @Override
         public void onStopGatherCallback(int status, String msg) {
             if (status == ErrorCode.TrackListen.STOP_GATHER_SUCCE) {
-                Toast.makeText(TrajectoryActivity.this, "定位采集停止成功", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(TrajectoryActivity.this, "定位采集停止成功", Toast.LENGTH_SHORT).show();
             } else {
                 Log.w(TAG, "error onStopGatherCallback, status: " + status + ", msg: " + msg);
                 Toast.makeText(TrajectoryActivity.this,
@@ -270,6 +274,13 @@ public class TrajectoryActivity extends BaseActivity {
                             }
                         });
                     }
+                    if ((boolean) shareHelper.query("tra", false)) {
+                        //查询储存的轨迹开关
+                        isOpen.setChecked(true);
+                    } else {
+                        isOpen.setChecked(false);
+                    }
+                    getTodayTrack();
                 } else {
                     Toast.makeText(TrajectoryActivity.this, "网络请求失败，" + queryTerminalResponse.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -317,21 +328,25 @@ public class TrajectoryActivity extends BaseActivity {
     /**
      * 查询轨迹点
      */
-    private void queryHistoryTrack(long startTime, long stopTime) {
+    private void queryHistoryTrack(Date date) {
+        time.setText(Utils.getDateStr(date, "yyyy-MM-dd"));
+        long startTime;
+        startTime = Utils.date2TimeStamp(Utils.getDateStr(date, "yyyy-MM-dd") + " 00:00:00", "yyyy-MM-dd HH:mm:ss");
+
         HistoryTrackRequest historyTrackRequest = new HistoryTrackRequest(
                 Constants.SERVICE_ID,
                 terminalId,
                 startTime,
-                stopTime,
+                startTime + 24 * 60 * 60 * 1000
 //                System.currentTimeMillis() - 24 * 60 * 60 * 1000,
-//                System.currentTimeMillis(),
-                0,      // 不绑路
-                0,      // 不做距离补偿
-                5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
-                0,  // 由旧到新排序
-                1,  // 返回第1页数据
-                100,    // 一页不超过100条
-                ""  // 暂未实现，该参数无意义，请留空
+//                System.currentTimeMillis()
+//                0,      // 不绑路
+//                0,      // 不做距离补偿
+//                5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
+//                0,  // 由旧到新排序
+//                1,  // 返回第1页数据
+//                100,    // 一页不超过100条
+//                ""  // 暂未实现，该参数无意义，请留空
         );
         aMapTrackClient.queryHistoryTrack(historyTrackRequest, new SimpleOnTrackListener() {
             @Override
@@ -345,6 +360,7 @@ public class TrajectoryActivity extends BaseActivity {
                     List<Point> points = historyTrack.getPoints();
                     drawTrackOnMap(points, historyTrack.getStartPoint(), historyTrack.getEndPoint());
                 } else {
+                    showToast(historyTrackResponse.getErrorDetail());
                     Toast.makeText(TrajectoryActivity.this, "查询历史轨迹点失败，" + historyTrackResponse.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -429,4 +445,55 @@ public class TrajectoryActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
         map.onSaveInstanceState(outState);
     }
+
+//    private void test() {
+//        aMapTrackClient.queryLatestPoint(new LatestPointRequest(Constants.SERVICE_ID, terminalId), new OnTrackListener() {
+//
+//            @Override
+//            public void onQueryTerminalCallback(QueryTerminalResponse queryTerminalResponse) {
+//
+//            }
+//
+//            @Override
+//            public void onCreateTerminalCallback(AddTerminalResponse addTerminalResponse) {
+//
+//            }
+//
+//            @Override
+//            public void onDistanceCallback(DistanceResponse distanceResponse) {
+//
+//            }
+//
+//            @Override
+//            public void onLatestPointCallback(LatestPointResponse latestPointResponse) {
+//                if (latestPointResponse.isSuccess()) {
+//                    Point point = latestPointResponse.getLatestPoint().getPoint();
+//                    // 查询实时位置成功，point为实时位置信息
+//                    showToast("经度:" + point.getLat() + "纬度:" + point.getLng() + "时间:" + point.getTime());
+//                } else {
+//                    // 查询实时位置失败
+//                }
+//            }
+//
+//            @Override
+//            public void onHistoryTrackCallback(HistoryTrackResponse historyTrackResponse) {
+//
+//            }
+//
+//            @Override
+//            public void onQueryTrackCallback(QueryTrackResponse queryTrackResponse) {
+//
+//            }
+//
+//            @Override
+//            public void onAddTrackCallback(AddTrackResponse addTrackResponse) {
+//
+//            }
+//
+//            @Override
+//            public void onParamErrorCallback(ParamErrorResponse paramErrorResponse) {
+//
+//            }
+//        });
+//    }
 }

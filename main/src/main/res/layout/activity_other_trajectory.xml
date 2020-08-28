@@ -16,37 +16,18 @@
         >
 
         <TextView
-            android:id="@+id/tv_1"
+            android:id="@+id/check_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="轨迹上报"
-            android:textColor="@color/text_color"
-            android:textSize="16sp"
+            android:text="查询下属轨迹"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:drawableRight="@mipmap/down_img"
+            android:drawablePadding="10dp"
             />
 
-        <Switch
-            android:id="@+id/is_open"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:track="@drawable/switch_selector_green"
-            android:thumb="@drawable/switch_white_circle_selector"
-            app:layout_constraintTop_toTopOf="@+id/tv_1"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_1"
-            app:layout_constraintLeft_toRightOf="@+id/tv_1"
-            android:layout_marginLeft="10dp"
-            />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/down_img"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
 
         <TextView
             android:id="@+id/time"
@@ -56,7 +37,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:paddingRight="15dp"
+            android:drawableRight="@mipmap/down_img"
+            android:drawablePadding="10dp"
             />
 
 <!--        <TextView-->

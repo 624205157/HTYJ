@@ -144,12 +144,20 @@ public class Utils {
     public static long date2TimeStamp(String date, String format) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
-            return sdf.parse(date).getTime() / 1000;
+            return sdf.parse(date).getTime();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
     }
+
+//    public static String stamp2String(long time, String format) {
+//        if (TextUtils.isEmpty(format)) {
+//            format = "yyyy-MM-dd HH:mm:ss";
+//        }
+//        SimpleDateFormat sdf = new SimpleDateFormat(format); //设置格式
+//        return sdf.format(time);
+//    }
 
     /**
      * 判断给定字符串时间是否为今日
@@ -161,8 +169,8 @@ public class Utils {
 //        Date time = parseServerTime(sdate,null);
         Date today = new Date();
         if (time != null) {
-            String nowDate = getDateStr(today,null);
-            String timeDate =  getDateStr(time,null);
+            String nowDate = getDateStr(today, null);
+            String timeDate = getDateStr(time, null);
             if (nowDate.equals(timeDate)) {
                 b = true;
             }
