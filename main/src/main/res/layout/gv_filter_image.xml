@@ -33,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:scaleType="center"
                 android:src="@mipmap/ic_cha"
-                android:visibility="invisible"
                 />
         </LinearLayout>
 
