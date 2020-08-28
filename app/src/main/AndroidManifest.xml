@@ -17,7 +17,7 @@
         <!--            />-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="e8103e248dae6d96f796e3d1f32029f6" />
+            android:value="bfdc369a22efc57e7c0eb15abefa2cda" />
 
         <service
             android:name=".CallService"
