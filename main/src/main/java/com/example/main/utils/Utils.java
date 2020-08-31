@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import java.io.File;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -176,5 +177,38 @@ public class Utils {
             }
         }
         return b;
+    }
+
+
+    /**
+     * MD5、SHA1等加密算法(不可逆) <br>
+     * 1、生成一个指定加密方式的加密计算摘要 <br>
+     * 2、计算(指定加密方式)函数 <br>
+     * 3、digest()最后确定返回md5hash值，返回值为8为字符串。因为md5 hash值是16位的hex值，实际上就是8位的字符<br>
+     * 4、BigInteger函数则将8位的字符串转换成16位hex值，用字符串来表示；得到字符串形式的hash值<br>
+     *
+     * @param value 需要加密的内容
+     * @param type  加密方式 SHA-1
+     * @return 加密后的字符串(MD5 ： 32 、 SHA1 ： 40)
+     */
+    public static String encryption(String value, String type){
+        try {
+            MessageDigest md5 = null;
+            md5 = MessageDigest.getInstance(type);
+            byte[] byteArray = value.getBytes("UTF-8");
+            byte[] md5Bytes = md5.digest(byteArray);
+            StringBuffer hexValue = new StringBuffer();
+            for (int i = 0; i < md5Bytes.length; i++) {
+                int val = md5Bytes[i] & 0xff;
+                if (val < 16) {
+                    hexValue.append("0");
+                }
+                hexValue.append(Integer.toHexString(val));
+            }
+            return hexValue.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

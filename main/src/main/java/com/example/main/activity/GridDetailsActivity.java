@@ -82,7 +82,7 @@ public class GridDetailsActivity extends RightTitleActivity {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.tel) {
-                    callPhone(mData.get(position).getTel());
+                    callPhone(mData.get(position).getSubject().getMobile());
                 }
             }
         });
@@ -98,8 +98,8 @@ public class GridDetailsActivity extends RightTitleActivity {
     private void getData() {
         for (int i = 0; i < 9; i++) {
             User user = new User();
-            user.setName("张飞" + i);
-            user.setTel("1358888" + i+ i+ i+ i);
+            user.getSubject().setName("张飞" + i);
+            user.getSubject().setMobile("1358888" + i+ i+ i+ i);
             mData.add(user);
         }
         adapter.setList(mData);

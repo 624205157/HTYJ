@@ -77,4 +77,6 @@ dependencies {
     //依赖一个utils类
     api 'com.blankj:utilcode:1.25.9'
     api files('libs/AMap3DMap_7.6.0_AMapSearch_7.6.0_AMapTrack_1.3.0_AMapLocation_5.1.0_20200819.jar')
+
+    api 'de.hdodenhof:circleimageview:3.1.0'//圆形图片裁剪
 }

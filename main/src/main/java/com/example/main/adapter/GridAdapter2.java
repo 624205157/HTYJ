@@ -36,7 +36,7 @@ public class GridAdapter2 extends BaseQuickAdapter<Grid, BaseViewHolder>  {
         holder.setText(R.id.name,grid.getName());
         String users = "";
         for (User user : grid.getUsers()){
-            users = users + user.getName() + "、";
+            users = users + user.getSubject().getName() + "、";
         }
         if (!TextUtils.isEmpty(users)){
             users = users.substring(0, users.length() - 1);

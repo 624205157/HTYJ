@@ -16,14 +16,19 @@ import com.example.commonlib.utils.ShareHelper;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
+import com.example.main.bean.User;
 import com.example.main.fragment.BaseFragment;
 import com.example.main.fragment.Fragment1;
 import com.example.main.fragment.Fragment2;
 import com.example.main.fragment.Fragment3;
 import com.example.main.fragment.Fragment4;
+import com.example.main.utils.Utils;
+import com.google.gson.Gson;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
 import com.tencent.liteav.login.model.ProfileManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,20 +197,9 @@ public class MainActivity extends BaseActivity {
                         if (allGranted) {
                             //判断是否已登录
                             String username = (String) shareHelper.query("username","");
+                            String password = (String) shareHelper.query("password","");
                             if (!TextUtils.isEmpty( username)){
-                                /**
-                                 * 腾讯云登录
-                                 */
-                                ProfileManager.getInstance().login(username, "", new ProfileManager.ActionCallback() {
-                                    @Override
-                                    public void onSuccess() {
-
-                                    }
-
-                                    @Override
-                                    public void onFailed(int code, String msg) {
-                                    }
-                                });
+                                login(username,password);
                             }else {
                                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
                                 finish();
@@ -220,6 +214,65 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    private void login(String username,String password) {
+        buildDialog("登录中，请稍后...");
+        User user = new User(username, Utils.encryption(password, "SHA-1"));
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(user);
+        RequestCenter.requestLogin(jsonStr, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object o) {
+                cancelDialog();
+                try {
+                    JSONObject jsonObject = new JSONObject(o.toString());
+                    String code = jsonObject.getString("code");
+                    String message = jsonObject.getString("msg");
+                    showToast(message);
+                    if (TextUtils.equals("0", code)) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        shareHelper
+                                .save("username", username)
+                                .save("password", password)
+                                .save("token", data.getString("token"))
+                                .save("subject", data.getString("subject")).commit();
+
+
+                        /**
+                         * 腾讯云登录
+                         */
+                        ProfileManager.getInstance().login(username, "", new ProfileManager.ActionCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Log.e("腾讯云登录", "成功");
+//                                startActivity(new Intent(MainActivity.this, MainActivity.class));
+//                                finish();
+                            }
+
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                Log.e("腾讯云登录失败", msg);
+                            }
+                        });
+
+                    }else {
+                        showToast("登录信息失效，请重新登录");
+                        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                        finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                showToast("网络连接失败,请稍后重试");
+                e.printStackTrace();
+                cancelDialog();
+            }
+        });
     }
 
 

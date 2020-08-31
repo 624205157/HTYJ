@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/iv_1"
@@ -30,15 +31,16 @@
         />
 
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/head_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/my_head"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         app:layout_constraintTop_toTopOf="@+id/iv_1"
         app:layout_constraintBottom_toBottomOf="@id/iv_1"
         app:layout_constraintLeft_toLeftOf="@id/tv_1"
-        android:layout_marginLeft="25dp"
+        android:layout_marginLeft="20dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FF000000"
         />
 
 
@@ -46,7 +48,7 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="戎娟爽"
+        tools:text="戎娟爽"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:textStyle="bold"
@@ -58,15 +60,18 @@
 
     <TextView
         android:id="@+id/department"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="吉林省xxxx科技有限公司"
+        tools:text="吉林省xxxx科技有限公司"
         android:textSize="18sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/head_img"
         app:layout_constraintLeft_toRightOf="@+id/head_img"
         app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="25dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout

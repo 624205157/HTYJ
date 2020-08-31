@@ -23,8 +23,8 @@ public class GridDetailsAdapter extends BaseQuickAdapter<User, BaseViewHolder> {
     @Override
     protected void convert(@NotNull BaseViewHolder holder, User user) {
 
-        holder.setText(R.id.name,user.getName())
-                .setText(R.id.tel,user.getTel());
+        holder.setText(R.id.name,user.getSubject().getName())
+                .setText(R.id.tel,user.getSubject().getMobile());
 
     }
 }
