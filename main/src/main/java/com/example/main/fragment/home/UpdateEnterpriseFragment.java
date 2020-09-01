@@ -199,6 +199,8 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
     }
 
     private void getData() {
+        pageNum = 0;
+        mData.clear();
         RequestParams params = new RequestParams();
         try {
             params.put("pageNum", ++pageNum);
@@ -216,6 +218,8 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
                     JSONObject data = result.getJSONObject("data");
 
                     if (TextUtils.equals(result.getString("code"), "0")) {
+                    /*    mData.removeAll(mData);
+                        mData.clear();*/
                         mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Enterprise>>() {
                         }.getType()));
                         mAdapter.setList(mData);

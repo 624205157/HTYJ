@@ -16,19 +16,20 @@ public class Enterprise {
     private String id;
     private String name;
     private String address;
-    @SerializedName("contact_phone")
+
+    @SerializedName("contactPhone")
     private String tel;//企业电话
-    @SerializedName("fax_number")
+    @SerializedName("faxNumber")
     private String fax;//传真号
-    @SerializedName("sc_code")
+    @SerializedName("creditCode")
     private String socialCreditCode;//社会信用代码
-    @SerializedName("legal_person")
+    @SerializedName("legalPerson")
     private String legalPerson;//法人
-    @SerializedName("legal_phone")
+    @SerializedName("legalPhone")
     private String legalPersonTel;//法人电话
     @SerializedName("star")
     private int isStart;//是否星标企业
-    @SerializedName("grid_name")
+    @SerializedName("gridName")
     private String grid;//网格名称
     private double longitude;//经度
     private double latitude;//纬度

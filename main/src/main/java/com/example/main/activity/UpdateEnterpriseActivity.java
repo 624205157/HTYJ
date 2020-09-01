@@ -68,7 +68,8 @@ import butterknife.OnClick;
  */
 public class UpdateEnterpriseActivity extends BaseActivity {
 
-
+    String hasLicense="";
+    String hasIdentity="";
     @BindView(R2.id.map)
     MapView map;
     @BindView(R2.id.name)
@@ -397,20 +398,22 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                         latLng = new LatLng(enterprise.getLatitude(), enterprise.getLongitude());
                         moveMap(latLng, enterprise.getAddress());
                         LocalMedia license = new LocalMedia();
-                        license.setPath(enterprise.getLicense().get(0).getUrl());
-                        license.setUid(enterprise.getLicense().get(0).getUid());
-                        selectList.add(license);
+                        if(enterprise.getLicense()!=null) {
+                            license.setPath(enterprise.getLicense().get(0).getUrl());
+                            license.setUid(enterprise.getLicense().get(0).getUid());
+                            selectList.add(license);
+                            adapter.setList(selectList);
+                            adapter.notifyDataSetChanged();
+                        }
+
                         LocalMedia identity = new LocalMedia();
-                        identity.setPath(enterprise.getIdentity().get(0).getUrl());
-                        identity.setUid(enterprise.getIdentity().get(0).getUid());
-                        selectList2.add(identity);
-
-                        adapter.setList(selectList);
-                        adapter.notifyDataSetChanged();
-
-                        adapter2.setList(selectList2);
-                        adapter2.notifyDataSetChanged();
-
+                        if(enterprise.getIdentity()!=null) {
+                            identity.setPath(enterprise.getIdentity().get(0).getUrl());
+                            identity.setUid(enterprise.getIdentity().get(0).getUid());
+                            selectList2.add(identity);
+                            adapter2.setList(selectList2);
+                            adapter2.notifyDataSetChanged();
+                        }
 
                         if (TextUtils.isEmpty(enterprise.getGrid())) {
                             return;
@@ -448,17 +451,18 @@ public class UpdateEnterpriseActivity extends BaseActivity {
         try {
             params.put("id", enterprise.getId());
             params.put("name", Utils.getText(name));
-            params.put("sc_code", Utils.getText(enterpriseCode));
+            params.put("creditCode", Utils.getText(enterpriseCode));
             params.put("address", Utils.getText(address));
-            params.put("contact_phone", Utils.getText(tel));
-            params.put("fax_number", Utils.getText(fax));
-            params.put("legal_person", Utils.getText(legalPerson));
-            params.put("legal_phone", Utils.getText(legalPersonTel));
+            params.put("contactPhone", Utils.getText(tel));
+            params.put("faxNumber", Utils.getText(fax));
+            params.put("legalPerson", Utils.getText(legalPerson));
+            params.put("legalPhone", Utils.getText(legalPersonTel));
             params.put("longitude", latLng.longitude + "");
             params.put("latitude", latLng.latitude + "");
             params.put("star", isStart + "");
-            params.put("grid_id", gridSelect.getId());
-            params.put("grid_name", gridSelect.getName());
+            params.put("gridId", gridSelect.getId());
+            params.put("gridName", gridSelect.getName());
+
             String exist="";
             if (selectList.size()>0){
                 Iterator<LocalMedia> it_b=selectList.iterator();
@@ -467,6 +471,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                     if (!TextUtils.isEmpty(localMedia.getUid())){
                         exist+= localMedia.getUid()+",";
                         it_b.remove();
+                        hasLicense="1";
                     }
                 }
             }
@@ -478,11 +483,13 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                     if (!TextUtils.isEmpty(localMedia.getUid())){
                         exist+= localMedia.getUid()+",";
                         it_b.remove();
+                        hasIdentity="1";
                     }
                 }
             }
 
-
+            params.put("hasIdentity",hasIdentity);
+            params.put("hasLicense",hasLicense);
             params.put("exist", exist.substring(0, exist.length() - 1));
 
         } catch (Exception e) {
