@@ -369,12 +369,12 @@ public class AddEnterpriseFragment extends BaseFragment {
         RequestParams params = new RequestParams();
         try {
             params.put("name", Utils.getText(name));
-            params.put("sc_code", Utils.getText(enterpriseCode));
+            params.put("creditCode", Utils.getText(enterpriseCode));//信用代码
             params.put("address", Utils.getText(address));
-            params.put("contact_phone", Utils.getText(tel));
-            params.put("fax_number", Utils.getText(fax));
-            params.put("legal_person", Utils.getText(legalPerson));
-            params.put("legal_phone", Utils.getText(legalPersonTel));
+            params.put("contactPhone", Utils.getText(tel));//企业联系电话
+            params.put("faxNumber", Utils.getText(fax));
+            params.put("legalPerson", Utils.getText(legalPerson));
+            params.put("legalPhone", Utils.getText(legalPersonTel));
             params.put("longitude", latLng.longitude + "");
             params.put("latitude", latLng.latitude+ "");
             params.put("star", isStart + "");
