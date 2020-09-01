@@ -30,6 +30,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -37,6 +38,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import constant.UiType;
+import listener.Md5CheckResultListener;
+import listener.UpdateDownloadListener;
+import model.UiConfig;
+import model.UpdateConfig;
+import update.UpdateAppUtils;
 
 /**
  * Created by 陈泽宇 on 2020/8/31
@@ -53,6 +60,11 @@ public class UpdateMyActivity extends BaseActivity {
     private String path = "";
 
     private Subject personInfo;
+
+    private String apkUrl = "http://118.24.148.250:8080/yk/update_signed.apk";
+    private String updateContent = "1、Kotlin重构版\n2、支持自定义UI\n3、增加md5校验\n4、更多功能等你探索";
+
+
     @Override
     protected int setContentView() {
         return R.layout.activity_update_my;
@@ -73,14 +85,14 @@ public class UpdateMyActivity extends BaseActivity {
         }.getType());
         name.setText(personInfo.getName());
         tel.setText(personInfo.getMobile());
-
-        GlideUrl glideUrl = new GlideUrl(personInfo.getAvatar(), new LazyHeaders.Builder()
-                .addHeader("Authorization", Constants.TAKEN)
-                .build());
-        Glide.with(this).load(glideUrl).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
-                .into(headImg);
-
+        if (!TextUtils.isEmpty(personInfo.getAvatar())) {
+            GlideUrl glideUrl = new GlideUrl(personInfo.getAvatar(), new LazyHeaders.Builder()
+                    .addHeader("Authorization", Constants.TAKEN)
+                    .build());
+            Glide.with(this).load(glideUrl).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
+                    .into(headImg);
+        }
 
 
     }
@@ -170,9 +182,7 @@ public class UpdateMyActivity extends BaseActivity {
                     String message = jsonObject.getString("msg");
                     showToast(message);
                     if (TextUtils.equals("0", code)) {
-                        Gson gson = new Gson();
-                        String json = gson.toJson(personInfo);
-                        shareHelper.save("subject",json).commit();
+                        shareHelper.save("subject",jsonObject.getString("data")).commit();
                         finish();
                     }
                 } catch (Exception e) {
@@ -188,5 +198,51 @@ public class UpdateMyActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private void updateApp(){
+        UpdateConfig updateConfig = new UpdateConfig();
+        updateConfig.setCheckWifi(true);
+        updateConfig.setNeedCheckMd5(true);
+//        updateConfig.setNotifyImgRes(R.drawable.ic_logo);
+
+        UiConfig uiConfig = new UiConfig();
+        uiConfig.setUiType(UiType.PLENTIFUL);
+
+        UpdateAppUtils
+                .getInstance()
+                .apkUrl(apkUrl)
+                .updateTitle("发现新版本")
+                .updateContent(updateContent)
+                .uiConfig(uiConfig)
+                .updateConfig(updateConfig)
+                .setMd5CheckResultListener(new Md5CheckResultListener() {
+                    @Override
+                    public void onResult(boolean result) {
+
+                    }
+                })
+                .setUpdateDownloadListener(new UpdateDownloadListener() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onDownload(int progress) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onError(@NotNull Throwable e) {
+
+                    }
+                })
+                .update();
     }
 }

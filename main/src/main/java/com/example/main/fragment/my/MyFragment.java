@@ -52,7 +52,7 @@ public class MyFragment extends BaseFragment {
 
     }
 
-    private void initData(){
+    private void initData() {
         String subject = (String) shareHelper.query("subject", "");
         if (TextUtils.isEmpty(subject)) {
             return;
@@ -62,17 +62,19 @@ public class MyFragment extends BaseFragment {
         }.getType());
         name.setText(personInfo.getName());
 
-        GlideUrl glideUrl = new GlideUrl(personInfo.getAvatar(), new LazyHeaders.Builder()
-                .addHeader("Authorization", Constants.TAKEN)
-                .build());
-        Glide.with(this).load(glideUrl).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
-                .into(headImg);
+        if (!TextUtils.isEmpty(personInfo.getAvatar())) {
+            GlideUrl glideUrl = new GlideUrl(personInfo.getAvatar(), new LazyHeaders.Builder()
+                    .addHeader("Authorization", Constants.TAKEN)
+                    .build());
+            Glide.with(this).load(glideUrl).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
+                    .into(headImg);
+        }
 
         List<Grid> grids = new ArrayList<>();
         grids.addAll(personInfo.getGrids());
         String departmentStr = "";
-        for (Grid grid : grids){
+        for (Grid grid : grids) {
             departmentStr = departmentStr + "-" + grid.getName();
         }
         department.setText(departmentStr.substring(1));
@@ -86,8 +88,10 @@ public class MyFragment extends BaseFragment {
         } else if (id == R.id.update_version) {
 
         } else if (id == R.id.cancel) {
-            shareHelper.save("username", "");
-            shareHelper.save("password", "");
+            shareHelper.save("username", "")
+                    .save("password", "")
+                    .save("token", "")
+                    .save("subject","").commit();
             startActivity(new Intent(getActivity(), LoginActivity.class));
             mActivity.finish();
         }

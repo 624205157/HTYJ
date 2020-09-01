@@ -115,7 +115,7 @@
 
 
                 <TextView
-                    android:id="@+id/enterprise_code_tv"
+                    android:id="@+id/address_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@+id/name"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/enterprise_code_tv"
+                    app:layout_constraintTop_toTopOf="@+id/address_tv"
                     android:background="@null"
                     android:hint="请输入信用代码"
                     android:textSize="16sp"
@@ -148,7 +148,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/enterprise_code_tv"
+                    app:layout_constraintLeft_toLeftOf="@+id/address_tv"
                     app:layout_constraintTop_toBottomOf="@+id/enterprise_code"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="5dp"
@@ -192,7 +192,7 @@
 
 
                 <TextView
-                    android:id="@+id/tel_tv"
+                    android:id="@+id/change_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -210,7 +210,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@+id/name"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tel_tv"
+                    app:layout_constraintTop_toTopOf="@+id/change_tv"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     android:background="@null"
@@ -224,14 +224,14 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/tel_tv"
+                    app:layout_constraintLeft_toLeftOf="@+id/change_tv"
                     app:layout_constraintTop_toBottomOf="@+id/tel"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="5dp"
                     />
 
                 <TextView
-                    android:id="@+id/fax_tv"
+                    android:id="@+id/time_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -249,7 +249,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@+id/name"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/fax_tv"
+                    app:layout_constraintTop_toTopOf="@+id/time_tv"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     android:background="@null"
@@ -263,7 +263,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/fax_tv"
+                    app:layout_constraintLeft_toLeftOf="@+id/time_tv"
                     app:layout_constraintTop_toBottomOf="@+id/fax"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="5dp"
@@ -348,7 +348,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/key_enterprises_tv"
+                    android:id="@+id/is_intact_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -366,7 +366,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@+id/name"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/key_enterprises_tv"
+                    app:layout_constraintTop_toTopOf="@+id/is_intact_tv"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     android:background="@null"
@@ -392,7 +392,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/key_enterprises_tv"
+                    app:layout_constraintLeft_toLeftOf="@+id/is_intact_tv"
                     app:layout_constraintTop_toBottomOf="@+id/key_enterprises"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="5dp"

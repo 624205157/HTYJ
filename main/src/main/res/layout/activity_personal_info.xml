@@ -109,7 +109,7 @@
             />
 
         <TextView
-            android:id="@+id/tel_tv"
+            android:id="@+id/change_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="联系电话"
@@ -128,9 +128,9 @@
             android:text="15214565412"
             android:textColor="@color/text_color2"
             android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@+id/tel_tv"
-            app:layout_constraintTop_toTopOf="@+id/tel_tv"
-            app:layout_constraintBottom_toBottomOf="@+id/tel_tv"
+            app:layout_constraintLeft_toRightOf="@+id/change_tv"
+            app:layout_constraintTop_toTopOf="@+id/change_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/change_tv"
             android:layout_marginLeft="25dp"
             />
 
