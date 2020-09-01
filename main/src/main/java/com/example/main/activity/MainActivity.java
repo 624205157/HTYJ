@@ -196,10 +196,13 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onResult(boolean allGranted, List<String> grantedList, List<String> deniedList) {
                         if (allGranted) {
+                            if (TextUtils.equals("LoginActivity",getIntent().getStringExtra("from"))){
+                                return;
+                            }
                             //判断是否已登录
                             String username = (String) shareHelper.query("username","");
                             String password = (String) shareHelper.query("password","");
-                            if (!TextUtils.isEmpty( username)){
+                            if (!TextUtils.isEmpty(username)){
                                 login(username,password);
                             }else {
                                 startActivity(new Intent(MainActivity.this,LoginActivity.class));

@@ -54,7 +54,7 @@
             app:layout_constraintLeft_toRightOf="@+id/name"
             android:layout_marginLeft="20dp"
             />
-        
+
         <View
             android:id="@+id/v_1"
             android:layout_width="0dp"

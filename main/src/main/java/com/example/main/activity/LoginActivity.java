@@ -79,7 +79,9 @@ public class LoginActivity extends BaseActivity {
                             @Override
                             public void onSuccess() {
                                 Log.e("腾讯云登录", "成功");
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("from","LoginActivity");
+                                startActivity(intent);
                                 finish();
                             }
 

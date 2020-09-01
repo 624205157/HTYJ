@@ -13,6 +13,8 @@ import com.example.commonlib.utils.ShareHelper;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.tencent.liteav.login.model.ProfileManager;
 
+import update.UpdateAppUtils;
+
 /**
  * Created by czy on 2020/8/12 21:15.
  * describe:
@@ -31,6 +33,9 @@ public class MyApplication extends BaseApplication {
         // 初始化MultiDex
         MultiDex.install(this);
         Fresco.initialize(this);
+
+        //app更新初始化
+        UpdateAppUtils.init(this);
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
