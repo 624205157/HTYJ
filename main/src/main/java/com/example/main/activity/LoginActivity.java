@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.EditText;
 
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.okhttp.exception.OkHttpException;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.Constants;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
@@ -69,7 +69,8 @@ public class LoginActivity extends BaseActivity {
                                 .save("password", password)
                                 .save("token", data.getString("token"))
                                 .save("subject", data.getString("subject")).commit();
-
+                        Constants.TAKEN = data.getString("token");
+//                        Constants.SERVICE_ID = data.getInt("serviceId");
 
                         /**
                          * 腾讯云登录

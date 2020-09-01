@@ -20,6 +20,8 @@ public class UrlService {
     public static final String TYPE = URL + "system/dictionary";//类别
     public static final String TASK = URL + "task/board";//任务
 
+    public static final String USER = URL + "system/user";//任务
+
 
 
 

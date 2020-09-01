@@ -3,14 +3,19 @@ package com.example.main.fragment.my;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+import com.example.commonlib.Constants;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.activity.LoginActivity;
+import com.example.main.activity.my.UpdateMyActivity;
 import com.example.main.bean.Grid;
 import com.example.main.bean.Subject;
 import com.example.main.fragment.BaseFragment;
@@ -44,6 +49,10 @@ public class MyFragment extends BaseFragment {
 
     @Override
     protected void lazyLoad(Bundle savedInstanceState) {
+
+    }
+
+    private void initData(){
         String subject = (String) shareHelper.query("subject", "");
         if (TextUtils.isEmpty(subject)) {
             return;
@@ -53,9 +62,12 @@ public class MyFragment extends BaseFragment {
         }.getType());
         name.setText(personInfo.getName());
 
-        Glide.with(this).load(personInfo.getAvatar()).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
+        GlideUrl glideUrl = new GlideUrl(personInfo.getAvatar(), new LazyHeaders.Builder()
+                .addHeader("Authorization", Constants.TAKEN)
+                .build());
+        Glide.with(this).load(glideUrl).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
-         .into(headImg);
+                .into(headImg);
 
         List<Grid> grids = new ArrayList<>();
         grids.addAll(personInfo.getGrids());
@@ -70,13 +82,26 @@ public class MyFragment extends BaseFragment {
     public void onViewClicked(View view) {
         int id = view.getId();
         if (id == R.id.update_personal) {
-
+            startActivity(new Intent(getActivity(), UpdateMyActivity.class));
         } else if (id == R.id.update_version) {
+
         } else if (id == R.id.cancel) {
             shareHelper.save("username", "");
             shareHelper.save("password", "");
             startActivity(new Intent(getActivity(), LoginActivity.class));
             mActivity.finish();
         }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onSupportVisible() {
+        super.onSupportVisible();
+        initData();
     }
 }

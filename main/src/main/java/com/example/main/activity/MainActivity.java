@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RadioGroup;
 
+import com.example.commonlib.Constants;
 import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.okhttp.exception.OkHttpException;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
@@ -237,7 +238,8 @@ public class MainActivity extends BaseActivity {
                                 .save("password", password)
                                 .save("token", data.getString("token"))
                                 .save("subject", data.getString("subject")).commit();
-
+                        Constants.TAKEN = data.getString("token");
+//                        Constants.SERVICE_ID = data.getInt("serviceId");
 
                         /**
                          * 腾讯云登录

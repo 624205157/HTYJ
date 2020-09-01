@@ -1,4 +1,4 @@
-package com.example.main;
+package com.example.commonlib;
 
 public class Constants {
 
@@ -15,5 +15,6 @@ public class Constants {
      *
      * 猎鹰轨迹服务，同一个开发者账号下的key可以直接使用同账号下的sid，不再需要人工绑定
      */
-    public static final long SERVICE_ID = 184215;
+    public static long SERVICE_ID = 184215;
+    public static String TAKEN = "";
 }

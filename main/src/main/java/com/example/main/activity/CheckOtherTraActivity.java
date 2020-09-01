@@ -26,7 +26,7 @@ import com.amap.api.track.query.entity.TrackPoint;
 import com.amap.api.track.query.model.HistoryTrackRequest;
 import com.amap.api.track.query.model.HistoryTrackResponse;
 import com.example.commonlib.base.BaseActivity;
-import com.example.main.Constants;
+import com.example.commonlib.Constants;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.utils.SimpleOnTrackListener;
