@@ -11,13 +11,12 @@
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
 
-        <!--        <meta-data-->
-        <!--            android:name="com.amap.api.v2.apikey"-->
-        <!--            android:value="fb96e12a76ab5fe7c85c24b23c9d830a" -->
-        <!--            />-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="bfdc369a22efc57e7c0eb15abefa2cda" />
+            android:value="fb96e12a76ab5fe7c85c24b23c9d830a" />
+        <!--        <meta-data-->
+        <!--            android:name="com.amap.api.v2.apikey"-->
+        <!--            android:value="bfdc369a22efc57e7c0eb15abefa2cda" />-->
 
         <service
             android:name=".CallService"

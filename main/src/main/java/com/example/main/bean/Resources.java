@@ -16,13 +16,13 @@ public class Resources {
     private String id;
     private String name;
     private String address;
-    @SerializedName("category_name")
+    @SerializedName("categoryName")
     private String type;
     private String total;
     private double longitude;//经度
     private double latitude;//纬度
     private String surplus;//剩余量
-    @SerializedName("grid_name")
+    @SerializedName("gridName")
     private String grid;
 
     private List<ImageList> attachments;

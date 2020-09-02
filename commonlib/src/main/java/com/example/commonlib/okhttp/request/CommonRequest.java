@@ -150,7 +150,7 @@ public class CommonRequest {
         //添加图片集合放到请求体中
         if (files != null) {
             for (File f : files) {
-                bodyBuilder.addFormDataPart("files", f.getName(),
+                bodyBuilder.addFormDataPart("attachments", f.getName(),
                         RequestBody.create(MediaType.parse("image/png"), f));
             }
         }

@@ -402,15 +402,15 @@ public class UpdateResourcesActivity  extends BaseActivity {
         try {
             params.put("id",resources.getId());
             params.put("name", Utils.getText(name));
-            params.put("category_id", typeSelect.getId());
-            params.put("category_name", typeSelect.getName());
+            params.put("categoryId", typeSelect.getId());
+            params.put("categoryName", typeSelect.getName());
             params.put("address", Utils.getText(address));
             params.put("total", Utils.getText(total));
             params.put("surplus", Utils.getText(remain));
             params.put("longitude", latLng.longitude + "");
             params.put("latitude", latLng.latitude+ "");
-            params.put("grid_id", gridSelect.getId());
-            params.put("grid_name", gridSelect.getName());
+            params.put("gridId", gridSelect.getId());
+            params.put("gridName", gridSelect.getName());
 
 
             String exist="";
@@ -503,7 +503,7 @@ public class UpdateResourcesActivity  extends BaseActivity {
 
     private void getTypeList(){
         RequestParams params = new RequestParams();
-        params.put("pid","EMERGENCY_RESOURCE_TYPE");//资源种类
+        params.put("pId","EMERGENCY_RESOURCE_TYPE");//资源种类
         RequestCenter.getType(params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
