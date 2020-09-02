@@ -14,6 +14,7 @@ import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.activity.EnterpriseActivity;
 import com.example.main.activity.EventActivity;
+import com.example.main.activity.PlanListActivity;
 import com.example.main.activity.ResourcesActivity;
 import com.example.main.activity.TaskActivity;
 import com.example.main.activity.TrajectoryActivity;
@@ -59,7 +60,7 @@ public class HomeFragment extends BaseFragment {
         } else if (id == R.id.resources) {
             startActivity(new Intent(getActivity(), ResourcesActivity.class));
         } else if (id == R.id.plan) {
-
+            startActivity(new Intent(getActivity(), PlanListActivity.class));
         } else if (id == R.id.trajectory) {
             startActivity(new Intent(getActivity(), TrajectoryActivity.class));
         }

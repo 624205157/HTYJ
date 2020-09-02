@@ -45,12 +45,6 @@ public class TaskActivity extends RightTitleActivity {
     protected void onCreate(Bundle savedInstanceState, String a) {
         addBack();
         setTitleText("任务管理");
-        rightTitle("下发任务", new RightClickListener() {
-            @Override
-            public void callBack() {
-//                startActivity(new Intent(TaskActivity.this,ReportEventActivity.class));
-            }
-        });
         initView();
     }
 

@@ -8,7 +8,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.main.R;
-import com.example.main.bean.Event;
 import com.example.main.bean.Task;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +27,8 @@ public class TaskAdapter extends BaseQuickAdapter<Task,BaseViewHolder> implement
     @Override
     protected void convert(@NotNull BaseViewHolder holder, Task data) {
         holder.setText(R.id.name,data.getName());
-        holder.setText(R.id.time,"下发时间: "+data.getTime());
+        holder.setText(R.id.time_limit,data.getName());
+        holder.setText(R.id.time,"开始时间: "+data.getStartTime());
         if (TextUtils.equals(data.getState(),"3")){
             holder.setText(R.id.level,"未开始");
             holder.setGone(R.id.finish,true);

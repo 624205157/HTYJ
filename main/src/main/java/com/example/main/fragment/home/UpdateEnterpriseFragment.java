@@ -199,8 +199,6 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
     }
 
     private void getData() {
-        pageNum = 0;
-        mData.clear();
         RequestParams params = new RequestParams();
         try {
             params.put("pageNum", ++pageNum);

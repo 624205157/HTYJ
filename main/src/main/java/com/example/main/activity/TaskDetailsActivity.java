@@ -7,13 +7,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
@@ -27,14 +26,19 @@ import com.example.main.R2;
 import com.example.main.RequestCenter;
 import com.example.main.UrlService;
 import com.example.main.adapter.EventDetailsAdapter;
-import com.example.main.bean.Event;
-import com.example.main.bean.ImageList;
+import com.example.main.adapter.GridImageAdapter;
 import com.example.main.bean.Processes;
 import com.example.main.bean.Task;
+import com.example.main.utils.FullyGridLayoutManager;
+import com.example.main.utils.GlideEngine;
 import com.example.main.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.listener.OnResultCallbackListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,26 +57,27 @@ import static com.amap.api.maps.model.BitmapDescriptorFactory.getContext;
  */
 public class TaskDetailsActivity extends BaseActivity {
     @BindView(R2.id.name)
-    EditText name;
-    @BindView(R2.id.type)
-    TextView type;
-    @BindView(R2.id.grid)
-    TextView grid;
-    @BindView(R2.id.count)
-    TextView count;
+    TextView name;
+    @BindView(R2.id.start_time)
+    TextView startTime;
+    @BindView(R2.id.stop_time)
+    TextView stopTime;
+    @BindView(R2.id.time_limit)
+    TextView timeLimit;
     @BindView(R2.id.state)
     TextView state;
-    @BindView(R2.id.state_recycler)
-    RecyclerView stateRecycler;
-    @BindView(R2.id.submit)
-    TextView submit;
-    @BindView(R2.id.state_switch)
-    Switch stateSwitch;
+    @BindView(R2.id.count)
+    TextView count;
+    @BindView(R2.id.controls)
+    LinearLayout controls;
+//    @BindView(R2.id.state_recycler)
+//    RecyclerView stateRecycler;
 
-    private EventDetailsAdapter mAdapter;
-    private List<Processes> mData = new ArrayList<>();
+//    private EventDetailsAdapter mAdapter;
+//    private List<Processes> mData = new ArrayList<>();
 
     private Task task;
+
     @Override
     protected int setContentView() {
         return R.layout.activity_task;
@@ -83,171 +88,113 @@ public class TaskDetailsActivity extends BaseActivity {
         addBack();
         setTitleText("下发任务");
 
-        mAdapter = new EventDetailsAdapter(mData);
-
-        mAdapter.setAnimationEnable(false);
-        stateRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        stateRecycler.setAdapter(mAdapter);
-        if (TextUtils.equals(getIntent().getStringExtra("state"), "1")) {
-            submit.setVisibility(View.GONE);
-            state.setText("是");
-        } else {
-            state.setText("否");
-        }
-
-//        getData();
-    }
-
-
-    private void getData() {
-        RequestParams params = new RequestParams();
-        params.put("id", getIntent().getStringExtra("id"));
-
-        RequestCenter.getDataList(UrlService.EVENT, params, new DisposeDataListener() {
-            @Override
-            public void onSuccess(Object responseObj) {
-                try {
-                    JSONObject result = new JSONObject(responseObj.toString());
-                    JSONObject data = (JSONObject) result.getJSONObject("data").getJSONArray("list").get(0);
-
-                    if (TextUtils.equals(result.getString("code"), "0")) {
-
-                        task = new Gson().fromJson(data.toString(), new TypeToken<Task>() {
-                        }.getType());
-
-                        name.setText("事件名称: " + task.getName());
-//                        address.setText("发生地址: " + event.getAddress());
-//                        type.setText("事件类型: " + event.getType());
-//                        level.setText("紧急程度: " + event.getLevel());
-//                        count.setText(event.getContent());
-
-//                        for (ImageList imageList : event.getAttachments()) {
-//                            selectList.add(new LocalMedia(imageList.getUid(), imageList.getUrl()));
-//                        }
+//        mAdapter = new EventDetailsAdapter(mData);
 //
-//                        mData.addAll(event.getProcesses());
-                        mAdapter.setList(mData);
+//        mAdapter.setAnimationEnable(false);
+//        stateRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+//
+//        stateRecycler.setAdapter(mAdapter);
 
-                        mAdapter.notifyDataSetChanged();
-
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(OkHttpException responseObj) {
-
-            }
-        });
+        getData();
 
     }
 
-    @OnClick({R2.id.submit})
+    private void getData(){
+        task = getIntent().getParcelableExtra("task");
+    }
+
+
+
+    @OnClick({R2.id.submit, R2.id.save})
     public void onViewClicked(View view) {
         int id = view.getId();
         if (id == R.id.submit) {
-//            showDialog();
+
+        } else if (id == R.id.save) {
+
         }
     }
 
-    private OptionsPickerView reasonPicker;
+    private GridImageAdapter adapter;
+    private List<LocalMedia> selectList = new ArrayList<>();
 
-    private void showDialog() {
-        final String[] stateStr = new String[1];
-        View view = getLayoutInflater().inflate(R.layout.dialog_processing_opinion, null);
-        ImageView close = view.findViewById(R.id.close);
-        EditText count = view.findViewById(R.id.count);
-        LinearLayout ll = view.findViewById(R.id.ll);
-        TextView chose = view.findViewById(R.id.chose_next);
-        TextView submit = view.findViewById(R.id.submit);
-        ((RadioGroup) view.findViewById(R.id.deal_with_rg)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+    private void initPhotoRecycler(RecyclerView photoRecycler) {
+
+        FullyGridLayoutManager manager = new FullyGridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
+        photoRecycler.setLayoutManager(manager);
+        adapter = new GridImageAdapter(this, new GridImageAdapter.onAddPicClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.over) {//办结
-                    stateStr[0] = "1";
-                } else if (checkedId == R.id.next) {//转发
-                    stateStr[0] = "0";
-//                    ll.setVisibility(View.VISIBLE);
-
-                }
+            public void onAddPicClick() {
+                initSelectImage(adapter, selectList);
             }
         });
-        BottomDialog dialog = new BottomDialog(this)
-                .setAddView(view);
-        dialog.show();
+        adapter.setList(selectList);
+        adapter.setSelectMax(9);
+        photoRecycler.setAdapter(adapter);
 
-        close.setOnClickListener(new View.OnClickListener() {
+        adapter.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        chose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reasonPicker.show();
-            }
-        });
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buildDialog("");
-                sendData(Utils.getText(count), stateStr[0], "", dialog);
-            }
-        });
-    }
-
-    private void sendData(String content, String state, String users, BottomDialog dialog) {
-        if (TextUtils.isEmpty(content)) {
-            showToast("处理意见不可为空");
-            return;
-        }
-        if (TextUtils.isEmpty(state)) {
-            showToast("处理状态未选择");
-            return;
-        }
-        if (TextUtils.equals(state, "0") && TextUtils.isEmpty(users)) {
-            showToast("未选择转发对象");
-            return;
-        }
-        Processes processes = new Processes();
-//        processes.setEventId(event.getId());
-        processes.setContent(content);
-        processes.setState(state);
-        processes.setUserName(users);
-
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(processes);
-
-        RequestCenter.patchData(UrlService.EVENT, jsonStr, new DisposeDataListener() {
-            @Override
-            public void onSuccess(Object responseObj) {
-                cancelDialog();
-                showToast("处理成功");
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(OkHttpException responseObj) {
-                showToast(responseObj.getMessage());
+            public void onItemClick(int position, View v) {
+                PictureSelector.create(TaskDetailsActivity.this)
+                        .themeStyle(R.style.picture_default_style)
+                        .imageEngine(GlideEngine.createGlideEngine())
+                        .openExternalPreview(position, selectList);
             }
         });
 
     }
 
-    private void initPicker() {
-        reasonPicker = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-//                gridSelect = gridList.get(options1);
-//                grid.setText(gridSelect.getName());
-            }
-        }).setTitleText("选择人员").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-//        reasonPicker.setPicker(gridSelectList);
-    }
+    /**
+     * 选择图片
+     * @param adapter
+     * @param selectList
+     */
+    private void initSelectImage(GridImageAdapter adapter, List<LocalMedia> selectList) {
+        PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                .imageEngine(GlideEngine.createGlideEngine())
+                .maxSelectNum(9)// 最大图片选择数量
+                .minSelectNum(0)// 最小选择数量
+                .imageSpanCount(4)// 每行显示个数
+                .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选
+                .previewImage(true)// 是否可预览图片
+                .isCamera(true)// 是否显示拍照按钮
+                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                //.imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+                //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+                .compress(true)// 是否压缩
+                .synOrAsy(true)//同步true或异步false 压缩 默认同步
+                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                .selectionMedia(selectList)// 是否传入已选图片
+                .minimumCompressSize(100)// 小于100kb的图片不压缩
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(List<LocalMedia> result) {
+                        // 图片选择结果回调
+                        selectList.clear();
+                        selectList.addAll(result);
+                        // 例如 LocalMedia 里面返回三种path
+                        // 1.media.getPath(); 为原图path
+                        // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
+                        // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
+                        // 如果裁剪并压缩了，已取压缩路径为准，因为是先裁剪后压缩的
+                        for (LocalMedia media : selectList) {
+//                            Log.i("图片-----》", new File(media.getPath()).length() + "");
+//                            Log.i("压缩图片-----》", new File(media.getCompressPath()).length() + "");
 
+//                        Bitmap bitmap = BitmapFactory.decodeFile(media.getCompressPath());
+//                        iv_document.setImageBitmap(bitmap);
+                            adapter.setList(selectList);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // 取消
+                    }
+                });
+
+    }
 }

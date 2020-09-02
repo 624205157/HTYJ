@@ -74,6 +74,12 @@
         <activity
             android:name=".activity.TrajectoryActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.PlanListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.CheckOtherTraActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
             android:name=".activity.my.UpdateMyActivity"

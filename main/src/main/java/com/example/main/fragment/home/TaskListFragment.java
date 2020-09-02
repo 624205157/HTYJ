@@ -113,7 +113,9 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.update) {
                     showToast("修改");
-                    startActivity(new Intent(getActivity(), TaskDetailsActivity.class));
+                    Intent intent = new Intent(getActivity(), TaskDetailsActivity.class);
+                    intent.putExtra("task",mData.get(position));
+                    startActivity(intent);
                 }
                 if (view.getId() == R.id.del) {
                     new MyDialog(mContext)

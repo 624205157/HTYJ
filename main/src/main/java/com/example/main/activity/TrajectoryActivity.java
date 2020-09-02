@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -61,7 +62,7 @@ import butterknife.OnClick;
  * Created by czy on 2020/8/16 13:46.
  * describe: 轨迹
  */
-public class TrajectoryActivity extends BaseActivity {
+public class TrajectoryActivity extends RightTitleActivity {
     @BindView(R2.id.time)
     TextView time;
     @BindView(R2.id.map)
@@ -91,6 +92,14 @@ public class TrajectoryActivity extends BaseActivity {
 
         addBack();
         setTitleText("轨迹管理");
+
+        rightTitle("查看他人轨迹", new RightClickListener() {
+            @Override
+            public void callBack() {
+                startActivity(new Intent(TrajectoryActivity.this,CheckOtherTraActivity.class));
+            }
+        });
+
         isOpen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -141,9 +150,27 @@ public class TrajectoryActivity extends BaseActivity {
             public void onTimeSelect(Date date, View v) {
                 queryHistoryTrack(date);
 
+                if (Utils.isToday(date)){
+                    handler.postDelayed(runnable, 60000);
+                }
+
             }
         }).build();
     }
+    Handler handler=new Handler();
+
+    /**
+     * 60秒更新一次当天数据
+     */
+    Runnable runnable=new Runnable(){
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            getTodayTrack();
+            handler.postDelayed(this, 60000);
+        }
+    };
+
 
     private void getTodayTrack() {
         Date date = new Date();
@@ -426,6 +453,7 @@ public class TrajectoryActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         map.onDestroy();
+        handler.removeCallbacks(runnable);
 //        if (isServiceRunning) {
 //            aMapTrackClient.stopTrack(new TrackParam(Constants.SERVICE_ID, terminalId), new SimpleOnTrackLifecycleListener());
 //        }

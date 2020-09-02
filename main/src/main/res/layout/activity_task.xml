@@ -42,26 +42,23 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="事件名称"
+                    android:text="任务名称"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
+                <TextView
                     android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toRightOf="@+id/name_tv"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/name_tv"
-                    android:background="@null"
-                    android:hint="请输入事件名称"
                     android:textColor="@color/text_color"
                     android:textSize="16sp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="20dp"
-                    style="@style/EditTextStyle"
                     />
 
                 <View
@@ -77,12 +74,12 @@
 
 
                 <TextView
-                    android:id="@+id/type_tv"
+                    android:id="@+id/start_time_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="任务类型"
+                    android:text="开始时间"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -90,17 +87,16 @@
                     />
 
                 <TextView
-                    android:id="@+id/type"
+                    android:id="@+id/start_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@+id/name"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/type_tv"
-                    android:background="@null"
-                    android:hint="请选择"
+                    app:layout_constraintTop_toTopOf="@+id/start_time_tv"
                     android:textSize="16sp"
                     android:layout_marginRight="20dp"
                     android:textColor="@color/text_color"
+                    tools:text="2020-9-2"
                     />
 
                 <View
@@ -108,37 +104,77 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/type_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/type"
+                    app:layout_constraintLeft_toLeftOf="@+id/start_time_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/start_time"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="5dp"
                     />
 
                 <TextView
-                    android:id="@+id/grid_tv"
+                    android:id="@+id/stop_time_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="下发网络"
+                    android:text="完成时间"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/v_2"
+                    android:visibility="gone"
                     />
 
                 <TextView
-                    android:id="@+id/grid"
+                    android:id="@+id/stop_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@+id/name"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/grid_tv"
+                    app:layout_constraintTop_toTopOf="@+id/stop_time_tv"
+                    android:textSize="16sp"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/text_color"
+                    tools:text="2020-9-2"
+                    android:visibility="gone"
+                    />
+
+                <View
+                    android:id="@+id/v_5"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"
+                    app:layout_constraintLeft_toLeftOf="@+id/stop_time_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/stop_time"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    />
+
+                <TextView
+                    android:id="@+id/time_limit_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="完成时限"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_5"
+                    />
+
+                <TextView
+                    android:id="@+id/time_limit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/time_limit_tv"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     android:background="@null"
-                    android:hint="请选择"
                     android:layout_marginRight="20dp"
+                    tools:text="5天"
                     />
 
                 <View
@@ -146,8 +182,8 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/grid_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/grid"
+                    app:layout_constraintLeft_toLeftOf="@+id/time_limit_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/time_limit"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="5dp"
                     />
@@ -160,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="是否已办结"
+                    android:text="状态"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -175,20 +211,9 @@
                     app:layout_constraintTop_toTopOf="@+id/state_text"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
-                    android:text="否"
+                    tools:text="已完成"
                     />
 
-                <Switch
-                    android:id="@+id/state_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:track="@drawable/switch_selector_green"
-                    android:thumb="@drawable/switch_white_circle_selector"
-                    app:layout_constraintTop_toTopOf="@+id/state"
-                    app:layout_constraintBottom_toBottomOf="@+id/state"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginRight="20dp"
-                    />
 
 
                 <View
@@ -239,6 +264,15 @@
                 android:gravity="top"
                 />
 
+            <LinearLayout
+                android:id="@+id/controls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/count"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@color/white"
+                />
 
 
             <TextView
@@ -246,10 +280,31 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/save"
+                app:layout_constraintTop_toBottomOf="@+id/count"
+                app:layout_constraintBottom_toTopOf="@+id/state_recycler"
+                android:text="提交"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:background="#8B6DE9"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+
+                />
+
+            <TextView
+                android:id="@+id/save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/submit"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/count"
                 app:layout_constraintBottom_toTopOf="@+id/state_recycler"
-                android:text="反  馈"
+                android:text="暂存"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="18sp"
@@ -265,22 +320,22 @@
 
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/state_recycler"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/submit"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:padding="10dp"
-                android:visibility="gone"
-                />
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/state_recycler"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:overScrollMode="never"-->
+<!--                app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                app:layout_constraintRight_toRightOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/submit"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="10dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginBottom="10dp"-->
+<!--                android:padding="10dp"-->
+<!--                android:visibility="gone"-->
+<!--                />-->
 
 
 

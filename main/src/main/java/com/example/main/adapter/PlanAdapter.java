@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.main.R;
 import com.example.main.bean.Enterprise;
+import com.example.main.bean.Plan;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,41 +18,35 @@ import java.util.List;
  * Created by czy on 2020/8/12 12:49.
  * describe:
  */
-public class PlanAdapter extends BaseQuickAdapter<Enterprise, BaseViewHolder> implements LoadMoreModule {
+public class PlanAdapter extends BaseQuickAdapter<Plan, BaseViewHolder> implements LoadMoreModule {
 
-    public PlanAdapter(List<Enterprise> data) {
-        super(R.layout.item_enterprise, data);
+    public PlanAdapter(List<Plan> data) {
+        super(R.layout.item_plan, data);
     }
 
     @Override
-    protected void convert(@NotNull BaseViewHolder holder, Enterprise enterprise) {
-        holder.setText(R.id.name, enterprise.getName());
-        holder.setText(R.id.address, "地址: " + enterprise.getAddress());
-        holder.setText(R.id.social_credit_code, "社会信用代码: " + enterprise.getSocialCreditCode());
-        holder.setText(R.id.legal_person, "法人: " + enterprise.getLegalPerson());
-        if (enterprise.getIsStart() == 0) {
-            holder.setText(R.id.is_start, "否");
-        } else {
-            holder.setText(R.id.is_start, "是");
-        }
+    protected void convert(@NotNull BaseViewHolder holder, Plan plan) {
+        holder.setText(R.id.name, plan.getName());
+        holder.setText(R.id.create_time, "创建时间: " + plan.getCreateTime());
+        holder.setText(R.id.type, "事件类型: " + plan.getCategoryId());
 
 
         View view = holder.getView(R.id.cl_1);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clear(enterprise);
+                clear(plan);
 
-                if (enterprise.isHidden()) {
-                    enterprise.setHidden(false);
+                if (plan.isHidden()) {
+                    plan.setHidden(false);
                 } else {
-                    enterprise.setHidden(true);
+                    plan.setHidden(true);
                 }
                 notifyDataSetChanged();
             }
         });
 
-        if (enterprise.isHidden()) {
+        if (plan.isHidden()) {
             holder.setGone(R.id.cl_2, false);
             view.setBackgroundColor(Color.parseColor("#eeeeee"));
             holder.setImageResource(R.id.hidden, R.mipmap.up_img);
@@ -64,10 +59,10 @@ public class PlanAdapter extends BaseQuickAdapter<Enterprise, BaseViewHolder> im
 
     }
 
-    private void clear(Enterprise data) {
-        for (Enterprise enterprise : getData()) {
-            if (enterprise != data)
-                enterprise.setHidden(false);
+    private void clear(Plan data) {
+        for (Plan plan : getData()) {
+            if (plan != data)
+                plan.setHidden(false);
         }
     }
 

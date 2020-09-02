@@ -32,6 +32,7 @@ import com.example.main.adapter.PlanAdapter;
 import com.example.main.adapter.UpdateEnterpriseAdapter;
 import com.example.main.bean.DeleteData;
 import com.example.main.bean.Enterprise;
+import com.example.main.bean.Plan;
 import com.example.main.fragment.home.UpdateEnterpriseFragment;
 import com.example.main.utils.Utils;
 import com.google.gson.Gson;
@@ -59,7 +60,7 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
     SwipeRefreshLayout refresh;
 
     private PlanAdapter mAdapter;
-    private List<Enterprise> mData = new ArrayList<>();
+    private List<Plan> mData = new ArrayList<>();
 
     Handler handler = new Handler();
 
@@ -94,35 +95,14 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
         mAdapter = new PlanAdapter(mData);
         mAdapter.setAnimationEnable(true);
         mAdapter.getLoadMoreModule().setOnLoadMoreListener(this);
-        mAdapter.addChildClickViewIds(R.id.navigation, R.id.update, R.id.del);
+        mAdapter.addChildClickViewIds(R.id.look);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
-                if (view.getId() == R.id.navigation) {
-                    showToast("导航");
-                    ARouter.getInstance().build("/map/navigation")
-                            .withParcelable("address", mData.get(position).getPoint())
-                            .navigation();
-
-                } else if (view.getId() == R.id.update) {
-                    Intent intent = new Intent(PlanListActivity.this, UpdateEnterpriseActivity.class);
-                    intent.putExtra("id", mData.get(position).getId());
-                    startActivity(intent);
-                }
-                if (view.getId() == R.id.del) {
-                    new MyDialog(PlanListActivity.this)
-                            .setTitleStr("提示")
-                            .setMessageStr("您确定要删除吗?")
-                            .setButtonText("取消", "确定")
-                            .setClickListener(new CallPhoneListener() {
-                                @Override
-                                public void onClick(int var1) {
-                                    if (var1 == 2) {
-                                        deleteData(mData.get(position).getId(), adapter, position);
-//                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-                            }).show();
+                if (view.getId() == R.id.look) {
+//                    Intent intent = new Intent(PlanListActivity.this, UpdateEnterpriseActivity.class);
+//                    intent.putExtra("id", mData.get(position).getId());
+//                    startActivity(intent);
                 }
             }
         });
@@ -137,25 +117,6 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
 
     }
 
-    private void deleteData(String id, BaseQuickAdapter adapter, int position) {
-        DeleteData deleteData = new DeleteData(id);
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(deleteData);
-
-
-        RequestCenter.deleteData(UrlService.ENTERPRISE, jsonStr, new DisposeDataListener() {
-            @Override
-            public void onSuccess(Object responseObj) {
-                showToast("删除成功");
-                adapter.remove(mData.get(position));
-            }
-
-            @Override
-            public void onFailure(OkHttpException responseObj) {
-
-            }
-        });
-    }
 
     SearchTask mSearchTesk = new SearchTask();
 
@@ -211,7 +172,7 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
         }
 
 
-        RequestCenter.getDataList(UrlService.ENTERPRISE, params, new DisposeDataListener() {
+        RequestCenter.getDataList(UrlService.PLAN, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
@@ -219,7 +180,7 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
                     JSONObject data = result.getJSONObject("data");
 
                     if (TextUtils.equals(result.getString("code"), "0")) {
-                        mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Enterprise>>() {
+                        mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Plan>>() {
                         }.getType()));
                         mAdapter.setList(mData);
 
@@ -246,14 +207,14 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
 
     private void getSearch(RequestParams params) {
         mData.clear();
-        RequestCenter.getDataList(UrlService.ENTERPRISE, params, new DisposeDataListener() {
+        RequestCenter.getDataList(UrlService.PLAN, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
 
                     if (TextUtils.equals(result.getString("code"), "0")) {
-                        mData.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Enterprise>>() {
+                        mData.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Plan>>() {
                         }.getType()));
                         mAdapter.setList(mData);
                         mAdapter.notifyDataSetChanged();

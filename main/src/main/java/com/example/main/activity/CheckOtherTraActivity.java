@@ -3,6 +3,8 @@ package com.example.main.activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,15 +25,35 @@ import com.amap.api.track.AMapTrackClient;
 import com.amap.api.track.query.entity.HistoryTrack;
 import com.amap.api.track.query.entity.Point;
 import com.amap.api.track.query.entity.TrackPoint;
+import com.amap.api.track.query.model.AddTerminalRequest;
+import com.amap.api.track.query.model.AddTerminalResponse;
 import com.amap.api.track.query.model.HistoryTrackRequest;
 import com.amap.api.track.query.model.HistoryTrackResponse;
+import com.amap.api.track.query.model.QueryTerminalRequest;
+import com.amap.api.track.query.model.QueryTerminalResponse;
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.Constants;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
+import com.example.main.UrlService;
+import com.example.main.bean.User;
 import com.example.main.utils.SimpleOnTrackListener;
 import com.example.main.utils.TraceRePlay;
 import com.example.main.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +68,7 @@ import butterknife.OnClick;
  * Created by 陈泽宇 on 2020/8/28
  * Describe: 查询他人轨迹
  */
-public class CheckOtherTraActivity extends BaseActivity {
+public class CheckOtherTraActivity extends RightTitleActivity {
 
 
     @BindView(R2.id.check_other)
@@ -70,7 +92,16 @@ public class CheckOtherTraActivity extends BaseActivity {
     private ExecutorService mThreadPool;
     private TraceRePlay mRePlay;
 
+    private long terminalId;
+
     private AMapTrackClient aMapTrackClient;
+    private TimePickerView pvTime;
+    private Date selectData = null;
+
+    private List<User> userList = new ArrayList<>();
+    private List<String> userName = new ArrayList<>();
+    private OptionsPickerView reasonPicker;
+
 
     @Override
     protected int setContentView() {
@@ -79,21 +110,84 @@ public class CheckOtherTraActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
+        addBack();
+        setTitleText("查询他人轨迹");
+        rightTitle("查询", new RightClickListener() {
+            @Override
+            public void callBack() {
+                if (terminalId == 0) {
+                    showToast("请选择人员");
+                    return;
+                }
+                if (selectData == null) {
+                    showToast("请选择时间");
+                    return;
+                }
+                if (Utils.isToday(selectData)){
+                    handler.postDelayed(runnable, 60000);
+                }
+                queryHistoryTrack(selectData);
+            }
+        });
+
         mMapView.onCreate(savedInstanceState);// 此方法必须重写
         int threadPoolSize = Runtime.getRuntime().availableProcessors() * 2 + 3;
         mThreadPool = Executors.newFixedThreadPool(threadPoolSize);
         initMap();
         aMapTrackClient = new AMapTrackClient(getApplicationContext());
+
+        initView();
+
+        getUserList();
+
+    }
+
+
+
+    private void getUserList(){
+
+        RequestCenter.getDataList(UrlService.USERLIST, null, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject data = new JSONObject(responseObj.toString());
+                    String code = data.getString("code");
+                    if (TextUtils.equals(code,"0")){
+                        Gson gson = new Gson();
+                        userList.addAll(gson.fromJson(data.getJSONObject("data").getString("list"),new TypeToken<List<User>>(){}.getType()));
+                        for (User user:userList){
+                            userName.add(user.getUsername());
+                        }
+
+                        reasonPicker = new OptionsPickerBuilder(CheckOtherTraActivity.this, new OnOptionsSelectListener() {
+                            @Override
+                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                                queryTerminal(userList.get(options1).getUsername());
+                                checkOther.setText(userList.get(options1).getUsername());
+                            }
+                        }).setTitleText("选择人员").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+                        reasonPicker.setPicker(userName);
+                    }
+                }catch (Exception e){
+
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
     }
 
     @OnClick({R2.id.check_other, R2.id.time})
     public void onViewClicked(View view) {
         int id = view.getId();
         if (id == R.id.check_other) {
-
+            reasonPicker.show();
         } else if (id == R.id.time) {
-            Date date = new Date();
-            queryHistoryTrack(date);
+            pvTime.show();
         }
     }
 
@@ -113,18 +207,47 @@ public class CheckOtherTraActivity extends BaseActivity {
     }
 
 
+    private void initView() {
+        //时间选择器
+        pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                selectData = date;
+                time.setText(Utils.getDateStr(date, "yyyy-MM-dd"));
+            }
+        }).build();
+    }
+
+    Handler handler = new Handler();
+
+    /**
+     * 60秒更新一次当天数据
+     */
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            getTodayTrack();
+            handler.postDelayed(this, 60000);
+        }
+    };
+
+    private void getTodayTrack() {
+        Date date = new Date();
+        queryHistoryTrack(date);
+    }
+
+
     /**
      * 查询轨迹点
      */
     private void queryHistoryTrack(Date date) {
-        time.setText(Utils.getDateStr(date, "yyyy-MM-dd"));
         long startTime;
         startTime = Utils.date2TimeStamp(Utils.getDateStr(date, "yyyy-MM-dd") + " 00:00:00", "yyyy-MM-dd HH:mm:ss");
-
+        buildDialog("查询中");
         HistoryTrackRequest historyTrackRequest = new HistoryTrackRequest(
                 Constants.SERVICE_ID,
-//                terminalId,
-                0,
+                terminalId,
                 startTime,
                 startTime + 24 * 60 * 60 * 1000
 //                System.currentTimeMillis() - 24 * 60 * 60 * 1000,
@@ -140,6 +263,7 @@ public class CheckOtherTraActivity extends BaseActivity {
         aMapTrackClient.queryHistoryTrack(historyTrackRequest, new SimpleOnTrackListener() {
             @Override
             public void onHistoryTrackCallback(HistoryTrackResponse historyTrackResponse) {
+                cancelDialog();
                 if (historyTrackResponse.isSuccess()) {
                     HistoryTrack historyTrack = historyTrackResponse.getHistoryTrack();
                     if (historyTrack == null || historyTrack.getCount() == 0) {
@@ -156,6 +280,7 @@ public class CheckOtherTraActivity extends BaseActivity {
             }
         });
     }
+
     /**
      * 轨迹回放方法
      */
@@ -178,6 +303,29 @@ public class CheckOtherTraActivity extends BaseActivity {
                 });
         mThreadPool.execute(replay);
         return replay;
+    }
+
+    /**
+     * 查询Terminal ID
+     */
+    private void queryTerminal(String username) {
+        buildDialog("查询人员中");
+        aMapTrackClient.queryTerminal(new QueryTerminalRequest(Constants.SERVICE_ID, username), new SimpleOnTrackListener() {
+            @Override
+            public void onQueryTerminalCallback(QueryTerminalResponse queryTerminalResponse) {
+                if (queryTerminalResponse.isSuccess()) {
+                    if (queryTerminalResponse.isTerminalExist()) {
+                        // 当前终端已经创建过，直接使用查询到的terminal id
+                        terminalId = queryTerminalResponse.getTid();
+                        cancelDialog();
+                    } else {
+                        showToast("该终端未创建");
+                    }
+                } else {
+                    Toast.makeText(CheckOtherTraActivity.this, "网络请求失败，" + queryTerminalResponse.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 //    /**
