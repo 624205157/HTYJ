@@ -13,6 +13,7 @@ import com.example.commonlib.okhttp.listener.DisposeDataListener;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -62,6 +63,12 @@ public class CommonJsonCallback implements Callback {
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
         final String result = response.body().string();
+        List<String> urlList = response.request().url().pathSegments();
+        String url = "";
+        for (String a : urlList){
+            url = url + "/" + a;
+        }
+        Log.e("接口返回" +url,result);
         mDeliveryHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -72,7 +79,7 @@ public class CommonJsonCallback implements Callback {
 
     //处理成功的响应
     private void handleResponse(Object responseObj) {
-        Log.e("返回数据",responseObj.toString());
+
         //为了保证代码的健壮性
         if (responseObj == null && responseObj.toString().trim().equals("")) {
             mListener.onFailure(new OkHttpException(NETWORK_ERROR, EMPTY_MSG));

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,10 +40,12 @@ public class ShowGridImageAdapter extends RecyclerView.Adapter<ShowGridImageAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         SimpleDraweeView mImg;
+        ImageView del;
 
         public ViewHolder(View view) {
             super(view);
             mImg = (SimpleDraweeView) view.findViewById(R.id.fiv);
+            del = (ImageView) view.findViewById(R.id.iv_del);
         }
     }
 
@@ -69,6 +72,7 @@ public class ShowGridImageAdapter extends RecyclerView.Adapter<ShowGridImageAdap
      */
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+        viewHolder.del.setVisibility(View.GONE);
         String path = "";
         LocalMedia media = list.get(position);
         if (media.isCompressed()) {

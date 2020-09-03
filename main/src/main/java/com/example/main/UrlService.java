@@ -15,6 +15,7 @@ public class UrlService {
     public static final String ENTERPRISE = URL + "enterprise";//企业
     public static final String RESOURCE = URL + "resource";//资源
     public static final String EVENT = URL + "event";//事件
+    public static final String EVENTUSER = URL + "event/user";//转发人
     public static final String PLAN = URL + "planning";//事件
 //    public static final String DICTIONARY = URL + "system/dictionary";//字典
     public static final String GRID = URL + "grid";//网格

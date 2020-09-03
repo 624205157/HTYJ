@@ -30,6 +30,7 @@ import com.example.main.adapter.EventDetailsAdapter;
 import com.example.main.adapter.ShowGridImageAdapter;
 import com.example.main.bean.Event;
 import com.example.main.bean.MyFiles;
+import com.example.main.bean.People;
 import com.example.main.bean.Processes;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
@@ -76,6 +77,8 @@ public class EventDetailsActivity extends BaseActivity {
 
     private EventDetailsAdapter mAdapter;
     private List<Processes> mData = new ArrayList<>();
+    private List<People> peopleList = new ArrayList<>();
+    private List<String> peopleName = new ArrayList<>();
 
     private Event event;
 
@@ -103,7 +106,7 @@ public class EventDetailsActivity extends BaseActivity {
             submit.setVisibility(View.GONE);
             state.setText("已办结");
         }else {
-            state.setText("未处理");
+            state.setText("处理中");
         }
         init();
 
@@ -158,6 +161,8 @@ public class EventDetailsActivity extends BaseActivity {
                         for (MyFiles imageList : event.getAttachments()) {
                             selectList.add(new LocalMedia(imageList.getUid(), imageList.getUrl()));
                         }
+                        adapter.setList(selectList);
+                        adapter.notifyDataSetChanged();
 
                         mData.addAll(event.getProcesses());
                         mAdapter.setList(mData);
@@ -177,6 +182,30 @@ public class EventDetailsActivity extends BaseActivity {
             }
         });
 
+        RequestParams params2 = new RequestParams();
+        params2.put("eventId", getIntent().getStringExtra("id"));
+        RequestCenter.getDataList(UrlService.EVENTUSER, params2, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        Gson gson = new Gson();
+                        peopleList.addAll(gson.fromJson(result.getString("data"),new TypeToken<List<People>>(){}.getType()));
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
     @OnClick({R2.id.navigation, R2.id.submit})
@@ -255,7 +284,7 @@ public class EventDetailsActivity extends BaseActivity {
         processes.setEventId(event.getId());
         processes.setContent(content);
         processes.setState(state);
-        processes.setUserName(users);
+        processes.setUsers(users);
 
         Gson gson = new Gson();
         String jsonStr = gson.toJson(processes);

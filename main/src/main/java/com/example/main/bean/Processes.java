@@ -9,16 +9,17 @@ import com.google.gson.annotations.SerializedName;
 public class Processes {
 
     private String id;
-    @SerializedName("event_id")
+    @SerializedName("eventId")
     private String eventId;
-    @SerializedName("user_id")
+    @SerializedName("settleUserId")
     private String userId;
-    @SerializedName("user_name")
+    @SerializedName("settleUserName")
     private String userName;//处理人姓名
     private String state;//处理进程，1=已处理，0=未处理
-    @SerializedName("settle_time")
+    @SerializedName("settleTime")
     private String settleTime;//处理时间
     private String content;//描述
+    private String users;
 
     public String getId() {
         return id;
@@ -74,5 +75,13 @@ public class Processes {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getUsers() {
+        return users;
+    }
+
+    public void setUsers(String users) {
+        this.users = users;
     }
 }
