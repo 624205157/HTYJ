@@ -17,6 +17,7 @@ public class Plan {
     private String categoryId;//事件类型ID
     private String createTime;//创建时间
     private List<Grid> category;//预案类型
+    private List<MyFiles> attachments;//附件list
 
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
@@ -77,5 +78,13 @@ public class Plan {
 
     public void setCategory(List<Grid> category) {
         this.category = category;
+    }
+
+    public List<MyFiles> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<MyFiles> attachments) {
+        this.attachments = attachments;
     }
 }

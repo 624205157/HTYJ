@@ -1,8 +1,5 @@
 package com.example.main.bean;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -34,8 +31,8 @@ public class Enterprise {
     private double longitude;//经度
     private double latitude;//纬度
     private Address point = new Address();
-    private List<ImageList> license;//营业执照图片
-    private List<ImageList> identity;//法人图片
+    private List<MyFiles> license;//营业执照图片
+    private List<MyFiles> identity;//法人图片
     private String [] exist;//删除图片
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
@@ -166,19 +163,19 @@ public class Enterprise {
         this.exist = exist;
     }
 
-    public List<ImageList> getLicense() {
+    public List<MyFiles> getLicense() {
         return license;
     }
 
-    public void setLicense(List<ImageList> license) {
+    public void setLicense(List<MyFiles> license) {
         this.license = license;
     }
 
-    public List<ImageList> getIdentity() {
+    public List<MyFiles> getIdentity() {
         return identity;
     }
 
-    public void setIdentity(List<ImageList> identity) {
+    public void setIdentity(List<MyFiles> identity) {
         this.identity = identity;
     }
 }

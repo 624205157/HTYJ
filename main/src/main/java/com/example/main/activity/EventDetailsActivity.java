@@ -29,7 +29,7 @@ import com.example.main.UrlService;
 import com.example.main.adapter.EventDetailsAdapter;
 import com.example.main.adapter.ShowGridImageAdapter;
 import com.example.main.bean.Event;
-import com.example.main.bean.ImageList;
+import com.example.main.bean.MyFiles;
 import com.example.main.bean.Processes;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
@@ -155,7 +155,7 @@ public class EventDetailsActivity extends BaseActivity {
                         level.setText("紧急程度: " + event.getLevel());
                         count.setText(event.getContent());
 
-                        for (ImageList imageList : event.getAttachments()) {
+                        for (MyFiles imageList : event.getAttachments()) {
                             selectList.add(new LocalMedia(imageList.getUid(), imageList.getUrl()));
                         }
 

@@ -76,9 +76,17 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         return fragment;
     }
 
+
+
     @Override
     protected void lazyLoad(Bundle savedInstanceState) {
 
+
+    }
+
+    @Override
+    public void onEnterAnimationEnd(Bundle savedInstanceState) {
+        super.onEnterAnimationEnd(savedInstanceState);
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -101,7 +109,7 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
 
         adapter = new GridAdapter2(mData,getArguments().getString("pid"));
-        adapter.setAnimationEnable(true);
+        adapter.setAnimationEnable(false);
 
         adapter.addChildClickViewIds(R.id.next, R.id.details);
         adapter.setOnItemChildClickListener(new OnItemChildClickListener() {
@@ -111,7 +119,7 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                     start(GridFragment.newInstance(mData.get(position).getId()));
                 } else if (view.getId() == R.id.details) {
                     Intent intent = new Intent(getActivity(), GridDetailsActivity.class);
-                    intent.putExtra("id",mData.get(position).getId());
+                    intent.putExtra("gridId",mData.get(position).getId());
                     intent.putExtra("name",mData.get(position).getName());
                     intent.putExtra("polygon",mData.get(position).getPolygon());
                     startActivity(intent);
@@ -153,9 +161,9 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         RequestParams params = new RequestParams();
         if (!TextUtils.isEmpty(getArguments().getString("pid"))) {
-            params.put("pid", getArguments().getString("pid"));
+            params.put("pId", getArguments().getString("pid"));
         }else {
-            params.put("pid", "root");
+            params.put("pId", "root");
         }
 
         RequestCenter.getDataList(UrlService.GRID, params, new DisposeDataListener() {
@@ -226,5 +234,11 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         refresh.setRefreshing(false);
     }
 
+    @Override
+    public void onSupportVisible() {
+        super.onSupportVisible();
+        mData.clear();
+        getData();
+    }
 
 }

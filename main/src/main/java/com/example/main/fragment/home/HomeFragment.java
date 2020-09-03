@@ -2,6 +2,8 @@ package com.example.main.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,15 +12,29 @@ import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
+import com.example.main.UrlService;
 import com.example.main.activity.EnterpriseActivity;
 import com.example.main.activity.EventActivity;
 import com.example.main.activity.PlanListActivity;
 import com.example.main.activity.ResourcesActivity;
 import com.example.main.activity.TaskActivity;
 import com.example.main.activity.TrajectoryActivity;
+import com.example.main.bean.Event;
+import com.example.main.bean.Task;
 import com.example.main.fragment.BaseFragment;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,6 +62,7 @@ public class HomeFragment extends BaseFragment {
             aMap = mMapView.getMap();
         }
         showMy();
+        getData();
     }
 
     @OnClick({R2.id.event, R2.id.task, R2.id.enterprise, R2.id.resources, R2.id.plan, R2.id.trajectory})
@@ -86,6 +103,61 @@ public class HomeFragment extends BaseFragment {
 
 
 //        myLocationStyle.showMyLocation(true);
+    }
+
+    private void getData(){
+        RequestParams params = new RequestParams();
+        params.put("state","0");
+
+        RequestCenter.getDataList(UrlService.EVENT, params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    JSONObject data = result.getJSONObject("data");
+
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        eventNum.setText(data.getString("total"));
+                    }else {
+                        showToast(data.getString("msg"));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
+        RequestParams params2 = new RequestParams();
+        params2.put("state","2,3");
+        RequestCenter.getDataList(UrlService.TASK, params2, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    JSONObject data = result.getJSONObject("data");
+
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        taskNum.setText(data.getString("total"));
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+                showToast(responseObj.getMessage());
+            }
+        });
     }
 
 

@@ -37,7 +37,7 @@ import com.example.main.RequestCenter;
 import com.example.main.UrlService;
 import com.example.main.adapter.GridImageAdapter;
 import com.example.main.bean.Grid;
-import com.example.main.bean.ImageList;
+import com.example.main.bean.MyFiles;
 import com.example.main.bean.Resources;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
@@ -348,7 +348,7 @@ public class UpdateResourcesActivity  extends BaseActivity {
                         latLng = new LatLng(resources.getLatitude(), resources.getLongitude());
                         moveMap(latLng, resources.getAddress());
 
-                        for (ImageList imageList :resources.getAttachments()){
+                        for (MyFiles imageList :resources.getAttachments()){
                             selectList.add(new LocalMedia(imageList.getUid(),imageList.getUrl()));
                         }
 

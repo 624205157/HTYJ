@@ -8,11 +8,11 @@ import java.util.List;
  */
 public class Grid {
     private String id;
-    private String pid;
+    private String pId;
     private String name;
     private String address;
 
-    private List<User> users;
+    private List<People> users;
     private String polygon;//json字符串
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
@@ -41,13 +41,6 @@ public class Grid {
         this.id = id;
     }
 
-    public String getPid() {
-        return pid;
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
 
     public boolean isHidden() {
         return hidden;
@@ -57,13 +50,6 @@ public class Grid {
         this.hidden = hidden;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 
     public String getPolygon() {
         return polygon;
@@ -74,5 +60,19 @@ public class Grid {
     }
 
 
+    public String getpId() {
+        return pId;
+    }
 
+    public void setpId(String pId) {
+        this.pId = pId;
+    }
+
+    public List<People> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<People> users) {
+        this.users = users;
+    }
 }

@@ -1,17 +1,30 @@
 package com.example.main.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.commonlib.base.BaseActivity;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.adapter.PlanAdapter;
+import com.example.main.adapter.PlanDetailsAdapter;
+import com.example.main.bean.MyFiles;
 import com.example.main.bean.Plan;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -31,9 +44,12 @@ public class PlanDetailsActivity extends BaseActivity {
     @BindView(R2.id.count)
     TextView count;
     @BindView(R2.id.photo_recycler1)
-    RecyclerView photoRecycler1;
+    RecyclerView recyclerview;
 
     private Plan plan;
+
+    private PlanDetailsAdapter mAdapter;
+    private List<MyFiles> mData = new ArrayList<>();
 
     @Override
     protected int setContentView() {
@@ -59,7 +75,26 @@ public class PlanDetailsActivity extends BaseActivity {
             }
 
             type.setText(typeStr.substring(1));
+            mData.addAll(plan.getAttachments());
         }
+
+        mAdapter = new PlanDetailsAdapter(mData);
+
+        mAdapter.setAnimationEnable(true);
+
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+
+                Uri uri = Uri.parse(mData.get(position).getUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
+        recyclerview.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerview.setAdapter(mAdapter);
 
 
     }

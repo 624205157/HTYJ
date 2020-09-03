@@ -1,8 +1,5 @@
 package com.example.main.bean;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -25,7 +22,7 @@ public class Resources {
     @SerializedName("gridName")
     private String grid;
 
-    private List<ImageList> attachments;
+    private List<MyFiles> attachments;
 
     private Address point = new Address();
 
@@ -116,11 +113,11 @@ public class Resources {
         this.surplus = surplus;
     }
 
-    public List<ImageList> getAttachments() {
+    public List<MyFiles> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<ImageList> attachments) {
+    public void setAttachments(List<MyFiles> attachments) {
         this.attachments = attachments;
     }
 

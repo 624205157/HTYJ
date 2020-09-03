@@ -2,6 +2,7 @@ package com.example.commonlib.okhttp.response;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,7 @@ public class CommonJsonCallback implements Callback {
 
     //处理成功的响应
     private void handleResponse(Object responseObj) {
+        Log.e("返回数据",responseObj.toString());
         //为了保证代码的健壮性
         if (responseObj == null && responseObj.toString().trim().equals("")) {
             mListener.onFailure(new OkHttpException(NETWORK_ERROR, EMPTY_MSG));

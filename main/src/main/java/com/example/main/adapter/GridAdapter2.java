@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.main.R;
 import com.example.main.bean.Grid;
+import com.example.main.bean.People;
 import com.example.main.bean.Resources;
 import com.example.main.bean.User;
 
@@ -35,8 +36,8 @@ public class GridAdapter2 extends BaseQuickAdapter<Grid, BaseViewHolder>  {
 
         holder.setText(R.id.name,grid.getName());
         String users = "";
-        for (User user : grid.getUsers()){
-            users = users + user.getSubject().getName() + "、";
+        for (People people : grid.getUsers()){
+            users = users + people.getName() + "、";
         }
         if (!TextUtils.isEmpty(users)){
             users = users.substring(0, users.length() - 1);

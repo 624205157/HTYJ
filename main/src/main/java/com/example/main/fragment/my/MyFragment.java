@@ -62,14 +62,9 @@ public class MyFragment extends BaseFragment {
         }.getType());
         name.setText(personInfo.getName());
 
-        if (!TextUtils.isEmpty(personInfo.getAvatar())) {
-            GlideUrl glideUrl = new GlideUrl(personInfo.getAvatar(), new LazyHeaders.Builder()
-                    .addHeader("Authorization", Constants.TAKEN)
-                    .build());
-            Glide.with(this).load(glideUrl).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
-                    .into(headImg);
-        }
+        Glide.with(this).load(personInfo.getAvatar()).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
+                .into(headImg);
 
         List<Grid> grids = new ArrayList<>();
         grids.addAll(personInfo.getGrids());
@@ -77,7 +72,8 @@ public class MyFragment extends BaseFragment {
         for (Grid grid : grids) {
             departmentStr = departmentStr + "-" + grid.getName();
         }
-        department.setText(departmentStr.substring(1));
+        if (!TextUtils.isEmpty(departmentStr))
+            department.setText(departmentStr.substring(1));
     }
 
     @OnClick({R2.id.update_personal, R2.id.update_version, R2.id.cancel})
@@ -91,7 +87,7 @@ public class MyFragment extends BaseFragment {
             shareHelper.save("username", "")
                     .save("password", "")
                     .save("token", "")
-                    .save("subject","").commit();
+                    .save("subject", "").commit();
             startActivity(new Intent(getActivity(), LoginActivity.class));
             mActivity.finish();
         }

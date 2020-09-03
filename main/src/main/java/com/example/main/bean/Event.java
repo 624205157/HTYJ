@@ -24,7 +24,7 @@ public class Event {
     private double latitude;//纬度
     private Address point = new Address();
 
-    private List<ImageList> attachments;
+    private List<MyFiles> attachments;
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
 
@@ -129,11 +129,11 @@ public class Event {
         this.id = id;
     }
 
-    public List<ImageList> getAttachments() {
+    public List<MyFiles> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<ImageList> attachments) {
+    public void setAttachments(List<MyFiles> attachments) {
         this.attachments = attachments;
     }
 }

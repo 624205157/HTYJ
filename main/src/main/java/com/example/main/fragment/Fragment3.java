@@ -15,8 +15,8 @@ public class Fragment3 extends GroupPopFragment {
 
     @Override
     protected void lazyLoad(Bundle savedInstanceState) {
-        if (findChildFragment(DepartmentFragment.class) == null) {
-            loadRootFragment(R.id.home, new DepartmentFragment());
+        if (findChildFragment(PhoneFragment.class) == null) {
+            loadRootFragment(R.id.home, new PhoneFragment());
         }
     }
 

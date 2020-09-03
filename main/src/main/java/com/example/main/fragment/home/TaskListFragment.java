@@ -189,7 +189,7 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
         }
         params.put("states",state);
 
-        RequestCenter.getDataList(UrlService.TASK, null, new DisposeDataListener() {
+        RequestCenter.getDataList(UrlService.TASK, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {

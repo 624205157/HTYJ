@@ -2,6 +2,7 @@ package com.example.main.activity;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -9,17 +10,25 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.example.commonlib.base.BaseActivity;
+import com.example.commonlib.okhttp.exception.OkHttpException;
+import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.commonlib.view.TextHintDialog;
 import com.example.commonlib.view.TwoChangeDialog;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.RequestCenter;
+import com.example.main.UrlService;
 import com.example.main.adapter.GridDetailsAdapter;
 import com.example.main.bean.Address;
 import com.example.main.bean.Grid;
 import com.example.main.bean.Polygon;
+import com.example.main.bean.Subject;
 import com.example.main.bean.User;
 import com.example.main.utils.Utils;
 import com.google.gson.Gson;
@@ -44,10 +53,9 @@ public class GridDetailsActivity extends RightTitleActivity {
     @BindView(R2.id.list)
     RecyclerView list;
 
-    //    private Grid grid;
     private String gridName;
     private GridDetailsAdapter adapter;
-    private List<User> mData = new ArrayList<>();
+    private List<Subject> mData = new ArrayList<>();
 
     @Override
     protected int setContentView() {
@@ -56,7 +64,6 @@ public class GridDetailsActivity extends RightTitleActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
-//        grid = getIntent().getParcelableExtra("grid");
         gridName = getIntent().getStringExtra("name");
 
 
@@ -82,7 +89,7 @@ public class GridDetailsActivity extends RightTitleActivity {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.tel) {
-                    callPhone(mData.get(position).getSubject().getMobile());
+                    callPhone(mData.get(position).getMobile());
                 }
             }
         });
@@ -95,16 +102,39 @@ public class GridDetailsActivity extends RightTitleActivity {
 
     }
 
-    private void getData() {
-        for (int i = 0; i < 9; i++) {
-            User user = new User();
-            user.getSubject().setName("张飞" + i);
-            user.getSubject().setMobile("1358888" + i+ i+ i+ i);
-            mData.add(user);
-        }
-        adapter.setList(mData);
 
-        adapter.notifyDataSetChanged();
+
+    private void getData() {
+
+        RequestParams params = new RequestParams();
+        params.put("gridId",getIntent().getStringExtra("gridId"));
+
+        RequestCenter.getDataList(UrlService.USERLIST, params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject data = new JSONObject(responseObj.toString());
+                    String code = data.getString("code");
+                    if (TextUtils.equals(code,"0")){
+                        Gson gson = new Gson();
+                        mData.addAll(gson.fromJson(data.getJSONObject("data").getString("list"),new TypeToken<List<Subject>>(){}.getType()));
+
+                        adapter.setList(mData);
+
+                        adapter.notifyDataSetChanged();
+                    }
+                }catch (Exception e){
+
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
+
+
     }
 
     private Address getAddress() {

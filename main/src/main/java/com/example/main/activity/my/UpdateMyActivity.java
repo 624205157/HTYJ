@@ -85,14 +85,9 @@ public class UpdateMyActivity extends BaseActivity {
         }.getType());
         name.setText(personInfo.getName());
         tel.setText(personInfo.getMobile());
-        if (!TextUtils.isEmpty(personInfo.getAvatar())) {
-            GlideUrl glideUrl = new GlideUrl(personInfo.getAvatar(), new LazyHeaders.Builder()
-                    .addHeader("Authorization", Constants.TAKEN)
-                    .build());
-            Glide.with(this).load(glideUrl).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
-                    .into(headImg);
-        }
+        Glide.with(this).load(personInfo.getAvatar()).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
+                .into(headImg);
 
 
     }
@@ -151,22 +146,23 @@ public class UpdateMyActivity extends BaseActivity {
                 });
 
     }
-//    avatar
-    private void sendData(){
+
+    //    avatar
+    private void sendData() {
         File file = null;
         RequestParams params = new RequestParams();
-        params.put("id",personInfo.getId());
-        if (!TextUtils.isEmpty(name.getText()) && !TextUtils.equals(personInfo.getName(),name.getText())){
-            params.put("name",name.getText() + "");
+        params.put("id", personInfo.getId());
+        if (!TextUtils.isEmpty(name.getText()) && !TextUtils.equals(personInfo.getName(), name.getText())) {
+            params.put("name", name.getText() + "");
             personInfo.setName(name.getText() + "");
         }
 
-        if (!TextUtils.isEmpty(tel.getText()) && !TextUtils.equals(personInfo.getMobile(),tel.getText())){
-            params.put("mobile",tel.getText() + "");
+        if (!TextUtils.isEmpty(tel.getText()) && !TextUtils.equals(personInfo.getMobile(), tel.getText())) {
+            params.put("mobile", tel.getText() + "");
             personInfo.setMobile(tel.getText() + "");
         }
 
-        if (!TextUtils.isEmpty(path)){
+        if (!TextUtils.isEmpty(path)) {
             file = new File(path);
             personInfo.setAvatar(path);
         }
@@ -182,7 +178,7 @@ public class UpdateMyActivity extends BaseActivity {
                     String message = jsonObject.getString("msg");
                     showToast(message);
                     if (TextUtils.equals("0", code)) {
-                        shareHelper.save("subject",jsonObject.getString("data")).commit();
+                        shareHelper.save("subject", jsonObject.getString("data")).commit();
                         finish();
                     }
                 } catch (Exception e) {
@@ -200,7 +196,7 @@ public class UpdateMyActivity extends BaseActivity {
 
     }
 
-    private void updateApp(){
+    private void updateApp() {
         UpdateConfig updateConfig = new UpdateConfig();
         updateConfig.setCheckWifi(true);
         updateConfig.setNeedCheckMd5(true);
