@@ -74,6 +74,10 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
+
+        addBack();
+        setTitleText("预案列表");
+
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -100,9 +104,10 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.look) {
-//                    Intent intent = new Intent(PlanListActivity.this, UpdateEnterpriseActivity.class);
-//                    intent.putExtra("id", mData.get(position).getId());
-//                    startActivity(intent);
+                    Intent intent = new Intent(PlanListActivity.this, PlanDetailsActivity.class);
+                    Gson gson = new Gson();
+                    intent.putExtra("json", gson.toJson(mData.get(position)));
+                    startActivity(intent);
                 }
             }
         });

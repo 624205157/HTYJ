@@ -142,6 +142,7 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
         refresh.setOnRefreshListener(this);
 
+        getData();
 
     }
 
@@ -171,16 +172,22 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
         }
     }
 
+    private int pages = 1;
+
     private void getData() {
 
         RequestParams params = new RequestParams();
         try {
-            params.put("pageNum", ++pageNum);
+            params.put("current", ++pageNum);
             params.put("pageable", "y");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if (pages < pageNum) {
+            mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+            return;
+        }
+        params.put("states",state);
 
         RequestCenter.getDataList(UrlService.TASK, null, new DisposeDataListener() {
             @Override
@@ -190,7 +197,7 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
                     JSONObject data = result.getJSONObject("data");
 
                     if (TextUtils.equals(result.getString("code"), "0")) {
-                        mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Enterprise>>() {
+                        mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Task>>() {
                         }.getType()));
                         mAdapter.setList(mData);
 
@@ -198,9 +205,7 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
                     }
 
-                    if (data.getInt("pages") == pageNum) {
-                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
-                    }
+                    pages = data.getInt("pages");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -209,7 +214,7 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
             @Override
             public void onFailure(OkHttpException responseObj) {
-
+                showToast(responseObj.getMessage());
             }
         });
 

@@ -195,6 +195,7 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
             }
         }
     }
+    private int pages = 1;
 
     private void getData() {
 
@@ -205,6 +206,11 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (pages < pageNum) {
+            mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+            return;
+        }
+
 
         RequestCenter.getDataList(UrlService.RESOURCE, params, new DisposeDataListener() {
             @Override
@@ -222,9 +228,7 @@ public class UpdateResourcesFragment extends BaseFragment implements SwipeRefres
 
                     }
 
-                    if (data.getInt("pages") == pageNum) {
-                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
-                    }
+                    pages = data.getInt("pages");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

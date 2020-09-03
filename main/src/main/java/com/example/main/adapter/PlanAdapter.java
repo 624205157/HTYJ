@@ -28,7 +28,12 @@ public class PlanAdapter extends BaseQuickAdapter<Plan, BaseViewHolder> implemen
     protected void convert(@NotNull BaseViewHolder holder, Plan plan) {
         holder.setText(R.id.name, plan.getName());
         holder.setText(R.id.create_time, "创建时间: " + plan.getCreateTime());
-        holder.setText(R.id.type, "事件类型: " + plan.getCategoryId());
+        String type = "";
+        for (int i = plan.getCategory().size()-1; i >= 0; i--) {
+            type = type  + "-" + plan.getCategory().get(i).getName() ;
+        }
+
+        holder.setText(R.id.type, type.substring(1));
 
 
         View view = holder.getView(R.id.cl_1);

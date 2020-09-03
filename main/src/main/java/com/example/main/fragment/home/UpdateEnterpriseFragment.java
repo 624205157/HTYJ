@@ -198,15 +198,21 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
         }
     }
 
+    private int pages = 1;
+
     private void getData() {
         RequestParams params = new RequestParams();
         try {
-            params.put("pageNum", ++pageNum);
+            params.put("current", ++pageNum);
             params.put("pageable", "y");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        if (pages < pageNum) {
+            mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+            return;
+        }
 
         RequestCenter.getDataList(UrlService.ENTERPRISE, params, new DisposeDataListener() {
             @Override
@@ -225,10 +231,7 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
                         mAdapter.notifyDataSetChanged();
 
                     }
-
-                    if (data.getInt("pages") == pageNum) {
-                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
-                    }
+                    pages = data.getInt("pages");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

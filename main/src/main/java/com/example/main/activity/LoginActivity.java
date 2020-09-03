@@ -70,7 +70,7 @@ public class LoginActivity extends BaseActivity {
                                 .save("token", data.getString("token"))
                                 .save("subject", data.getString("subject")).commit();
                         Constants.TAKEN = data.getString("token");
-//                        Constants.SERVICE_ID = data.getInt("serviceId");
+                        Constants.SERVICE_ID = data.getInt("serviceId");
 
                         /**
                          * 腾讯云登录

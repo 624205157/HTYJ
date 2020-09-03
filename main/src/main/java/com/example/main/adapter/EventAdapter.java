@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.main.R;
 import com.example.main.bean.Event;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by czy on 2020/8/12 12:49.
  * describe:
  */
-public class EventAdapter extends BaseQuickAdapter<Event, BaseViewHolder> {
+public class EventAdapter extends BaseQuickAdapter<Event, BaseViewHolder> implements LoadMoreModule {
 
     public EventAdapter(List<Event> datas) {
         super(R.layout.item_event, datas);

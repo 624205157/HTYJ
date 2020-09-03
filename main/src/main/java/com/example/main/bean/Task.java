@@ -15,7 +15,6 @@ public class Task implements Parcelable {
 
     private String id;
     private String name;
-    @SerializedName("start_time")
     private String startTime;//开始时间
     private String stopTime;//结束时间
     private String state;//任务状态（1=已完成，2=进行中，3=未开始）
@@ -26,86 +25,9 @@ public class Task implements Parcelable {
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
 
-    private List<Control> controls;//表单控件的JSON配置
+//    private List<Control> controls;//表单控件的JSON配置
+    private String controls;//表单控件的JSON配置
 
-
-    public class Control{
-        private String id;
-        private String label;//中文描述
-        private String type;//控件类型 input、textarea、radio、checkbox、date、upload
-        private boolean required;//是否必填
-        private String placeholder;//输入框提示文字
-        private List<Option> options;//候选项（仅radio、checkbox、select有）
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public boolean isRequired() {
-            return required;
-        }
-
-        public void setRequired(boolean required) {
-            this.required = required;
-        }
-
-        public String getPlaceholder() {
-            return placeholder;
-        }
-
-        public void setPlaceholder(String placeholder) {
-            this.placeholder = placeholder;
-        }
-
-        public List<Option> getOptions() {
-            return options;
-        }
-
-        public void setOptions(List<Option> options) {
-            this.options = options;
-        }
-    }
-
-    public class Option{
-        private String label;//描述
-        private String value;//数据
-
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
 
     protected Task(Parcel in) {
         id = in.readString();
@@ -116,6 +38,7 @@ public class Task implements Parcelable {
         timeLimit = in.readString();
         count = in.readString();
         hidden = in.readByte() != 0;
+        controls = in.readString();
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -196,13 +119,6 @@ public class Task implements Parcelable {
         this.stopTime = stopTime;
     }
 
-    public List<Control> getControls() {
-        return controls;
-    }
-
-    public void setControls(List<Control> controls) {
-        this.controls = controls;
-    }
 
     @Override
     public int describeContents() {
@@ -220,6 +136,8 @@ public class Task implements Parcelable {
         dest.writeString(timeLimit);
         dest.writeString(count);
         dest.writeByte((byte) (hidden ? 1 : 0));
+        dest.writeString(controls);
     }
+
 
 }

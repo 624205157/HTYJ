@@ -1,5 +1,10 @@
 package com.example.main.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.List;
+
 /**
  * Created by 陈泽宇 on 2020/9/2
  * Describe: 预案
@@ -11,8 +16,11 @@ public class Plan {
     private String content;//预案内容
     private String categoryId;//事件类型ID
     private String createTime;//创建时间
+    private List<Grid> category;//预案类型
+
 
     private boolean hidden = false;//是否局部隐藏 true 显示 false隐藏
+
 
     public String getId() {
         return id;
@@ -60,5 +68,14 @@ public class Plan {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+
+    public List<Grid> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<Grid> category) {
+        this.category = category;
     }
 }

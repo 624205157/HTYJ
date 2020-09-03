@@ -13,7 +13,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="fb96e12a76ab5fe7c85c24b23c9d830a" />
+            android:value="83521e31c0cccd3f8b379c760a0a6fe7" />
         <!--        <meta-data-->
         <!--            android:name="com.amap.api.v2.apikey"-->
         <!--            android:value="bfdc369a22efc57e7c0eb15abefa2cda" />-->

@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.chad.library.adapter.base.listener.OnLoadMoreListener;
 import com.example.commonlib.okhttp.exception.OkHttpException;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
 import com.example.commonlib.okhttp.request.RequestParams;
@@ -45,7 +46,7 @@ import butterknife.BindView;
  * Created by czy on 2020/8/10 11:32.
  * describe: 事件列表
  */
-public class EventListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class EventListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
     @BindView(R2.id.search)
     EditText search;
     @BindView(R2.id.recyclerview)
@@ -102,6 +103,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
         mAdapter = new EventAdapter(mData);
         mAdapter.setAnimationEnable(true);
+        mAdapter.getLoadMoreModule().setOnLoadMoreListener(this);
         mAdapter.addChildClickViewIds(R.id.navigation,R.id.check_v);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
@@ -136,9 +138,15 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        pageNum = 0;
         mData.clear();
         getData();
         refresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onLoadMore() {
+        getData();
     }
 
     /**
@@ -166,6 +174,8 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
         }
     }
 
+    private int pages = 1;
+
     private void getData(){
 
         RequestParams params = new RequestParams();
@@ -175,6 +185,12 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if (pages < pageNum) {
+            mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+            return;
+        }
+        params.put("state",state);
 
         RequestCenter.getDataList(UrlService.EVENT, params, new DisposeDataListener() {
             @Override
@@ -190,11 +206,11 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
                         mAdapter.notifyDataSetChanged();
 
+                    }else {
+                        showToast(data.getString("msg"));
                     }
 
-                    if (data.getInt("pages") == pageNum) {
-                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
-                    }
+                    pages = data.getInt("pages");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -13,9 +13,9 @@ public class Event {
     private String id;
     private String name;
     private String address;
-    @SerializedName("category_name")
+    @SerializedName("categoryName")
     private String type;//事件类型
-    @SerializedName("degree_name")
+    @SerializedName("degreeName")
     private String level;//紧急程度
     private String state;//1=已办结，0=处理中
     private String content;//事件内容

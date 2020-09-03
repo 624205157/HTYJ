@@ -80,6 +80,9 @@
         <activity
             android:name=".activity.CheckOtherTraActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.PlanDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
             android:name=".activity.my.UpdateMyActivity"

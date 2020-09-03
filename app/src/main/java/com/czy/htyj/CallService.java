@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CallService extends Service {
-    private ITRTCAudioCall        mITRTCAudioCall;
+    private ITRTCAudioCall mITRTCAudioCall;
     private TRTCAudioCallListener mTRTCAudioCallListener = new TRTCAudioCallListener() {
         // <editor-fold  desc="音频监听代码">
         @Override
@@ -236,7 +236,7 @@ public class CallService extends Service {
                 }
             });
         }
-        String userId  = ProfileManager.getInstance().getUserModel().userId;
+        String userId = ProfileManager.getInstance().getUserModel().userId;
         String userSig = ProfileManager.getInstance().getUserModel().userSig;
         Log.d("Login", "login: " + userId + " " + userSig);
         // 由于这里提前登陆了，所以会导致上一次的消息收不到，您在APP中单独使用 ITRTCAudioCall.login 不会出现这种问题
@@ -263,8 +263,10 @@ public class CallService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mITRTCAudioCall!=null)
         mITRTCAudioCall.removeListener(mTRTCAudioCallListener);
         TRTCAudioCallImpl.destroySharedInstance();
+        if (mITRTCVideoCall!=null)
         mITRTCVideoCall.removeListener(mTRTCVideoCallListener);
         TRTCVideoCallImpl.destroySharedInstance();
     }
@@ -274,8 +276,8 @@ public class CallService extends Service {
         mITRTCAudioCall.init();
         mITRTCAudioCall.addListener(mTRTCAudioCallListener);
         //为了方便接入和测试
-        int    appid   = GenerateTestUserSig.SDKAPPID;
-        String userId  = ProfileManager.getInstance().getUserModel().userId;
+        int appid = GenerateTestUserSig.SDKAPPID;
+        String userId = ProfileManager.getInstance().getUserModel().userId;
         String userSig = ProfileManager.getInstance().getUserModel().userSig;
         mITRTCAudioCall.login(appid, userId, userSig, null);
     }
@@ -284,8 +286,8 @@ public class CallService extends Service {
         mITRTCVideoCall = TRTCVideoCallImpl.sharedInstance(this);
         mITRTCVideoCall.init();
         mITRTCVideoCall.addListener(mTRTCVideoCallListener);
-        int    appid   = GenerateTestUserSig.SDKAPPID;
-        String userId  = ProfileManager.getInstance().getUserModel().userId;
+        int appid = GenerateTestUserSig.SDKAPPID;
+        String userId = ProfileManager.getInstance().getUserModel().userId;
         String userSig = ProfileManager.getInstance().getUserModel().userSig;
         mITRTCVideoCall.login(appid, userId, userSig, null);
     }

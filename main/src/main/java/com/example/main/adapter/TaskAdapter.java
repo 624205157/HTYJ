@@ -27,16 +27,16 @@ public class TaskAdapter extends BaseQuickAdapter<Task,BaseViewHolder> implement
     @Override
     protected void convert(@NotNull BaseViewHolder holder, Task data) {
         holder.setText(R.id.name,data.getName());
-        holder.setText(R.id.time_limit,data.getName());
-        holder.setText(R.id.time,"开始时间: "+data.getStartTime());
+        holder.setText(R.id.time_limit,"任务时限: "+data.getTimeLimit());
+        holder.setText(R.id.start_time,"开始时间: "+data.getStartTime());
         if (TextUtils.equals(data.getState(),"3")){
-            holder.setText(R.id.level,"未开始");
+            holder.setText(R.id.state,"未开始");
             holder.setGone(R.id.finish,true);
         }else if (TextUtils.equals(data.getState(),"2")){
-            holder.setText(R.id.level,"进行中");
-            holder.setGone(R.id.finish,false);
+            holder.setText(R.id.state,"进行中");
+            holder.setGone(R.id.finish,true);
         }else if (TextUtils.equals(data.getState(),"1")){
-            holder.setText(R.id.level,"已完成");
+            holder.setText(R.id.state,"已完成");
             holder.setGone(R.id.finish,false);
         }
 
