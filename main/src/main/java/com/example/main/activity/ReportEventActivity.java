@@ -34,6 +34,7 @@ import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
+import com.example.main.UrlService;
 import com.example.main.adapter.GridImageAdapter;
 import com.example.main.bean.Grid;
 import com.example.main.utils.FullyGridLayoutManager;
@@ -185,6 +186,7 @@ public class ReportEventActivity extends BaseActivity {
         } else if (id == R.id.level) {
             reasonPicker2.show();
         } else if (id == R.id.submit) {
+            sendData();
         }
     }
 
@@ -308,6 +310,7 @@ public class ReportEventActivity extends BaseActivity {
     }
 
     private void sendData() {
+        buildDialog("提交中");
         if (TextUtils.isEmpty(name.getText())) {
             showToast("事件名称不可为空");
             return;
@@ -317,10 +320,10 @@ public class ReportEventActivity extends BaseActivity {
             params.put("name", Utils.getText(name));
             params.put("address", Utils.getText(address));
             params.put("content", Utils.getText(count));
-            params.put("category_id", category.getId());
-            params.put("category_name", category.getName());
-            params.put("degree_id", degree.getId());
-            params.put("degree_name", degree.getName());
+            params.put("categoryId", category.getId());
+//            params.put("category_name", category.getName());
+            params.put("degreeId", degree.getId());
+//            params.put("degree_name", degree.getName());
             params.put("longitude", latLng.longitude + "");
             params.put("latitude", latLng.latitude + "");
 
@@ -329,12 +332,14 @@ public class ReportEventActivity extends BaseActivity {
         }
 
 
-        RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList), new DisposeDataListener() {
+        RequestCenter.addUpdateData(UrlService.EVENT,params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     showToast(result.getString("msg"));
+                    finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -343,6 +348,7 @@ public class ReportEventActivity extends BaseActivity {
 
             @Override
             public void onFailure(OkHttpException responseObj) {
+                cancelDialog();
                 showToast(responseObj.getMessage());
             }
         });
@@ -354,7 +360,7 @@ public class ReportEventActivity extends BaseActivity {
     private void initGridList() {
 
         RequestParams params = new RequestParams();
-        params.put("pid", "EMERGENCY_TYPE");//事件类型
+        params.put("pId", "EMERGENCY_TYPE");//事件类型
         RequestCenter.getType(params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
@@ -392,7 +398,7 @@ public class ReportEventActivity extends BaseActivity {
         });
 
         RequestParams params2 = new RequestParams();
-        params2.put("pid", "EMERGENCY_DEGREE");//事件类型
+        params2.put("pId", "EMERGENCY_DEGREE");//事件类型
         RequestCenter.getType(params2, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
@@ -412,7 +418,7 @@ public class ReportEventActivity extends BaseActivity {
                             @Override
                             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                                 degree = degreeList.get(options1);
-                                type.setText(degree.getName());
+                                level.setText(degree.getName());
                             }
                         }).setTitleText("紧急程度").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
                         reasonPicker2.setPicker(degreeNameList);

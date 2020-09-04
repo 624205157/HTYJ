@@ -193,6 +193,9 @@ public class EventDetailsActivity extends BaseActivity {
                     if (TextUtils.equals(result.getString("code"), "0")) {
                         Gson gson = new Gson();
                         peopleList.addAll(gson.fromJson(result.getString("data"),new TypeToken<List<People>>(){}.getType()));
+                        for (People people : peopleList){
+                            peopleName.add(people.getName());
+                        }
                     }
 
                 }catch (Exception e){
@@ -237,13 +240,14 @@ public class EventDetailsActivity extends BaseActivity {
                     stateStr[0] = "1";
                 } else if (checkedId == R.id.next) {//转发
                     stateStr[0] = "0";
-//                    ll.setVisibility(View.VISIBLE);
+                    ll.setVisibility(View.VISIBLE);
 
                 }
             }
         });
         BottomDialog dialog = new BottomDialog(this)
                 .setAddView(view);
+
         dialog.show();
 
         close.setOnClickListener(new View.OnClickListener() {
@@ -262,9 +266,10 @@ public class EventDetailsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 buildDialog("");
-                sendData(Utils.getText(count), stateStr[0], "", dialog);
+                sendData(Utils.getText(count), stateStr[0], Utils.getText(chose), dialog);
             }
         });
+        initPicker(chose);
     }
 
     private void sendData(String content, String state, String users, BottomDialog dialog) {
@@ -280,11 +285,13 @@ public class EventDetailsActivity extends BaseActivity {
             showToast("未选择转发对象");
             return;
         }
+        List<String> userList = new ArrayList<>();
+        userList.add(users);
         Processes processes = new Processes();
         processes.setEventId(event.getId());
         processes.setContent(content);
         processes.setState(state);
-        processes.setUsers(users);
+        processes.setUsers(userList);
 
         Gson gson = new Gson();
         String jsonStr = gson.toJson(processes);
@@ -293,8 +300,19 @@ public class EventDetailsActivity extends BaseActivity {
             @Override
             public void onSuccess(Object responseObj) {
                 cancelDialog();
-                showToast("处理成功");
-                dialog.dismiss();
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    if (TextUtils.equals(result.getString("code"),"0")) {
+                        showToast("处理成功");
+                        dialog.dismiss();
+                    }else {
+                        showToast(result.getString("msg"));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
             }
 
             @Override
@@ -305,15 +323,16 @@ public class EventDetailsActivity extends BaseActivity {
 
     }
 
-    private void initPicker() {
+    private void initPicker(TextView tv) {
         reasonPicker = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-//                gridSelect = gridList.get(options1);
-//                grid.setText(gridSelect.getName());
+                tv.setText(peopleList.get(options1).getName());
             }
-        }).setTitleText("选择人员").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-//        reasonPicker.setPicker(gridSelectList);
+        }).setTitleText("选择人员").setContentTextSize(22).setTitleSize(22).setSubCalSize(21)
+                .isDialog(true)
+                .build();
+        reasonPicker.setPicker(peopleName);
     }
 
 }

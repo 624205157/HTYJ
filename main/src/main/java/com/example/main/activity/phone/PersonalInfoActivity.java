@@ -5,20 +5,26 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.commonlib.base.BaseActivity;
+import com.example.main.R;
+import com.example.main.R2;
+import com.example.main.bean.Grid;
+import com.example.main.bean.Subject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tencent.liteav.login.model.ProfileManager;
 import com.tencent.liteav.login.model.UserModel;
 import com.tencent.liteav.trtcaudiocalldemo.ui.TRTCAudioCallActivity;
-import com.example.main.R;
-import com.example.main.R2;
 import com.tencent.liteav.trtcvideocalldemo.ui.TRTCVideoCallActivity;
-import com.tencent.trtc.TRTCCloud;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by czy on 2020/8/9 20:42.
@@ -29,14 +35,14 @@ public class PersonalInfoActivity extends BaseActivity {
 
     @BindView(R2.id.name)
     TextView name;
-    @BindView(R2.id.address)
-    TextView address;
-    @BindView(R2.id.department)
-    TextView department;
+    @BindView(R2.id.grid)
+    TextView grid;
     @BindView(R2.id.tel)
     TextView tel;
 
     List<UserModel> list = new ArrayList<>();
+    @BindView(R2.id.iv)
+    CircleImageView iv;
 
     @Override
     protected int setContentView() {
@@ -47,14 +53,28 @@ public class PersonalInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState, String a) {
         addBack();
         setTitleText("人员详情");
-        String userID = ProfileManager.getInstance().getUserModel().userId;
+        Gson gson = new Gson();
+        Subject user = gson.fromJson(getIntent().getStringExtra("user"), new TypeToken<Subject>() {
+        }.getType());
+        name.setText(user.getName());
+        tel.setText(user.getMobile());
+
+        List<Grid> grids = new ArrayList<>();
+        grids.addAll(user.getGrids());
+        String departmentStr = "";
+        for (Grid grid : grids) {
+            departmentStr = departmentStr + "-" + grid.getName();
+        }
+        if (!TextUtils.isEmpty(departmentStr)) {
+            grid.setText(departmentStr.substring(1));
+        }
+
+        Glide.with(this).load(user.getAvatar()).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
+                .into(iv);
 
         UserModel userModel = new UserModel();
-        if (TextUtils.equals(userID,"123456")) {
-            userModel.userId = "654321";
-        }else {
-            userModel.userId = "123456";
-        }
+        userModel.userId = ProfileManager.getInstance().getUserModel().userId;
         list.add(userModel);
     }
 

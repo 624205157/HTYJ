@@ -12,7 +12,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="?android:actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/b_text_color_false"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

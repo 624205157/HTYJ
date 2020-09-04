@@ -59,6 +59,21 @@ public class MainActivity extends BaseActivity {
         shareHelper = ShareHelper.getInstance();
         getPermission();
 
+        if (TextUtils.equals("LoginActivity",getIntent().getStringExtra("from"))){
+            initData();
+            return;
+        }
+
+        //判断是否已登录
+        String username = (String) shareHelper.query("username","");
+        String password = (String) shareHelper.query("password","");
+        if (!TextUtils.isEmpty(username)){
+            login(username,password);
+        }else {
+            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+            finish();
+        }
+
 //        RequestParams params = new RequestParams();
 //        params.put("key","49e0db5b3745d3fce02a4292ad7ce212");
 //        params.put("name","轨迹测试");
@@ -195,9 +210,6 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onResult(boolean allGranted, List<String> grantedList, List<String> deniedList) {
                         if (allGranted) {
-                            if (TextUtils.equals("LoginActivity",getIntent().getStringExtra("from"))){
-                                return;
-                            }
 
                         } else {
                             String text = "";
@@ -208,15 +220,6 @@ public class MainActivity extends BaseActivity {
 //                            Toast.makeText(MainActivity.this, "您拒绝了定位权限", Toast.LENGTH_SHORT).show();
                         }
 
-                        //判断是否已登录
-                        String username = (String) shareHelper.query("username","");
-                        String password = (String) shareHelper.query("password","");
-                        if (!TextUtils.isEmpty(username)){
-                            login(username,password);
-                        }else {
-                            startActivity(new Intent(MainActivity.this,LoginActivity.class));
-                            finish();
-                        }
                     }
                 });
     }

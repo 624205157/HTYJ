@@ -21,6 +21,7 @@ public class UrlService {
     public static final String GRID = URL + "grid";//网格
     public static final String TYPE = URL + "system/dictionary";//类别
     public static final String TASK = URL + "task/mine";//任务
+    public static final String VERSION  = URL + "version";//版本检查
 
     public static final String USER = URL + "system/user";//更新用户信息
     public static final String USERLIST = URL + "system/user/list";//用户信息列表

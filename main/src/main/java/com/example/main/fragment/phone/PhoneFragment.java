@@ -74,7 +74,10 @@ public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.On
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                startActivity(new Intent(getActivity(), PersonalInfoActivity.class));
+                Intent intent = new Intent(getActivity(), PersonalInfoActivity.class);
+                Gson gson = new Gson();
+                intent.putExtra("user",gson.toJson(userList.get(position)));
+                startActivity(intent);
             }
         });
         list.setLayoutManager(new LinearLayoutManager(getContext()));

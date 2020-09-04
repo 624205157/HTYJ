@@ -2,6 +2,8 @@ package com.example.main.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by 陈泽宇 on 2020/8/21
  * Describe:处理进程
@@ -19,7 +21,7 @@ public class Processes {
     @SerializedName("settleTime")
     private String settleTime;//处理时间
     private String content;//描述
-    private String users;
+    private List<String> users;
 
     public String getId() {
         return id;
@@ -77,11 +79,11 @@ public class Processes {
         this.content = content;
     }
 
-    public String getUsers() {
+    public List<String> getUsers() {
         return users;
     }
 
-    public void setUsers(String users) {
+    public void setUsers(List<String> users) {
         this.users = users;
     }
 }

@@ -24,7 +24,7 @@ public class BottomDialog extends CustomDialog {
     private View addView;
 
 
-//    private int contentView = 0;
+    //    private int contentView = 0;
     private LinearLayout group;
     private float width;
 
@@ -60,7 +60,7 @@ public class BottomDialog extends CustomDialog {
         setDialogHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         setDialogGravity(Gravity.BOTTOM);
         setAnim(R.anim.bottom_in);
-            setContentView(R.layout.group);
+        setContentView(R.layout.group);
 //        setCanceledOnTouchOutside(false);
         initView();//初始化控件
         setShow();//设置显示内容
@@ -83,7 +83,6 @@ public class BottomDialog extends CustomDialog {
 
         group = findViewById(R.id.group);
     }
-
 
 
     public BottomDialog setCanceledOnTouch(boolean cancel) {

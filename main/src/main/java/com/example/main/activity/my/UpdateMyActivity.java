@@ -61,9 +61,6 @@ public class UpdateMyActivity extends BaseActivity {
 
     private Subject personInfo;
 
-    private String apkUrl = "http://118.24.148.250:8080/yk/update_signed.apk";
-    private String updateContent = "1、Kotlin重构版\n2、支持自定义UI\n3、增加md5校验\n4、更多功能等你探索";
-
 
     @Override
     protected int setContentView() {
@@ -196,49 +193,4 @@ public class UpdateMyActivity extends BaseActivity {
 
     }
 
-    private void updateApp() {
-        UpdateConfig updateConfig = new UpdateConfig();
-        updateConfig.setCheckWifi(true);
-        updateConfig.setNeedCheckMd5(true);
-//        updateConfig.setNotifyImgRes(R.drawable.ic_logo);
-
-        UiConfig uiConfig = new UiConfig();
-        uiConfig.setUiType(UiType.PLENTIFUL);
-
-        UpdateAppUtils
-                .getInstance()
-                .apkUrl(apkUrl)
-                .updateTitle("发现新版本")
-                .updateContent(updateContent)
-                .uiConfig(uiConfig)
-                .updateConfig(updateConfig)
-                .setMd5CheckResultListener(new Md5CheckResultListener() {
-                    @Override
-                    public void onResult(boolean result) {
-
-                    }
-                })
-                .setUpdateDownloadListener(new UpdateDownloadListener() {
-                    @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onDownload(int progress) {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-
-                    @Override
-                    public void onError(@NotNull Throwable e) {
-
-                    }
-                })
-                .update();
-    }
 }
