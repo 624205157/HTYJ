@@ -38,6 +38,8 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,7 +116,7 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
                 if (view.getId() == R.id.update) {
                     showToast("修改");
                     Intent intent = new Intent(getActivity(), TaskDetailsActivity.class);
-                    intent.putExtra("task",mData.get(position));
+                    intent.putExtra("task", mData.get(position));
                     startActivity(intent);
                 }
                 if (view.getId() == R.id.del) {
@@ -180,15 +182,17 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
         try {
             params.put("current", ++pageNum);
             params.put("pageable", "y");
+
+            if (pages < pageNum) {
+                mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+                return;
+            }
+
+            params.put("states", URLEncoder.encode(state, "UTF-8"));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (pages < pageNum) {
-            mAdapter.getLoadMoreModule().setEnableLoadMore(false);
-            return;
-        }
-        params.put("states",state);
-
         RequestCenter.getDataList(UrlService.TASK, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {

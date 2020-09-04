@@ -3,35 +3,20 @@ package com.example.main.activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.example.commonlib.base.BaseActivity;
-import com.example.commonlib.okhttp.exception.OkHttpException;
-import com.example.commonlib.okhttp.listener.DisposeDataListener;
-import com.example.commonlib.okhttp.request.RequestParams;
-import com.example.commonlib.view.BottomDialog;
 import com.example.main.R;
 import com.example.main.R2;
-import com.example.main.RequestCenter;
-import com.example.main.UrlService;
-import com.example.main.adapter.EventDetailsAdapter;
 import com.example.main.adapter.GridImageAdapter;
-import com.example.main.bean.Processes;
+import com.example.main.bean.Control;
 import com.example.main.bean.Task;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
-import com.example.main.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
@@ -40,16 +25,11 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.amap.api.maps.model.BitmapDescriptorFactory.getContext;
 
 /**
  * Created by czy on 2020/8/23 13:19.
@@ -70,6 +50,10 @@ public class TaskDetailsActivity extends BaseActivity {
     TextView count;
     @BindView(R2.id.controls)
     LinearLayout controls;
+    @BindView(R2.id.v_5)
+    View v5;
+    @BindView(R2.id.stop_time_tv)
+    TextView stopTimeTv;
 //    @BindView(R2.id.state_recycler)
 //    RecyclerView stateRecycler;
 
@@ -99,10 +83,36 @@ public class TaskDetailsActivity extends BaseActivity {
 
     }
 
-    private void getData(){
+    private void getData() {
         task = getIntent().getParcelableExtra("task");
-    }
 
+        name.setText(task.getName());
+        startTime.setText(task.getStartTime());
+        if (!TextUtils.isEmpty(task.getStopTime())) {
+            stopTime.setText(task.getStopTime());
+            stopTimeTv.setVisibility(View.VISIBLE);
+            stopTime.setVisibility(View.VISIBLE);
+            v5.setVisibility(View.VISIBLE);
+        }
+        timeLimit.setText(task.getTimeLimit());
+        if (TextUtils.equals(task.getState(), "1")) {
+            state.setText("已完成");
+        }
+        if (TextUtils.equals(task.getState(), "2")) {
+            state.setText("进行中");
+        }
+        if (TextUtils.equals(task.getState(), "3")) {
+            state.setText("未开始");
+        }
+
+        count.setText(task.getCount());
+
+        Gson gson = new Gson();
+        List<Control> controlList = new ArrayList<>();
+        controlList.addAll(gson.fromJson(task.getControls(),new TypeToken<List<Control>>(){}.getType()));
+
+//        controls.addView();
+    }
 
 
     @OnClick({R2.id.submit, R2.id.save})
@@ -113,6 +123,42 @@ public class TaskDetailsActivity extends BaseActivity {
         } else if (id == R.id.save) {
 
         }
+    }
+
+    private void showControl(List<Control> controlList){
+        for (Control control : controlList){
+            switch (control.getType()){
+                case "input":
+
+                    break;
+
+                case "textarea":
+
+                    break;
+
+                case "radio":
+
+                    break;
+
+                case "checkbox":
+
+                    break;
+
+                case "date":
+
+                    break;
+
+                case "upload":
+
+                    break;
+            }
+
+
+        }
+    }
+
+    private void addInput(){
+        View view = getLayoutInflater().inflate(R.layout.layout_input, null);
     }
 
     private GridImageAdapter adapter;
@@ -146,6 +192,7 @@ public class TaskDetailsActivity extends BaseActivity {
 
     /**
      * 选择图片
+     *
      * @param adapter
      * @param selectList
      */

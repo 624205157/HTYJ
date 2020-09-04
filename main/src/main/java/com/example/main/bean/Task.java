@@ -120,6 +120,14 @@ public class Task implements Parcelable {
     }
 
 
+    public String getControls() {
+        return controls;
+    }
+
+    public void setControls(String controls) {
+        this.controls = controls;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -127,7 +135,6 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(startTime);
@@ -138,6 +145,4 @@ public class Task implements Parcelable {
         dest.writeByte((byte) (hidden ? 1 : 0));
         dest.writeString(controls);
     }
-
-
 }

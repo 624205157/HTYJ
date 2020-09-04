@@ -53,8 +53,8 @@ public class TaskActivity extends RightTitleActivity {
         // 创建一个集合,装填Fragment
         ArrayList<Fragment> fragments = new ArrayList<>();
         List<String> titleList = new ArrayList<>();
-        fragments.add(TaskListFragment.newInstance("2,3"));
-        fragments.add(TaskListFragment.newInstance("1"));
+        fragments.add(TaskListFragment.newInstance("[2,3]"));
+        fragments.add(TaskListFragment.newInstance("[1]"));
 
         tab1.setText("待办事件");
         tab2.setText("已办事件");
