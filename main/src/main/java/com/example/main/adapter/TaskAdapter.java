@@ -3,6 +3,7 @@ package com.example.main.adapter;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.module.LoadMoreModule;
@@ -29,6 +30,9 @@ public class TaskAdapter extends BaseQuickAdapter<Task,BaseViewHolder> implement
         holder.setText(R.id.name,data.getName());
         holder.setText(R.id.time_limit,"任务时限: "+data.getTimeLimit());
         holder.setText(R.id.start_time,"开始时间: "+data.getStartTime());
+
+        TextView view1 = holder.getView(R.id.update);
+
         if (TextUtils.equals(data.getState(),"3")){
             holder.setText(R.id.state,"未开始");
             holder.setGone(R.id.finish,true);
@@ -38,6 +42,7 @@ public class TaskAdapter extends BaseQuickAdapter<Task,BaseViewHolder> implement
         }else if (TextUtils.equals(data.getState(),"1")){
             holder.setText(R.id.state,"已完成");
             holder.setGone(R.id.finish,false);
+            view1.setText("查看");
         }
 
         View view = holder.getView(R.id.cl_1);

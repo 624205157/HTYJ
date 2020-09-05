@@ -22,7 +22,7 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/photo_recycler1"
+        android:id="@+id/photo_recycler"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:overScrollMode="never"

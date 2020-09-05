@@ -109,31 +109,16 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
         mAdapter = new TaskAdapter(mData);
         mAdapter.setAnimationEnable(true);
         mAdapter.getLoadMoreModule().setOnLoadMoreListener(this);
-        mAdapter.addChildClickViewIds(R.id.update, R.id.del);
+        mAdapter.addChildClickViewIds(R.id.update);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.update) {
                     showToast("修改");
                     Intent intent = new Intent(getActivity(), TaskDetailsActivity.class);
-                    intent.putExtra("task", mData.get(position));
+                    Gson gson = new Gson();
+                    intent.putExtra("task",gson.toJson(mData.get(position)));
                     startActivity(intent);
-                }
-                if (view.getId() == R.id.del) {
-                    new MyDialog(mContext)
-                            .setTitleStr("提示")
-                            .setMessageStr("您确定要删除吗?")
-                            .setButtonText("取消", "确定")
-                            .setClickListener(new CallPhoneListener() {
-                                @Override
-                                public void onClick(int var1) {
-                                    if (var1 == 2) {
-                                        showToast("确定删除");
-                                        adapter.remove(mData.get(position));
-//                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-                            }).show();
                 }
             }
         });

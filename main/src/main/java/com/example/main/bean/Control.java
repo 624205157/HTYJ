@@ -14,6 +14,7 @@ public class Control{
     private String placeholder;//输入框提示文字
     private List<Option> options;//候选项（仅radio、checkbox、select有）
 
+
     public String getId() {
         return id;
     }

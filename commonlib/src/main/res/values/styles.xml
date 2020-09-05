@@ -36,5 +36,33 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <!-- 复选框的风格 -->
+    <style name="CheckItemCheckBoxStyleWithMargin" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:drawableLeft">@drawable/select_checked</item>
+        <item name="android:checkable">true</item>
+        <item name="android:button">@null</item>
+        <item name="background">@null</item>
+        <item name="android:drawablePadding">3dp</item>
+        <item name="android:colorControlActivated">@android:color/transparent</item>
+    </style>
+    <!-- 单选按钮的风格 -->
+    <style name="CheckItemRadioButtonStyleWithMargin" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:drawableLeft">@drawable/select_checked</item>
+        <item name="android:checkable">true</item>
+        <item name="android:button">@null</item>
+        <item name="background">@null</item>
+        <item name="android:drawablePadding">3dp</item>
+        <item name="android:colorControlActivated">@android:color/transparent</item>
+    </style>
+
+    <!-- 单选按钮的风格 -->
+    <style name="CheckItemNewRadioButtonStyleWithMargin" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <!--<item name="android:drawableLeft">@drawable/select_checked_new</item>-->
+        <!--<item name="android:drawablePadding">5dp</item>-->
+        <item name="android:checkable">true</item>
+        <item name="android:button">@null</item>
+        <!--<item name="android:colorControlActivated">@android:color/transparent</item>-->
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>

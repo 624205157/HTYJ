@@ -14,10 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
-import com.example.commonlib.base.BaseActivity;
 import com.example.main.R;
 
 import java.lang.reflect.Field;

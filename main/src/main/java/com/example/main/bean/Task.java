@@ -5,13 +5,15 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by czy on 2020/8/16 13:24.
  * describe: 任务
  */
-public class Task implements Parcelable {
+public class Task {
 
     private String id;
     private String name;
@@ -28,30 +30,10 @@ public class Task implements Parcelable {
 //    private List<Control> controls;//表单控件的JSON配置
     private String controls;//表单控件的JSON配置
 
+    private String values ;//表单反显
 
-    protected Task(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        startTime = in.readString();
-        stopTime = in.readString();
-        state = in.readString();
-        timeLimit = in.readString();
-        count = in.readString();
-        hidden = in.readByte() != 0;
-        controls = in.readString();
-    }
+    private List<MyFiles> attachments;
 
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel in) {
-            return new Task(in);
-        }
-
-        @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
-        }
-    };
 
     public String getId() {
         return id;
@@ -120,6 +102,19 @@ public class Task implements Parcelable {
     }
 
 
+
+
+
+    public List<MyFiles> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<MyFiles> attachments) {
+        this.attachments = attachments;
+    }
+
+
+
     public String getControls() {
         return controls;
     }
@@ -128,21 +123,11 @@ public class Task implements Parcelable {
         this.controls = controls;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getValues() {
+        return values;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(startTime);
-        dest.writeString(stopTime);
-        dest.writeString(state);
-        dest.writeString(timeLimit);
-        dest.writeString(count);
-        dest.writeByte((byte) (hidden ? 1 : 0));
-        dest.writeString(controls);
+    public void setValues(String values) {
+        this.values = values;
     }
 }

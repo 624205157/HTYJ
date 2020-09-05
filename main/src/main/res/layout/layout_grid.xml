@@ -21,17 +21,39 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <GridLayout
-        android:id="@+id/photo_recycler1"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/chose"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:overScrollMode="never"
-        app:layout_constraintLeft_toLeftOf="parent"
+        tools:text="请选择"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/tv"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv"
-        android:columnCount="4"
-        android:layout_margin="10dp"
-        android:orientation="horizontal"
+        android:visibility="invisible"
         />
+
+
+
+        <GridLayout
+            android:id="@+id/gl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="10dp"
+            />
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
