@@ -181,7 +181,23 @@ public class TaskDetailsActivity extends BaseActivity {
         params.put("state", state);
         Map<String, String> map = new HashMap<>();
         for (Dynamic dynamic : forms) {
-            map.put(dynamic.getId(), Utils.getText((dynamic.getView())));
+            if (dynamic.getControl().isRequired()&&TextUtils.isEmpty(Utils.getText(dynamic.getView()))){
+                dynamic.getView().setTextColor(getResources().getColor(R.color.red,null));
+                switch (dynamic.getControl().getType()){
+                    case "input":
+                    case "textarea":
+                    case "date":
+                    case "upload":
+                        showToast(dynamic.getControl().getPlaceholder());
+                    case "radio":
+                    case "checkbox":
+                        showToast(dynamic.getControl().getPlaceholder() + dynamic.getControl().getLabel());
+                }
+                return;
+            }else {
+                dynamic.getView().setTextColor(getResources().getColor(R.color.text_color,null));
+            }
+            map.put(dynamic.getControl().getId(), Utils.getText(dynamic.getView()));
         }
 
 
@@ -227,6 +243,7 @@ public class TaskDetailsActivity extends BaseActivity {
             }
         });
     }
+
 
     private void showControl(List<Control> controlList, LinearLayout controls, Map<String, String> map) {
         for (Control control : controlList) {
@@ -274,7 +291,7 @@ public class TaskDetailsActivity extends BaseActivity {
             edit.setText(map.get(control.getId()));
         }
 
-        forms.add(new Dynamic(control.getId(), edit));
+        forms.add(new Dynamic(control, edit,tv));
         return view;
 
     }
@@ -290,7 +307,7 @@ public class TaskDetailsActivity extends BaseActivity {
             edit.setText(map.get(control.getId()));
         }
 
-        forms.add(new Dynamic(control.getId(), edit));
+        forms.add(new Dynamic(control, edit,tv));
         return view;
 
     }
@@ -321,7 +338,7 @@ public class TaskDetailsActivity extends BaseActivity {
         }
 
 
-        forms.add(new Dynamic(control.getId(), chose));
+        forms.add(new Dynamic(control, chose,tv));
         return view;
 
     }
@@ -353,7 +370,7 @@ public class TaskDetailsActivity extends BaseActivity {
             helper.checkedBoxFromInfo(map.get(control.getId()));
         }
 
-        forms.add(new Dynamic(control.getId(), chose));
+        forms.add(new Dynamic(control, chose,tv));
         return view;
 
     }
@@ -382,7 +399,7 @@ public class TaskDetailsActivity extends BaseActivity {
         if (map != null) {
             time.setText(map.get(control.getId()));
         }
-        forms.add(new Dynamic(control.getId(), time));
+        forms.add(new Dynamic(control, time,tv));
         return view;
     }
 

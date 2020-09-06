@@ -338,11 +338,11 @@ public class AddResourcesFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-
-
+        buildDialog("提交中");
         RequestCenter.addUpdateData(UrlService.RESOURCE,params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     showToast(result.getString("msg"));
@@ -355,6 +355,7 @@ public class AddResourcesFragment extends BaseFragment {
             @Override
             public void onFailure(OkHttpException responseObj) {
                 showToast(responseObj.getMessage());
+                cancelDialog();
             }
         });
     }

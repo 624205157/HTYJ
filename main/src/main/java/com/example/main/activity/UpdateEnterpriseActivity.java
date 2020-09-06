@@ -463,13 +463,13 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             params.put("gridId", gridSelect.getId());
             params.put("gridName", gridSelect.getName());
 
-            String exist="";
+//            String exist="";
             if (selectList.size()>0){
                 Iterator<LocalMedia> it_b=selectList.iterator();
                 while(it_b.hasNext()){
                     LocalMedia localMedia=it_b.next();
                     if (!TextUtils.isEmpty(localMedia.getUid())){
-                        exist+= localMedia.getUid()+",";
+//                        exist+= localMedia.getUid()+",";
                         it_b.remove();
                         hasLicense="1";
                     }
@@ -481,7 +481,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
                 while(it_b.hasNext()){
                     LocalMedia localMedia=it_b.next();
                     if (!TextUtils.isEmpty(localMedia.getUid())){
-                        exist+= localMedia.getUid()+",";
+//                        exist+= localMedia.getUid()+",";
                         it_b.remove();
                         hasIdentity="1";
                     }
@@ -490,7 +490,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
 
             params.put("hasIdentity",hasIdentity);
             params.put("hasLicense",hasLicense);
-            params.put("exist", exist.substring(0, exist.length() - 1));
+//            params.put("exist", exist.substring(0, exist.length() - 1));
 
         } catch (Exception e) {
             e.printStackTrace();

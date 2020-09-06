@@ -366,6 +366,33 @@ public class AddEnterpriseFragment extends BaseFragment {
             showToast("用户名不可为空");
             return;
         }
+        if (TextUtils.isEmpty(Utils.getText(enterpriseCode))){
+            showToast("信用代码不可为空");
+            return;
+        }
+        if (TextUtils.isEmpty(Utils.getText(address))){
+            showToast("企业地址不可为空,请重新定位");
+            return;
+        }
+
+        if (TextUtils.isEmpty(Utils.getText(legalPerson))){
+            showToast("法人姓名不可为空");
+            return;
+        }
+
+        if (!Utils.isLicense15(Utils.getText(enterpriseCode))&&!Utils.isLicense18(Utils.getText(enterpriseCode))){
+            showToast("信用代码格式不正确");
+            return;
+        }
+        if (!Utils.isPhone(Utils.getText(tel))&&!Utils.isMobile(Utils.getText(tel))){
+            showToast("企业联系电话格式不正确");
+            return;
+        }
+
+        if (!Utils.isPhone(Utils.getText(legalPersonTel))&&!Utils.isMobile(Utils.getText(legalPersonTel))){
+            showToast("法人联系电话格式不正确");
+            return;
+        }
         RequestParams params = new RequestParams();
         try {
             params.put("name", Utils.getText(name));
@@ -378,18 +405,20 @@ public class AddEnterpriseFragment extends BaseFragment {
             params.put("longitude", latLng.longitude + "");
             params.put("latitude", latLng.latitude+ "");
             params.put("star", isStart + "");
-            params.put("grid_id", gridSelect.getId());
-            params.put("grid_name", gridSelect.getName());
+            params.put("gridId", gridSelect.getId());
+            params.put("gridName", gridSelect.getName());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
+        buildDialog("提交中");
 
         RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList2), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     showToast(result.getString("msg"));
@@ -402,6 +431,7 @@ public class AddEnterpriseFragment extends BaseFragment {
             @Override
             public void onFailure(OkHttpException responseObj) {
                 showToast(responseObj.getMessage());
+                cancelDialog();
             }
         });
     }

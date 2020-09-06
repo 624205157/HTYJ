@@ -7,21 +7,16 @@ import android.widget.TextView;
  * describe: 表单json
  */
 public class Dynamic {
-    private String id;
     private TextView view;
+    private TextView labelView;
+    private Control control;
 
-    public Dynamic(String id,TextView view){
-        this.id = id;
+    public Dynamic(Control control,TextView labelView,TextView view){
+        this.control = control;
         this.view = view;
+        this.labelView = labelView;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public TextView getView() {
         return view;
@@ -29,5 +24,22 @@ public class Dynamic {
 
     public void setView(TextView view) {
         this.view = view;
+    }
+
+
+    public Control getControl() {
+        return control;
+    }
+
+    public void setControl(Control control) {
+        this.control = control;
+    }
+
+    public TextView getLabelView() {
+        return labelView;
+    }
+
+    public void setLabelView(TextView labelView) {
+        this.labelView = labelView;
     }
 }

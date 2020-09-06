@@ -6,22 +6,22 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="23"
-8-->E:\AndroidStudioProjects\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml
+8-->D:\Android\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml
 9        android:targetSdkVersion="29" />
-9-->E:\AndroidStudioProjects\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml
+9-->D:\Android\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml
 10
 11    <application>
-11-->E:\AndroidStudioProjects\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:5:5-11:19
+11-->D:\Android\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:5:5-11:19
 12        <activity
-12-->E:\AndroidStudioProjects\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:6:9-10:66
+12-->D:\Android\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:6:9-10:66
 13            android:name="com.tencent.liteav.trtcvideocalldemo.ui.TRTCVideoCallActivity"
-13-->E:\AndroidStudioProjects\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:7:13-53
+13-->D:\Android\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:7:13-53
 14            android:launchMode="singleTop"
-14-->E:\AndroidStudioProjects\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:8:13-43
+14-->D:\Android\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:8:13-43
 15            android:screenOrientation="portrait"
-15-->E:\AndroidStudioProjects\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:9:13-49
+15-->D:\Android\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:9:13-49
 16            android:theme="@style/Theme.AppCompat.NoActionBar" />
-16-->E:\AndroidStudioProjects\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:10:13-63
+16-->D:\Android\HTYJ\trtcvideocalldemo\src\main\AndroidManifest.xml:10:13-63
 17    </application>
 18
 19</manifest>

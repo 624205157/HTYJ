@@ -34,6 +34,8 @@ public class Task {
 
     private List<MyFiles> attachments;
 
+    private boolean required;//是否必填
+
 
     public String getId() {
         return id;
@@ -129,5 +131,13 @@ public class Task {
 
     public void setValues(String values) {
         this.values = values;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }
