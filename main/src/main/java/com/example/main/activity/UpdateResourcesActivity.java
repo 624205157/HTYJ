@@ -398,6 +398,14 @@ public class UpdateResourcesActivity  extends BaseActivity {
             showToast("资源名不可为空");
             return;
         }
+        if (TextUtils.isEmpty(Utils.getText(address))){
+            showToast("资源地址不可为空,请重新定位");
+            return;
+        }
+        if (TextUtils.isEmpty(typeSelect.getId())){
+            showToast("资源种类不可为空,请选择");
+            return;
+        }
         RequestParams params = new RequestParams();
         try {
             params.put("id",resources.getId());
@@ -429,17 +437,18 @@ public class UpdateResourcesActivity  extends BaseActivity {
             }
 
 
-            params.put("exist",exist.substring(0,exist.length()-1));
+            params.put("exists",exist.substring(0,exist.length()-1));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-
+        buildDialog("提交中");
 
         RequestCenter.addUpdateData(UrlService.RESOURCE,params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     showToast(result.getString("msg"));
@@ -453,6 +462,7 @@ public class UpdateResourcesActivity  extends BaseActivity {
             @Override
             public void onFailure(OkHttpException responseObj) {
                 showToast(responseObj.getMessage());
+                cancelDialog();
             }
         });
     }

@@ -446,7 +446,34 @@ public class UpdateEnterpriseActivity extends BaseActivity {
             showToast("用户名不可为空");
             return;
         }
-        buildDialog("");
+        if (TextUtils.isEmpty(Utils.getText(enterpriseCode))){
+            showToast("信用代码不可为空");
+            return;
+        }
+        if (TextUtils.isEmpty(Utils.getText(address))){
+            showToast("企业地址不可为空,请重新定位");
+            return;
+        }
+
+        if (TextUtils.isEmpty(Utils.getText(legalPerson))){
+            showToast("法人姓名不可为空");
+            return;
+        }
+
+        if (!Utils.isLicense15(Utils.getText(enterpriseCode))&&!Utils.isLicense18(Utils.getText(enterpriseCode))){
+            showToast("信用代码格式不正确");
+            return;
+        }
+        if (!Utils.isPhone(Utils.getText(tel))&&!Utils.isMobile(Utils.getText(tel))){
+            showToast("企业联系电话格式不正确");
+            return;
+        }
+
+        if (!Utils.isPhone(Utils.getText(legalPersonTel))&&!Utils.isMobile(Utils.getText(legalPersonTel))){
+            showToast("法人联系电话格式不正确");
+            return;
+        }
+
         RequestParams params = new RequestParams();
         try {
             params.put("id", enterprise.getId());
@@ -511,6 +538,7 @@ public class UpdateEnterpriseActivity extends BaseActivity {
 //            }
 //        }
 
+        buildDialog("");
         RequestCenter.addEnterprise(params, Utils.getFile(selectList), Utils.getFile(selectList2), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {

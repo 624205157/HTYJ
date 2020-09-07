@@ -129,7 +129,7 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
         refresh.setOnRefreshListener(this);
 
-        getData();
+//        getData();
 
     }
 
@@ -178,9 +178,11 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
         } catch (Exception e) {
             e.printStackTrace();
         }
+        buildDialog("加载中");
         RequestCenter.getDataList(UrlService.TASK, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     JSONObject data = result.getJSONObject("data");
@@ -204,9 +206,17 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
             @Override
             public void onFailure(OkHttpException responseObj) {
                 showToast(responseObj.getMessage());
+                cancelDialog();
             }
         });
 
     }
 
+    @Override
+    public void onSupportVisible() {
+        super.onSupportVisible();
+        pageNum = 0;
+        mData.clear();
+        getData();
+    }
 }

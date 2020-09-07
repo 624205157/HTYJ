@@ -283,7 +283,7 @@ public class DynamicAddCompoundHelper<B extends CompoundButton> implements Compo
         if (values.size() <= 0) return commitStr;
         //拼接字符串
         for (int i = 0; i < values.size(); i++) {
-            commitStr += values.get(i).getParamValue() + ";";
+            commitStr += values.get(i).getParamValue() + ",";
         }
         return commitStr.substring(0, commitStr.length() - 1);
     }
@@ -400,9 +400,9 @@ public class DynamicAddCompoundHelper<B extends CompoundButton> implements Compo
     public void checkedBoxFromInfo(String message) {
         if (null == message) return;
         if (message.isEmpty()) return;
-        if (message.charAt(0) == ';') message = message.substring(1, message.length());
-        if (message.contains(";")) {
-            String tags[] = message.split(";");
+        if (message.charAt(0) == ',') message = message.substring(1, message.length());
+        if (message.contains(",")) {
+            String tags[] = message.split(",");
             List<String> viewTag = new ArrayList<>();
             for (int i = 0; i < saveViewList.size(); i++) {
                 AddCustomValues values = (AddCustomValues) saveViewList.get(i).getTag();
@@ -461,9 +461,9 @@ public class DynamicAddCompoundHelper<B extends CompoundButton> implements Compo
         if (checkValues.isEmpty()) return "";
         else {
             String message = null;
-            if (checkValues.contains(";")) {
+            if (checkValues.contains(",")) {
                 StringBuilder builder = new StringBuilder();
-                String tags[] = checkValues.split(";");
+                String tags[] = checkValues.split(",");
                 List<String> viewTag = new ArrayList<>();
                 for (int i = 0; i < values.size(); i++) {
                     viewTag.add((values.get(i).getParamValue()));

@@ -38,12 +38,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import constant.UiType;
-import listener.Md5CheckResultListener;
-import listener.UpdateDownloadListener;
-import model.UiConfig;
-import model.UpdateConfig;
-import update.UpdateAppUtils;
 
 /**
  * Created by 陈泽宇 on 2020/8/31

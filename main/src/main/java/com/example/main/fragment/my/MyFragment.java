@@ -3,15 +3,13 @@ package com.example.main.fragment.my;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
-import com.example.commonlib.Constants;
 import com.example.commonlib.okhttp.exception.OkHttpException;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
 import com.example.commonlib.okhttp.request.RequestParams;
@@ -28,7 +26,6 @@ import com.example.main.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -36,13 +33,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import constant.UiType;
 import de.hdodenhof.circleimageview.CircleImageView;
-import listener.Md5CheckResultListener;
-import listener.UpdateDownloadListener;
-import model.UiConfig;
-import model.UpdateConfig;
-import update.UpdateAppUtils;
 
 /**
  * Created by czy on 2020/8/5 10:56.
@@ -112,7 +103,7 @@ public class MyFragment extends BaseFragment {
         buildDialog("");
         RequestParams params = new RequestParams();
         params.put("platform","android");
-        params.put("version", Utils.getVersionCode(getActivity()) + "");
+        params.put("version", Utils.getVersionName(getActivity()) + "");
 //        params.put("version", "0.0.1");
         RequestCenter.getDataList(UrlService.VERSION, params, new DisposeDataListener() {
             @Override
@@ -147,49 +138,12 @@ public class MyFragment extends BaseFragment {
 //    private String updateContent = "1、Kotlin重构版\n2、支持自定义UI\n3、增加md5校验\n4、更多功能等你探索";
 
     private void updateApp(String url,String content) {
-        UpdateConfig updateConfig = new UpdateConfig();
-        updateConfig.setCheckWifi(true);
-        updateConfig.setNeedCheckMd5(true);
-//        updateConfig.setNotifyImgRes(R.drawable.ic_logo);
-
-        UiConfig uiConfig = new UiConfig();
-        uiConfig.setUiType(UiType.PLENTIFUL);
-
-        UpdateAppUtils
+        AllenVersionChecker
                 .getInstance()
-                .apkUrl(url)
-                .updateTitle("发现新版本")
-                .updateContent(content)
-                .uiConfig(uiConfig)
-                .updateConfig(updateConfig)
-                .setMd5CheckResultListener(new Md5CheckResultListener() {
-                    @Override
-                    public void onResult(boolean result) {
-
-                    }
-                })
-                .setUpdateDownloadListener(new UpdateDownloadListener() {
-                    @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onDownload(int progress) {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-
-                    @Override
-                    public void onError(@NotNull Throwable e) {
-
-                    }
-                })
-                .update();
+                .downloadOnly(
+                        UIData.create().setDownloadUrl(url).setContent(content).setTitle("发现新版本")
+                )
+                .executeMission(mContext);
     }
 
 

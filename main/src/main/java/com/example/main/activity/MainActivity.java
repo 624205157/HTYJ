@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RadioGroup;
 
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.example.commonlib.Constants;
 import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.okhttp.exception.OkHttpException;
@@ -165,6 +166,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AllenVersionChecker.getInstance().cancelAllMission();
 //        EventBus.getDefault().unregister(this);
     }
 

@@ -13,8 +13,11 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.bean.AddCustomValues;
@@ -22,6 +25,7 @@ import com.example.commonlib.okhttp.exception.OkHttpException;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
 import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.commonlib.utils.DynamicAddCompoundHelper;
+import com.example.commonlib.view.NoScrollRecyclerView;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
@@ -93,6 +97,7 @@ public class TaskDetailsActivity extends BaseActivity {
 
     private Task task;
     private TimePickerView pvTime;
+    private OptionsPickerView  pvOption;
 
     private List<Dynamic> forms = new ArrayList<>();
 
@@ -181,9 +186,9 @@ public class TaskDetailsActivity extends BaseActivity {
         params.put("state", state);
         Map<String, String> map = new HashMap<>();
         for (Dynamic dynamic : forms) {
-            if (dynamic.getControl().isRequired()&&TextUtils.isEmpty(Utils.getText(dynamic.getView()))){
-                dynamic.getView().setTextColor(getResources().getColor(R.color.red,null));
-                switch (dynamic.getControl().getType()){
+            if (dynamic.getControl().isRequired() && TextUtils.isEmpty(Utils.getText(dynamic.getView()))) {
+                dynamic.getView().setTextColor(getResources().getColor(R.color.red, null));
+                switch (dynamic.getControl().getType()) {
                     case "input":
                     case "textarea":
                     case "date":
@@ -191,11 +196,12 @@ public class TaskDetailsActivity extends BaseActivity {
                         showToast(dynamic.getControl().getPlaceholder());
                     case "radio":
                     case "checkbox":
+                    case "select":
                         showToast(dynamic.getControl().getPlaceholder() + dynamic.getControl().getLabel());
                 }
                 return;
-            }else {
-                dynamic.getView().setTextColor(getResources().getColor(R.color.text_color,null));
+            } else {
+                dynamic.getView().setTextColor(getResources().getColor(R.color.text_color, null));
             }
             map.put(dynamic.getControl().getId(), Utils.getText(dynamic.getView()));
         }
@@ -217,13 +223,16 @@ public class TaskDetailsActivity extends BaseActivity {
                     it_b.remove();
                 }
             }
-            params.put("exist", exist.substring(0, exist.length() - 1));
+            if (!TextUtils.isEmpty(exist))
+                params.put("exists",  exist.substring(0, exist.length() - 1));
         }
 
+        buildDialog("提交中");
 
         RequestCenter.addUpdateData(UrlService.TASK, params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
                     if (TextUtils.equals(result.getString("code"), "0")) {
@@ -233,13 +242,14 @@ public class TaskDetailsActivity extends BaseActivity {
                         showToast(result.getString("msg"));
                     }
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(OkHttpException responseObj) {
-
+                showToast(responseObj.getMessage());
+                cancelDialog();
             }
         });
     }
@@ -271,6 +281,10 @@ public class TaskDetailsActivity extends BaseActivity {
                 case "upload":
                     controls.addView(addUpload(control));
                     break;
+
+                case "select":
+                    controls.addView(addSelect(control, map));
+                    break;
             }
             if (controlList.indexOf(control) != controlList.size() - 1) {
                 controls.addView(addLine());
@@ -291,7 +305,7 @@ public class TaskDetailsActivity extends BaseActivity {
             edit.setText(map.get(control.getId()));
         }
 
-        forms.add(new Dynamic(control, edit,tv));
+        forms.add(new Dynamic(control, tv, edit));
         return view;
 
     }
@@ -307,7 +321,7 @@ public class TaskDetailsActivity extends BaseActivity {
             edit.setText(map.get(control.getId()));
         }
 
-        forms.add(new Dynamic(control, edit,tv));
+        forms.add(new Dynamic(control, tv, edit));
         return view;
 
     }
@@ -338,7 +352,7 @@ public class TaskDetailsActivity extends BaseActivity {
         }
 
 
-        forms.add(new Dynamic(control, chose,tv));
+        forms.add(new Dynamic(control, tv, chose));
         return view;
 
     }
@@ -362,15 +376,15 @@ public class TaskDetailsActivity extends BaseActivity {
                 .manageGridLayoutView(CheckBox.class, 3).addCheckedChangeListener(new DynamicAddCompoundHelper.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(int tag, int parentID, String values) {
-                        chose.setText(values);
+                        chose.setText("[" + values + "]");
                     }
                 });
 
         if (map != null) {
-            helper.checkedBoxFromInfo(map.get(control.getId()));
+            helper.checkedBoxFromInfo(map.get(control.getId()).replace("[", "").replace("]", ""));//去除字符串的 []
         }
 
-        forms.add(new Dynamic(control, chose,tv));
+        forms.add(new Dynamic(control, tv, chose));
         return view;
 
     }
@@ -399,14 +413,57 @@ public class TaskDetailsActivity extends BaseActivity {
         if (map != null) {
             time.setText(map.get(control.getId()));
         }
-        forms.add(new Dynamic(control, time,tv));
+        forms.add(new Dynamic(control, tv, time));
         return view;
     }
 
+    private View addSelect(Control control, Map<String, String> map) {
+        View view = getLayoutInflater().inflate(R.layout.layout_date, null);
+        TextView tv = view.findViewById(R.id.tv);
+        TextView time = view.findViewById(R.id.time);
+        TextView save = view.findViewById(R.id.save);
+        tv.setText(control.getLabel());
+        time.setHint(control.getPlaceholder());
+
+        time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pvOption.show();
+            }
+        });
+
+        List<String> valueList = new ArrayList<>();
+        for (Option option : control.getOptions()) {
+            valueList.add(option.getLabel());
+        }
+
+        pvOption =  new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                time.setText(valueList.get(options1));
+                save.setText(control.getOptions().get(options1).getValue());
+            }
+        }).setTitleText("选择人员").setContentTextSize(22).setTitleSize(22).setSubCalSize(21)
+                .build();
+        pvOption.setPicker(valueList);
+
+        if (map != null) {
+            save.setText(map.get(control.getId()));
+            for (Option option : control.getOptions()) {
+                if (TextUtils.equals(option.getValue(),map.get(control.getId()))){
+                    time.setText(option.getLabel());
+                }
+            }
+
+
+        }
+        forms.add(new Dynamic(control, tv, save));
+        return view;
+    }
     private View addUpload(Control control) {
         View view = getLayoutInflater().inflate(R.layout.layout_upload, null);
         TextView tv = view.findViewById(R.id.tv);
-        RecyclerView rv = findViewById(R.id.photo_recycler);
+        NoScrollRecyclerView rv = view.findViewById(R.id.photo_recycler);
         tv.setText(control.getLabel());
 
         initPhotoRecycler(rv);
@@ -430,8 +487,8 @@ public class TaskDetailsActivity extends BaseActivity {
                 initSelectImage(adapter, selectList);
             }
         });
-        adapter.setList(selectList);
         adapter.setSelectMax(9);
+        adapter.setList(selectList);
         photoRecycler.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {

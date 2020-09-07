@@ -310,9 +310,25 @@ public class ReportEventActivity extends BaseActivity {
     }
 
     private void sendData() {
-        buildDialog("提交中");
+
         if (TextUtils.isEmpty(name.getText())) {
             showToast("事件名称不可为空");
+            return;
+        }
+        if (TextUtils.isEmpty(count.getText())) {
+            showToast("事件内容不可为空");
+            return;
+        }
+         if (TextUtils.isEmpty(category.getId())) {
+            showToast("事件类型未选择");
+            return;
+        }
+        if (TextUtils.isEmpty(Utils.getText(address))){
+            showToast("事件地址不可为空,请重新定位");
+            return;
+        }
+        if (TextUtils.isEmpty(degree.getId())) {
+            showToast("紧急程度未选择");
             return;
         }
         RequestParams params = new RequestParams();
@@ -331,6 +347,7 @@ public class ReportEventActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        buildDialog("提交中");
 
         RequestCenter.addUpdateData(UrlService.EVENT,params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override

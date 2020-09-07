@@ -4,6 +4,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.trace.LBSTraceClient;
+import com.amap.api.trace.TraceListener;
 import com.amap.api.trace.TraceLocation;
 import com.amap.api.track.AMapTrackClient;
 import com.amap.api.track.query.entity.HistoryTrack;
@@ -68,7 +70,7 @@ import butterknife.OnClick;
  * Created by 陈泽宇 on 2020/8/28
  * Describe: 查询他人轨迹
  */
-public class CheckOtherTraActivity extends RightTitleActivity {
+public class CheckOtherTraActivity extends RightTitleActivity implements TraceListener {
 
 
     @BindView(R2.id.check_other)
@@ -82,12 +84,10 @@ public class CheckOtherTraActivity extends RightTitleActivity {
 
 
     private AMap mAMap;
-    private Marker mOriginStartMarker, mOriginEndMarker, mOriginRoleMarker;
     private Marker mGraspStartMarker, mGraspEndMarker, mGraspRoleMarker;
     private Polyline polylines, mGraspPolyline;
 
     private int mRecordItemId;
-    private List<LatLng> mOriginLatLngList = new ArrayList<>();
     private List<LatLng> mGraspLatLngList = new ArrayList<>();
     private ExecutorService mThreadPool;
     private TraceRePlay mRePlay;
@@ -123,7 +123,7 @@ public class CheckOtherTraActivity extends RightTitleActivity {
                     showToast("请选择时间");
                     return;
                 }
-                if (Utils.isToday(selectData)){
+                if (Utils.isToday(selectData)) {
                     handler.postDelayed(runnable, 60000);
                 }
                 queryHistoryTrack(selectData);
@@ -143,8 +143,7 @@ public class CheckOtherTraActivity extends RightTitleActivity {
     }
 
 
-
-    private void getUserList(){
+    private void getUserList() {
 
         RequestCenter.getDataList(UrlService.USERLIST, null, new DisposeDataListener() {
             @Override
@@ -152,10 +151,11 @@ public class CheckOtherTraActivity extends RightTitleActivity {
                 try {
                     JSONObject data = new JSONObject(responseObj.toString());
                     String code = data.getString("code");
-                    if (TextUtils.equals(code,"0")){
+                    if (TextUtils.equals(code, "0")) {
                         Gson gson = new Gson();
-                        userList.addAll(gson.fromJson(data.getJSONObject("data").getString("list"),new TypeToken<List<User>>(){}.getType()));
-                        for (User user:userList){
+                        userList.addAll(gson.fromJson(data.getJSONObject("data").getString("list"), new TypeToken<List<User>>() {
+                        }.getType()));
+                        for (User user : userList) {
                             userName.add(user.getUsername());
                         }
 
@@ -168,7 +168,7 @@ public class CheckOtherTraActivity extends RightTitleActivity {
                         }).setTitleText("选择人员").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
                         reasonPicker.setPicker(userName);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }
@@ -203,7 +203,7 @@ public class CheckOtherTraActivity extends RightTitleActivity {
         if (mRePlay != null) {
             mRePlay.stopTrace();
         }
-        mRePlay = rePlayTrace(mOriginLatLngList, mOriginRoleMarker);
+        mRePlay = rePlayTrace(mGraspLatLngList, mGraspRoleMarker);
     }
 
 
@@ -371,11 +371,11 @@ public class CheckOtherTraActivity extends RightTitleActivity {
 
     private LatLngBounds getBounds() {
         LatLngBounds.Builder b = LatLngBounds.builder();
-        if (mOriginLatLngList == null) {
+        if (mGraspLatLngList == null) {
             return b.build();
         }
-        for (int i = 0; i < mOriginLatLngList.size(); i++) {
-            b.include(mOriginLatLngList.get(i));
+        for (int i = 0; i < mGraspLatLngList.size(); i++) {
+            b.include(mGraspLatLngList.get(i));
         }
         return b.build();
 
@@ -389,25 +389,18 @@ public class CheckOtherTraActivity extends RightTitleActivity {
         LBSTraceClient mTraceClient = new LBSTraceClient(
                 getApplicationContext());
         List<TraceLocation> mGraspTraceLocationList = new ArrayList<>();
-        LatLng startLatLng = new LatLng(startPoint.getLocation().getLat(), startPoint.getLocation().getLng());
-        LatLng endLatLng = new LatLng(endPoint.getLocation().getLat(), endPoint.getLocation().getLng());
         for (Point p : points) {
-            LatLng latLng = new LatLng(p.getLat(), p.getLng());
-            mOriginLatLngList.add(latLng);
             TraceLocation location = new TraceLocation();
             location.setLatitude(p.getLat());
             location.setLongitude(p.getLng());
             location.setSpeed((float) p.getSpeed());
             location.setTime(p.getTime());
             mGraspTraceLocationList.add(location);
-//                boundsBuilder.include(latLng);
         }
-        addOriginTrace(startLatLng, endLatLng, mOriginLatLngList);
-
-        setOriginEnable();
+        setGraspEnable();
         // 调用轨迹纠偏，将mGraspTraceLocationList进行轨迹纠偏处理
-//            mTraceClient.queryProcessedTrace(1, mGraspTraceLocationList,
-//                    LBSTraceClient.TYPE_AMAP, this);
+        mTraceClient.queryProcessedTrace(1, mGraspTraceLocationList,
+                LBSTraceClient.TYPE_AMAP, this);
 
     }
 
@@ -418,16 +411,62 @@ public class CheckOtherTraActivity extends RightTitleActivity {
      * @param endPoint
      * @param originList
      */
-    private void addOriginTrace(LatLng startPoint, LatLng endPoint,
-                                List<LatLng> originList) {
-        polylines = mAMap.addPolyline(new PolylineOptions().color(
-                Color.BLUE).addAll(originList));
-        mOriginStartMarker = mAMap.addMarker(new MarkerOptions().position(
+//    private void addOriginTrace(LatLng startPoint, LatLng endPoint,
+//                                List<LatLng> originList) {
+//        polylines = mAMap.addPolyline(new PolylineOptions().color(
+//                Color.BLUE).addAll(originList));
+//        mOriginStartMarker = mAMap.addMarker(new MarkerOptions().position(
+//                startPoint).icon(
+//                BitmapDescriptorFactory.fromResource(R.drawable.start)));
+//        mOriginEndMarker = mAMap.addMarker(new MarkerOptions().position(
+//                endPoint).icon(
+//                BitmapDescriptorFactory.fromResource(R.drawable.end)));
+
+
+//        mOriginRoleMarker = mAMap.addMarker(new MarkerOptions().position(
+//                startPoint).icon(
+//                BitmapDescriptorFactory.fromBitmap(BitmapFactory
+//                        .decodeResource(getResources(), R.drawable.walk))));
+//    }
+
+    /**
+     * 设置显示原始轨迹
+     */
+//    private void setOriginEnable() {
+//        if (polylines == null || mOriginStartMarker == null
+//                || mOriginEndMarker == null || mOriginRoleMarker == null) {
+//            return;
+//        }
+//        polylines.setVisible(true);
+//        mOriginStartMarker.setVisible(true);
+//        mOriginEndMarker.setVisible(true);
+//        mOriginRoleMarker.setVisible(true);
+//    }
+
+    /**
+     * 地图上添加纠偏后轨迹线路及起终点、轨迹动画小人
+     */
+    private void addGraspTrace(List<LatLng> graspList) {
+        if (graspList == null || graspList.size() < 2) {
+            return;
+        }
+        LatLng startPoint = graspList.get(0);
+        LatLng endPoint = graspList.get(graspList.size() - 1);
+        mGraspPolyline = mAMap.addPolyline(new PolylineOptions()
+                .setCustomTexture(
+                        BitmapDescriptorFactory
+                                .fromResource(R.drawable.grasp_trace_line))
+                .width(40).addAll(graspList));
+        mGraspStartMarker = mAMap.addMarker(new MarkerOptions().position(
                 startPoint).icon(
                 BitmapDescriptorFactory.fromResource(R.drawable.start)));
-        mOriginEndMarker = mAMap.addMarker(new MarkerOptions().position(
-                endPoint).icon(
-                BitmapDescriptorFactory.fromResource(R.drawable.end)));
+        mGraspEndMarker = mAMap.addMarker(new MarkerOptions()
+                .position(endPoint).icon(
+                        BitmapDescriptorFactory.fromResource(R.drawable.end)));
+        mGraspRoleMarker = mAMap.addMarker(new MarkerOptions().position(
+                startPoint).icon(
+                BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(getResources(), R.drawable.walk))));
 
         try {
             mAMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getBounds(),
@@ -435,72 +474,21 @@ public class CheckOtherTraActivity extends RightTitleActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        mOriginRoleMarker = mAMap.addMarker(new MarkerOptions().position(
-                startPoint).icon(
-                BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(), R.drawable.walk))));
     }
-
-    /**
-     * 设置显示原始轨迹
-     */
-    private void setOriginEnable() {
-        if (polylines == null || mOriginStartMarker == null
-                || mOriginEndMarker == null || mOriginRoleMarker == null) {
-            return;
-        }
-        polylines.setVisible(true);
-        mOriginStartMarker.setVisible(true);
-        mOriginEndMarker.setVisible(true);
-        mOriginRoleMarker.setVisible(true);
-    }
-
-    /**
-     * 地图上添加纠偏后轨迹线路及起终点、轨迹动画小人
-     */
-//    private void addGraspTrace(List<LatLng> graspList, boolean mGraspChecked) {
-//        if (graspList == null || graspList.size() < 2) {
-//            return;
-//        }
-//        LatLng startPoint = graspList.get(0);
-//        LatLng endPoint = graspList.get(graspList.size() - 1);
-//        mGraspPolyline = mAMap.addPolyline(new PolylineOptions()
-//                .setCustomTexture(
-//                        BitmapDescriptorFactory
-//                                .fromResource(R.drawable.grasp_trace_line))
-//                .width(40).addAll(graspList));
-//        mGraspStartMarker = mAMap.addMarker(new MarkerOptions().position(
-//                startPoint).icon(
-//                BitmapDescriptorFactory.fromResource(R.drawable.start)));
-//        mGraspEndMarker = mAMap.addMarker(new MarkerOptions()
-//                .position(endPoint).icon(
-//                        BitmapDescriptorFactory.fromResource(R.drawable.end)));
-//        mGraspRoleMarker = mAMap.addMarker(new MarkerOptions().position(
-//                startPoint).icon(
-//                BitmapDescriptorFactory.fromBitmap(BitmapFactory
-//                        .decodeResource(getResources(), R.drawable.walk))));
-//        if (!mGraspChecked) {
-//            mGraspPolyline.setVisible(false);
-//            mGraspStartMarker.setVisible(false);
-//            mGraspEndMarker.setVisible(false);
-//            mGraspRoleMarker.setVisible(false);
-//        }
-//    }
 
     /**
      * 设置显示纠偏后轨迹
      */
-//    private void setGraspEnable() {
-//        if (mGraspPolyline == null || mGraspStartMarker == null
-//                || mGraspEndMarker == null || mGraspRoleMarker == null) {
-//            return;
-//        }
-//        mGraspPolyline.setVisible(false);
-//        mGraspStartMarker.setVisible(false);
-//        mGraspEndMarker.setVisible(false);
-//        mGraspRoleMarker.setVisible(false);
-//    }
+    private void setGraspEnable() {
+        if (mGraspPolyline == null || mGraspStartMarker == null
+                || mGraspEndMarker == null || mGraspRoleMarker == null) {
+            return;
+        }
+        mGraspPolyline.setVisible(true);
+        mGraspStartMarker.setVisible(true);
+        mGraspEndMarker.setVisible(true);
+        mGraspRoleMarker.setVisible(true);
+    }
 
 //    @Override
 //    public void onMapLoaded() {
@@ -509,26 +497,27 @@ public class CheckOtherTraActivity extends RightTitleActivity {
 //        handler.sendMessage(msg);
 //    }
 
-//    /**
-//     * 轨迹纠偏完成数据回调
-//     */
-//    @Override
-//    public void onFinished(int arg0, List<LatLng> list, int arg2, int arg3) {
-//        addGraspTrace(list, mGraspChecked);
-//        mGraspLatLngList = list;
-//    }
+    /**
+     * 轨迹纠偏完成数据回调
+     */
+    @Override
+    public void onFinished(int arg0, List<LatLng> list, int arg2, int arg3) {
+        mGraspLatLngList = list;
+        addGraspTrace(list);
 
-//    @Override
-//    public void onRequestFailed(int arg0, String arg1) {
-//        Toast.makeText(this.getApplicationContext(), "轨迹纠偏失败:" + arg1,
-//                Toast.LENGTH_SHORT).show();
-//
-//    }
-//
-//    @Override
-//    public void onTraceProcessing(int arg0, int arg1, List<LatLng> arg2) {
-//
-//    }
+    }
+
+    @Override
+    public void onRequestFailed(int arg0, String arg1) {
+        Toast.makeText(this.getApplicationContext(), "轨迹纠偏失败:" + arg1,
+                Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onTraceProcessing(int arg0, int arg1, List<LatLng> arg2) {
+
+    }
 
     /**
      * 清空地图

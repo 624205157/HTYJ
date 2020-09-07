@@ -223,7 +223,7 @@ public class Utils {
      *
      * @return 版本号
      */
-    public static int getVersionCode(Context context) {
+    public static String getVersionName(Context context) {
 
         //获取包管理器
         PackageManager pm = context.getPackageManager();
@@ -231,12 +231,12 @@ public class Utils {
         try {
             PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
             //返回版本号
-            return packageInfo.versionCode;
+            return packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
-        return 0;
+        return "";
 
     }
 

@@ -321,6 +321,15 @@ public class AddResourcesFragment extends BaseFragment {
             showToast("资源名不可为空");
             return;
         }
+        if (TextUtils.isEmpty(Utils.getText(address))){
+            showToast("资源地址不可为空,请重新定位");
+            return;
+        }
+         if (TextUtils.isEmpty(typeSelect.getId())){
+            showToast("资源种类不可为空,请选择");
+            return;
+        }
+
         RequestParams params = new RequestParams();
         try {
             params.put("name", Utils.getText(name));
