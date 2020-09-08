@@ -285,7 +285,7 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
      * 轨迹回放方法
      */
     private TraceRePlay rePlayTrace(List<LatLng> list, final Marker updateMarker) {
-        TraceRePlay replay = new TraceRePlay(list, 100,
+        TraceRePlay replay = new TraceRePlay(list, 1000,
                 new TraceRePlay.TraceRePlayListener() {
 
                     @Override

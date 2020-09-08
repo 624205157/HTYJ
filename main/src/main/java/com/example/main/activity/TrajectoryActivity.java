@@ -115,7 +115,7 @@ public class TrajectoryActivity extends RightTitleActivity {
 
         username = (String) shareHelper.query("username", "");
         aMapTrackClient = new AMapTrackClient(getApplicationContext());
-//        aMapTrackClient.setInterval(10, 60);
+        aMapTrackClient.setInterval(5, 30);
 
 
         map.getMap().moveCamera(CameraUpdateFactory.zoomTo(14));
@@ -327,7 +327,7 @@ public class TrajectoryActivity extends RightTitleActivity {
         Notification.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_SERVICE_RUNNING, "app service", NotificationManager.IMPORTANCE_LOW);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_SERVICE_RUNNING, "trajectory service", NotificationManager.IMPORTANCE_LOW);
             nm.createNotificationChannel(channel);
             builder = new Notification.Builder(getApplicationContext(), CHANNEL_ID_SERVICE_RUNNING);
         } else {
@@ -336,7 +336,7 @@ public class TrajectoryActivity extends RightTitleActivity {
         Intent nfIntent = new Intent(TrajectoryActivity.this, TrajectoryActivity.class);
         nfIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         builder.setContentIntent(PendingIntent.getActivity(TrajectoryActivity.this, 0, nfIntent, 0))
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.logo_img)
                 .setContentTitle("猎鹰轨迹运行中")
                 .setContentText("猎鹰轨迹运行中");
         Notification notification = builder.build();
