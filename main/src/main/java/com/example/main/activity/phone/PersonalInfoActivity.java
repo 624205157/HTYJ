@@ -74,7 +74,7 @@ public class PersonalInfoActivity extends BaseActivity {
                 .into(iv);
 
         UserModel userModel = new UserModel();
-        userModel.userId = ProfileManager.getInstance().getUserModel().userId;
+        userModel.userId = user.getAccount();
         list.add(userModel);
     }
 

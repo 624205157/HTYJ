@@ -174,6 +174,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    stopPlayFromRawFile();//结束响铃
                     if (mCallUserModelMap.containsKey(userId)) {
                         // 进入拒绝环节
                         //1. 回收界面元素
@@ -339,6 +340,7 @@ public class TRTCVideoCallActivity extends AppCompatActivity {
         super.onDestroy();
         stopTimeCount();
         mTimeHandlerThread.quit();
+        stopPlayFromRawFile();//结束响铃
     }
 
     private void initListener() {

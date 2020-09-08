@@ -5,9 +5,14 @@ import android.app.Activity;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.example.commonlib.utils.ShareHelper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.security.auth.Subject;
 
 import static com.example.commonlib.trtc.GenerateTestUserSig.genTestUserSig;
 
@@ -15,21 +20,33 @@ public class ProfileManager {
     private static final ProfileManager ourInstance = new ProfileManager();
 
 
-    private final static String PER_DATA       = "per_profile_manager";
+    private final static String PER_DATA = "per_profile_manager";
     private final static String PER_USER_MODEL = "per_user_model";
-    private static final String PER_USER_ID    = "per_user_id";
-    private static final String PER_TOKEN      = "per_user_token";
-    private static final String PER_USER_DATE  = "per_user_publish_video_date";
-    private static final String TAG            = ProfileManager.class.getName();
+    private static final String PER_USER_ID = "per_user_id";
+    private static final String PER_TOKEN = "per_user_token";
+    private static final String PER_USER_DATE = "per_user_publish_video_date";
+    private static final String TAG = ProfileManager.class.getName();
 
     private UserModel mUserModel;
-    private String    mUserId;
-    private String    mToken;
-    private String    mUserPubishVideoDate;
-    private boolean   isLogin = false;
+    private String mUserId;
+    private String mToken;
+    private String mUserPubishVideoDate;
+    private boolean isLogin = false;
+
+    private static ShareHelper shareHelper;
+    private static List<UserModel> userList;
 
     public static ProfileManager getInstance() {
+        shareHelper = ShareHelper.getInstance();
         return ourInstance;
+    }
+
+    public void getUserList() {
+        Gson gson = new Gson();
+        String userListStr = (String) shareHelper.query("userList", "");
+        userList = gson.fromJson(userListStr, new TypeToken<List<UserModel>>() {
+        }.getType());
+
     }
 
     private ProfileManager() {
@@ -105,11 +122,22 @@ public class ProfileManager {
         callback.onSuccess();
     }
 
+    public void login(UserModel userModel) {
+        isLogin = true;
+        setUserId(userModel.userId);
+//        userModel.userAvatar = getAvatarUrl(userId);
+//        userModel.userName = userId;
+//        userModel.phone = userId;
+//        userModel.userId = userId;
+        userModel.userSig = genTestUserSig(userModel.userId);
+        setUserModel(userModel);
+    }
+
     public void login(String userId, String sms, final ActionCallback callback) {
         isLogin = true;
         setUserId(userId);
         UserModel userModel = new UserModel();
-        userModel.userAvatar = getAvatarUrl(userId);
+//        userModel.userAvatar = getAvatarUrl(userId);
         userModel.userName = userId;
         userModel.phone = userId;
         userModel.userId = userId;
@@ -122,7 +150,7 @@ public class ProfileManager {
         isLogin = true;
         setUserId(userId);
         UserModel userModel = new UserModel();
-        userModel.userAvatar = getAvatarUrl(userId);
+//        userModel.userAvatar = getAvatarUrl(userId);
         userModel.userName = userId;
         userModel.phone = userId;
         userModel.userId = userId;
@@ -132,18 +160,18 @@ public class ProfileManager {
     }
 
     public NetworkAction getUserInfoByUserId(String userId, final GetUserInfoCallback callback) {
-        UserModel userModel = new UserModel();
-        userModel.userAvatar = getAvatarUrl(userId);
-        userModel.phone = userId;
-        userModel.userId = userId;
-        userModel.userName = userId;
-        callback.onSuccess(userModel);
+//        UserModel userModel = new UserModel();
+////        userModel.userAvatar = getAvatarUrl(userId);
+//        userModel.phone = userId;
+//        userModel.userId = userId;
+//        userModel.userName = userId;
+        callback.onSuccess(getUserModel(userId));
         return new NetworkAction();
     }
 
     public NetworkAction getUserInfoByPhone(String phone, final GetUserInfoCallback callback) {
         UserModel userModel = new UserModel();
-        userModel.userAvatar = getAvatarUrl(phone);
+//        userModel.userAvatar = getAvatarUrl(phone);
         userModel.phone = phone;
         userModel.userId = phone;
         userModel.userName = phone;
@@ -155,27 +183,28 @@ public class ProfileManager {
         if (userIdList == null) {
             return;
         }
+
         List<UserModel> userModelList = new ArrayList<>();
         for (String userId : userIdList) {
-            UserModel userModel = new UserModel();
-            userModel.userAvatar = getAvatarUrl(userId);
-            userModel.phone = userId;
-            userModel.userId = userId;
-            userModel.userName = userId;
-            userModelList.add(userModel);
+//            UserModel userModel = new UserModel();
+////            userModel.userAvatar = getAvatarUrl(userId);
+//            userModel.phone = userId;
+//            userModel.userId = userId;
+//            userModel.userName = userId;
+            userModelList.add(getUserModel(userId));
         }
         callback.onSuccess(userModelList);
     }
 
-    private String getAvatarUrl(String userId) {
-        if (TextUtils.isEmpty(userId)) {
-            return null;
-        }
-        byte[] bytes = userId.getBytes();
-        int    index = bytes[bytes.length - 1] % 10;
-        String avatarName = "avatar" + index + "_100";
-        return "https://imgcache.qq.com/qcloud/public/static//" + avatarName + ".20191230.png";
-    }
+//    private String getAvatarUrl(String userId) {
+//        if (TextUtils.isEmpty(userId)) {
+//            return null;
+//        }
+//        byte[] bytes = userId.getBytes();
+//        int    index = bytes[bytes.length - 1] % 10;
+//        String avatarName = "avatar" + index + "_100";
+//        return "https://imgcache.qq.com/qcloud/public/static//" + avatarName + ".20191230.png";
+//    }
 
     private void saveUserModel() {
         try {
@@ -224,5 +253,14 @@ public class ProfileManager {
 
     public void checkNeedShowSecurityTips(Activity activity) {
 
+    }
+
+    private UserModel getUserModel(String mUserId) {
+        for (UserModel userModel : userList){
+            if (TextUtils.equals(userModel.userId,mUserId)){
+                return userModel;
+            }
+        }
+        return null;
     }
 }

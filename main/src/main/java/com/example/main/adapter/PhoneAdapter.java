@@ -46,8 +46,9 @@ public class PhoneAdapter extends BaseQuickAdapter<Subject, BaseViewHolder> {
         }
         if (!TextUtils.isEmpty(departmentStr)) {
             holder.setText(R.id.address, "(" + departmentStr.substring(1) + ")");
+        }else {
+            holder.setText(R.id.address,"");
         }
-
         Glide.with(context).load(user.getAvatar()).placeholder(R.mipmap.my_head).error(R.mipmap.my_head)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
                 .into((ImageView) holder.getView(R.id.iv));

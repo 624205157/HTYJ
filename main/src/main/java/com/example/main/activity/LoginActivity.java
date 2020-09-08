@@ -15,10 +15,13 @@ import com.example.commonlib.Constants;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
+import com.example.main.bean.Subject;
 import com.example.main.bean.User;
 import com.example.main.utils.Utils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tencent.liteav.login.model.ProfileManager;
+import com.tencent.liteav.login.model.UserModel;
 
 import org.json.JSONObject;
 
@@ -71,26 +74,25 @@ public class LoginActivity extends BaseActivity {
                                 .save("subject", data.getString("subject")).commit();
                         Constants.TAKEN = data.getString("token");
                         Constants.SERVICE_ID = data.getInt("serviceId");
-
+                        Gson gson = new Gson();
+                        Subject personInfo = gson.fromJson(data.getString("subject"), new TypeToken<Subject>() {
+                        }.getType());
                         /**
                          * 腾讯云登录
                          */
-                        ProfileManager.getInstance().login(username, "", new ProfileManager.ActionCallback() {
-                            @Override
-                            public void onSuccess() {
-                                Log.e("腾讯云登录", "成功");
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("from","LoginActivity");
-                                startActivity(intent);
-                                finish();
-                            }
+                        ProfileManager.getInstance().login(
+                                new UserModel(
+                                        personInfo.getMobile(),
+                                        personInfo.getAccount(),
+                                        personInfo.getName(),
+                                        personInfo.getAvatar()))
 
-                            @Override
-                            public void onFailed(int code, String msg) {
-                                Log.e("腾讯云登录失败", msg);
-                            }
-                        });
+                        ;
 
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("from","LoginActivity");
+                        startActivity(intent);
+                        finish();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

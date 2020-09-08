@@ -44,23 +44,23 @@ import java.util.UUID;
  * 1. 为了方便您接入，在login中调用了initIM进行IM系统的初始化，如果您的项目中已经使用了IM，可以删除这里的初始化
  */
 public class TRTCVideoCallImpl implements ITRTCVideoCall {
-    private static final String TAG            = "TRTCVideoCallImpl";
-    private static final long   TIME_OUT_COUNT = 30000;
+    private static final String TAG = "TRTCVideoCallImpl";
+    private static final long TIME_OUT_COUNT = 30000;
 
-    private static ITRTCVideoCall             sITRTCVideoCall;
-    private final  Context                    mContext;
+    private static ITRTCVideoCall sITRTCVideoCall;
+    private final Context mContext;
     /**
      * 底层SDK调用实例
      */
-    private        TRTCCloud                  mTRTCCloud;
-    private        V2TIMManager               mV2TIMManager;
-    private        V2TIMAdvancedMsgListener   mTIMMessageListener = new V2TIMAdvancedMsgListener() {
+    private TRTCCloud mTRTCCloud;
+    private V2TIMManager mV2TIMManager;
+    private V2TIMAdvancedMsgListener mTIMMessageListener = new V2TIMAdvancedMsgListener() {
         @Override
         public void onRecvNewMessage(V2TIMMessage msg) {
             if (msg == null) {
                 return;
             }
-            CallModel  callModel = convert2VideoCallData(msg);
+            CallModel callModel = convert2VideoCallData(msg);
             // 重要：这里初始化的时候会默认不处理音频请求，如果您的项目中
             // 想实现一个组件完成音视频的
             if (callModel != null
@@ -78,73 +78,73 @@ public class TRTCVideoCallImpl implements ITRTCVideoCall {
     /**
      * 当前IM登录用户名
      */
-    private        boolean                    mIsInitIMSDK;
-    private        String                     mCurUserId          = "";
-    private        int                        mSdkAppId;
-    private        String                     mCurUserSig;
+    private boolean mIsInitIMSDK;
+    private String mCurUserId = "";
+    private int mSdkAppId;
+    private String mCurUserSig;
     /**
      * 是否首次邀请
      */
-    private        boolean                    isOnCalling         = false;
-    private        String                     mCurCallID          = "";
-    private        int                        mCurRoomID          = 0;
+    private boolean isOnCalling = false;
+    private String mCurCallID = "";
+    private int mCurRoomID = 0;
     /**
      * 当前是否在TRTC房间中
      */
-    private        boolean                    mIsInRoom           = false;
+    private boolean mIsInRoom = false;
     /**
      * 当前邀请列表
      * C2C通话时会记录自己邀请的用户
      * IM群组通话时会同步群组内邀请的用户
      * 当用户接听、拒绝、忙线、超时会从列表中移除该用户
      */
-    private        List<String>               mCurInvitedList     = new ArrayList<>();
+    private List<String> mCurInvitedList = new ArrayList<>();
     /**
      * 当前语音通话中的用户
      */
-    private        Set<String>                mCurRoomUserSet     = new HashSet<>();
+    private Set<String> mCurRoomUserSet = new HashSet<>();
     /**
      * 用于记录邀请用户无回应超时处理
      * 每个邀请用户对应一个超时处理函数
      * 当被邀请用户有回应时，接听、拒绝、忙线会移除对应的超时处理函数
      */
-    private        Map<String, Runnable>      mTimeoutMap         = new HashMap<>();
+    private Map<String, Runnable> mTimeoutMap = new HashMap<>();
     /**
      * C2C通话的邀请人
      * 例如A邀请B，B存储的mCurSponsorForMe为A
      */
-    private        String                     mCurSponsorForMe    = "";
+    private String mCurSponsorForMe = "";
     /**
      * C2C通话是否回复过邀请人
      * 例如A邀请B，B回复接受/拒绝/忙线都置为true
      */
-    private        boolean                    mIsRespSponsor      = false;
+    private boolean mIsRespSponsor = false;
     /**
      * 当前通话的类型
      */
-    private        int                        mCurCallType        = TYPE_UNKNOWN;
+    private int mCurCallType = TYPE_UNKNOWN;
     /**
      * 当前群组通话的群组ID
      */
-    private        String                     mCurGroupId         = "";
+    private String mCurGroupId = "";
     /**
      * 最近使用的通话信令，用于快速处理
      */
-    private        CallModel                  mLastCallModel      = new CallModel();
+    private CallModel mLastCallModel = new CallModel();
     /**
      * 上层传入回调
      */
-    private        TRTCInteralListenerManager mTRTCInteralListenerManager;
+    private TRTCInteralListenerManager mTRTCInteralListenerManager;
     /**
      * 用于超时处理
      */
-    private        HandlerThread              mTimeoutThread;
-    private        Handler                    mTimeoutHandler;
-    private        boolean                    mIsUseFrontCamera;
+    private HandlerThread mTimeoutThread;
+    private Handler mTimeoutHandler;
+    private boolean mIsUseFrontCamera;
     /**
      * TRTC的监听器
      */
-    private TRTCCloudListener                 mTRTCCloudListener = new TRTCCloudListener() {
+    private TRTCCloudListener mTRTCCloudListener = new TRTCCloudListener() {
         @Override
         public void onError(int errCode, String errMsg, Bundle extraInfo) {
             stopCall();
@@ -368,8 +368,8 @@ public class TRTCVideoCallImpl implements ITRTCVideoCall {
     }
 
     private void handleCallModel(CallModel callModel, V2TIMMessage msg) {
-        String user     = msg.getSender();
-        long   leftTime = TIME_OUT_COUNT - (System.currentTimeMillis() / 1000 - msg.getTimestamp());
+        String user = msg.getSender();
+        long leftTime = TIME_OUT_COUNT - (System.currentTimeMillis() / 1000 - msg.getTimestamp());
         Log.d(TAG, "handleCallModel: " + callModel + " mCurCallID:" + mCurCallID + " sender:" + msg.getSender());
         switch (callModel.action) {
             case CallModel.VIDEO_CALL_ACTION_DIALING:
@@ -894,23 +894,23 @@ public class TRTCVideoCallImpl implements ITRTCVideoCall {
         /**
          * 系统错误
          */
-        public static final int VIDEO_CALL_ACTION_ERROR           = -1;
+        public static final int VIDEO_CALL_ACTION_ERROR = -1;
         /**
          * 未知信令
          */
-        public static final int VIDEO_CALL_ACTION_UNKNOWN         = 0;
+        public static final int VIDEO_CALL_ACTION_UNKNOWN = 0;
         /**
          * 正在呼叫
          */
-        public static final int VIDEO_CALL_ACTION_DIALING         = 1;
+        public static final int VIDEO_CALL_ACTION_DIALING = 1;
         /**
          * 发起人取消
          */
-        public static final int VIDEO_CALL_ACTION_SPONSOR_CANCEL  = 2;
+        public static final int VIDEO_CALL_ACTION_SPONSOR_CANCEL = 2;
         /**
          * 拒接电话
          */
-        public static final int VIDEO_CALL_ACTION_REJECT          = 3;
+        public static final int VIDEO_CALL_ACTION_REJECT = 3;
         /**
          * 无人接听
          */
@@ -918,18 +918,18 @@ public class TRTCVideoCallImpl implements ITRTCVideoCall {
         /**
          * 挂断
          */
-        public static final int VIDEO_CALL_ACTION_HANGUP          = 5;
+        public static final int VIDEO_CALL_ACTION_HANGUP = 5;
         /**
          * 电话占线
          */
-        public static final int VIDEO_CALL_ACTION_LINE_BUSY       = 6;
+        public static final int VIDEO_CALL_ACTION_LINE_BUSY = 6;
 
         /**
          * 通话类型
          */
         public static final int CALL_TYPE_UNKNOWN = 0;
-        public static final int CALL_TYPE_AUDIO   = 1;
-        public static final int CALL_TYPE_VIDEO   = 2;
+        public static final int CALL_TYPE_AUDIO = 1;
+        public static final int CALL_TYPE_VIDEO = 2;
 
 
         public static final int JSON_VERSION_4_ANDROID_IOS_TRTC = 4;
@@ -940,7 +940,7 @@ public class TRTCVideoCallImpl implements ITRTCVideoCall {
          * 3: Android/iOS/Web互通的视频通话版本
          */
         @SerializedName("version")
-        public int    version = JSON_VERSION_4_ANDROID_IOS_TRTC;
+        public int version = JSON_VERSION_4_ANDROID_IOS_TRTC;
         /**
          * 表示一次通话的唯一ID
          */
@@ -950,7 +950,7 @@ public class TRTCVideoCallImpl implements ITRTCVideoCall {
          * TRTC的房间号
          */
         @SerializedName("room_id")
-        public int    roomId  = 0;
+        public int roomId = 0;
         /**
          * IM的群组id，在群组内发起通话时使用
          */
@@ -960,7 +960,7 @@ public class TRTCVideoCallImpl implements ITRTCVideoCall {
          * 信令动作
          */
         @SerializedName("action")
-        public int    action  = VIDEO_CALL_ACTION_UNKNOWN;
+        public int action = VIDEO_CALL_ACTION_UNKNOWN;
 
         /**
          * 通话类型
@@ -969,16 +969,16 @@ public class TRTCVideoCallImpl implements ITRTCVideoCall {
          * 2-视频通话
          */
         @SerializedName("call_type")
-        public int          callType = CALL_TYPE_UNKNOWN;
+        public int callType = CALL_TYPE_UNKNOWN;
         /**
          * 正在邀请的列表
          */
         @SerializedName("invited_list")
         public List<String> invitedList;
         @SerializedName("duration")
-        public int          duration = 0;
+        public int duration = 0;
         @SerializedName("code")
-        public int          code     = 0;
+        public int code = 0;
 
         @Override
         public Object clone() {

@@ -18,6 +18,7 @@ import com.example.commonlib.utils.ShareHelper;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
+import com.example.main.bean.Subject;
 import com.example.main.bean.User;
 import com.example.main.fragment.BaseFragment;
 import com.example.main.fragment.Fragment1;
@@ -26,9 +27,11 @@ import com.example.main.fragment.Fragment3;
 import com.example.main.fragment.Fragment4;
 import com.example.main.utils.Utils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
 import com.tencent.liteav.login.model.ProfileManager;
+import com.tencent.liteav.login.model.UserModel;
 
 import org.json.JSONObject;
 
@@ -60,18 +63,18 @@ public class MainActivity extends BaseActivity {
         shareHelper = ShareHelper.getInstance();
         getPermission();
 
-        if (TextUtils.equals("LoginActivity",getIntent().getStringExtra("from"))){
+        if (TextUtils.equals("LoginActivity", getIntent().getStringExtra("from"))) {
             initData();
             return;
         }
 
         //判断是否已登录
-        String username = (String) shareHelper.query("username","");
-        String password = (String) shareHelper.query("password","");
-        if (!TextUtils.isEmpty(username)){
-            login(username,password);
-        }else {
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+        String username = (String) shareHelper.query("username", "");
+        String password = (String) shareHelper.query("password", "");
+        if (!TextUtils.isEmpty(username)) {
+            login(username, password);
+        } else {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
 
@@ -112,16 +115,16 @@ public class MainActivity extends BaseActivity {
             @SuppressLint("InvalidR2Usage")
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == R.id.tab_1){
+                if (i == R.id.tab_1) {
                     index = 0;
                     showHideFragment(fragments.get(0));
-                }else if (i == R.id.tab_2){
+                } else if (i == R.id.tab_2) {
                     index = 1;
                     showHideFragment(fragments.get(1));
-                }else if (i == R.id.tab_3){
+                } else if (i == R.id.tab_3) {
                     index = 2;
                     showHideFragment(fragments.get(2));
-                }else if (i == R.id.tab_4) {
+                } else if (i == R.id.tab_4) {
                     index = 3;
                     showHideFragment(fragments.get(3));
                 }
@@ -218,7 +221,7 @@ public class MainActivity extends BaseActivity {
                             for (String a : deniedList) {
                                 text = text + a + ";";
                             }
-                            showToast("您拒绝了" +text);
+                            showToast("您拒绝了" + text);
 //                            Toast.makeText(MainActivity.this, "您拒绝了定位权限", Toast.LENGTH_SHORT).show();
                         }
 
@@ -226,7 +229,7 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
-    private void login(String username,String password) {
+    private void login(String username, String password) {
         buildDialog("登录中，请稍后...");
         User user = new User(username, Utils.encryption(password, "SHA-1"));
         Gson gson = new Gson();
@@ -249,29 +252,24 @@ public class MainActivity extends BaseActivity {
                                 .save("subject", data.getString("subject")).commit();
                         Constants.TAKEN = data.getString("token");
                         Constants.SERVICE_ID = data.getInt("serviceId");
-
+                        Gson gson = new Gson();
+                        Subject personInfo = gson.fromJson(data.getString("subject"), new TypeToken<Subject>() {
+                        }.getType());
                         /**
                          * 腾讯云登录
                          */
-                        ProfileManager.getInstance().login(username, "", new ProfileManager.ActionCallback() {
-                            @Override
-                            public void onSuccess() {
-                                Log.e("腾讯云登录", "成功");
-//                                startActivity(new Intent(MainActivity.this, MainActivity.class));
-//                                finish();
-                            }
-
-                            @Override
-                            public void onFailed(int code, String msg) {
-                                Log.e("腾讯云登录失败", msg);
-                            }
-                        });
+                        ProfileManager.getInstance().login(
+                                new UserModel(
+                                        personInfo.getMobile(),
+                                        personInfo.getAccount(),
+                                        personInfo.getName(),
+                                        personInfo.getAvatar()));
 
                         initData();
 
-                    }else {
+                    } else {
                         showToast("登录信息失效，请重新登录");
-                        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         finish();
                     }
                 } catch (Exception e) {

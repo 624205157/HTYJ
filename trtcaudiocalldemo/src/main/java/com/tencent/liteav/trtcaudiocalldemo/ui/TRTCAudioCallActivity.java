@@ -118,7 +118,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                                 mCallUserModelList.add(model);
                                 mCallUserModelMap.put(model.userId, model);
                                 addUserToManager(model);
-                                stopPlayFromRawFile();//结束响铃
+//                                stopPlayFromRawFile();//结束响铃
                             }
 
                             @Override
@@ -133,7 +133,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
                                 mCallUserModelList.add(model);
                                 mCallUserModelMap.put(model.userId, model);
                                 addUserToManager(model);
-                                stopPlayFromRawFile();//结束响铃
+//                                stopPlayFromRawFile();//结束响铃
                             }
                         });
                     }
@@ -162,6 +162,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    stopPlayFromRawFile();//结束响铃
                     if (mCallUserModelMap.containsKey(userId)) {
                         // 进入拒绝环节
                         //1. 回收界面元素
@@ -596,6 +597,8 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         }
         mPlayer = null;
     }
+
+
 
 
 }
