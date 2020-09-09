@@ -28,6 +28,8 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
 
 <!--    腾讯云信-->
     <uses-permission android:name="android.permission.INTERNET" />

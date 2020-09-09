@@ -73,9 +73,18 @@ public class PersonalInfoActivity extends BaseActivity {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
                 .into(iv);
 
-        UserModel userModel = new UserModel();
-        userModel.userId = user.getAccount();
-        list.add(userModel);
+        ProfileManager.getInstance().getUserInfoByUserId(user.getAccount(), new ProfileManager.GetUserInfoCallback() {
+            @Override
+            public void onSuccess(UserModel model) {
+                list.add(model);
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+
+            }
+        });
+
     }
 
     @OnClick({R2.id.voice, R2.id.video})

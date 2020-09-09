@@ -45,13 +45,13 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     private static final String TAG = TRTCAudioCallActivity.class.getName();
 
 
-    public static final String PARAM_TYPE                = "type";
-    public static final String PARAM_USER                = "user_model";
-    public static final String PARAM_BEINGCALL_USER      = "beingcall_user_model";
+    public static final String PARAM_TYPE = "type";
+    public static final String PARAM_USER = "user_model";
+    public static final String PARAM_BEINGCALL_USER = "beingcall_user_model";
     public static final String PARAM_OTHER_INVITING_USER = "other_inviting_user_model";
-    public static final  int    TYPE_BEING_CALLED         = 1;
-    public static final  int    TYPE_CALL                 = 2;
-    private static final int    MAX_SHOW_INVITING_USER    = 2;
+    public static final int TYPE_BEING_CALLED = 1;
+    public static final int TYPE_CALL = 2;
+    private static final int MAX_SHOW_INVITING_USER = 2;
 
     private ImageView mImageMute;
     private ImageView mImageHangup;
@@ -67,19 +67,19 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
     private TextView mTextTime;
 
     private Runnable mTimeRunnable;
-    private int                    mTimeCount;
+    private int mTimeCount;
     private Handler mTimeHandler;
     private HandlerThread mTimeHandlerThread;
 
     private UserModel mSelfModel;
     private List<UserModel> mCallUserModelList = new ArrayList<>(); // 呼叫方
-    private Map<String, UserModel> mCallUserModelMap  = new HashMap<>();
-    private UserModel              mSponsorUserModel;                      // 被叫方
+    private Map<String, UserModel> mCallUserModelMap = new HashMap<>();
+    private UserModel mSponsorUserModel;                      // 被叫方
     private List<UserModel> mOtherInvitingUserModelList;
-    private int                    mCallType;
+    private int mCallType;
     private ITRTCAudioCall mITRTCAudioCall;
-    private boolean                isHandsFree        = true;
-    private boolean                isMuteMic          = false;
+    private boolean isHandsFree = true;
+    private boolean isMuteMic = false;
 
     /**
      * 拨号的回调
@@ -519,10 +519,10 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         }
         mGroupInviting.setVisibility(View.VISIBLE);
         int squareWidth = getResources().getDimensionPixelOffset(R.dimen.trtcaudiocall_small_image_size);
-        int leftMargin  = getResources().getDimensionPixelOffset(R.dimen.trtcaudiocall_small_image_left_margin);
+        int leftMargin = getResources().getDimensionPixelOffset(R.dimen.trtcaudiocall_small_image_left_margin);
         for (int index = 0; index < mOtherInvitingUserModelList.size() && index < MAX_SHOW_INVITING_USER; index++) {
-            UserModel                 userModel    = mOtherInvitingUserModelList.get(index);
-            ImageView imageView    = new ImageView(this);
+            UserModel userModel = mOtherInvitingUserModelList.get(index);
+            ImageView imageView = new ImageView(this);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(squareWidth, squareWidth);
             if (index != 0) {
                 layoutParams.leftMargin = leftMargin;
@@ -554,6 +554,7 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
 
 
     private MediaPlayer mPlayer;
+
     /**
      * 播放来电和呼出铃声
      *
@@ -597,8 +598,6 @@ public class TRTCAudioCallActivity extends AppCompatActivity {
         }
         mPlayer = null;
     }
-
-
 
 
 }

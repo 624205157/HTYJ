@@ -285,7 +285,7 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
      * 轨迹回放方法
      */
     private TraceRePlay rePlayTrace(List<LatLng> list, final Marker updateMarker) {
-        TraceRePlay replay = new TraceRePlay(list, 1000,
+        TraceRePlay replay = new TraceRePlay(list, 100,
                 new TraceRePlay.TraceRePlayListener() {
 
                     @Override
@@ -313,11 +313,11 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
         aMapTrackClient.queryTerminal(new QueryTerminalRequest(Constants.SERVICE_ID, username), new SimpleOnTrackListener() {
             @Override
             public void onQueryTerminalCallback(QueryTerminalResponse queryTerminalResponse) {
+                cancelDialog();
                 if (queryTerminalResponse.isSuccess()) {
                     if (queryTerminalResponse.isTerminalExist()) {
                         // 当前终端已经创建过，直接使用查询到的terminal id
                         terminalId = queryTerminalResponse.getTid();
-                        cancelDialog();
                     } else {
                         showToast("该终端未创建");
                     }
@@ -502,6 +502,7 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
      */
     @Override
     public void onFinished(int arg0, List<LatLng> list, int arg2, int arg3) {
+        clearTracksOnMap();
         mGraspLatLngList = list;
         addGraspTrace(list);
 
@@ -522,14 +523,15 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
     /**
      * 清空地图
      */
-//    private void clearTracksOnMap() {
-//        for (Polyline polyline : polylines) {
-//            polyline.remove();
-//        }
-//        polylines.remove();
-//        mOriginStartMarker.remove();
-//        endMarkers.clear();
-//        polylines.clear();
-//    }
+    private void clearTracksOnMap() {
+        if (mGraspPolyline != null)
+            mGraspPolyline.remove();
+        if (mGraspStartMarker != null)
+            mGraspStartMarker.remove();
+        if (mGraspEndMarker != null)
+            mGraspEndMarker.remove();
+        if (mGraspRoleMarker != null)
+            mGraspRoleMarker.remove();
+    }
 
 }
