@@ -173,8 +173,8 @@ public class Utils {
 //        Date time = parseServerTime(sdate,null);
         Date today = new Date();
         if (time != null) {
-            String nowDate = getDateStr(today, null);
-            String timeDate = getDateStr(time, null);
+            String nowDate = getDateStr(today, "yyyy-MM-dd");
+            String timeDate = getDateStr(time, "yyyy-MM-dd");
             if (nowDate.equals(timeDate)) {
                 b = true;
             }
