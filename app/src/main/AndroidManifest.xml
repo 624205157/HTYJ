@@ -19,9 +19,12 @@
 <!--                    android:value="412345a79e3f2bbf6e18a067ee2b37fd" />-->
 
         <service
-            android:name=".CallService"
+            android:name="com.example.main.service.CallService"
             android:enabled="true"
             android:exported="false"></service>
+
+        <service android:name="com.amap.api.track.AMapTrackService" />
+        <service android:name="com.amap.api.location.APSService" />
     </application>
 
 </manifest>

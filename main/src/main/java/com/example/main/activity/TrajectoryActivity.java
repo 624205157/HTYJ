@@ -121,7 +121,7 @@ public class TrajectoryActivity extends RightTitleActivity {
 
         username = (String) shareHelper.query("username", "");
         aMapTrackClient = new AMapTrackClient(getApplicationContext());
-        aMapTrackClient.setInterval(5, 30);
+        aMapTrackClient.setInterval(2, 10);
 
 
         map.getMap().moveCamera(CameraUpdateFactory.zoomTo(14));

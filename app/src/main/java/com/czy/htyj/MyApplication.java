@@ -10,6 +10,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.example.commonlib.base.BaseApplication;
 import com.example.commonlib.utils.ShareHelper;
+import com.example.main.service.CallService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.tencent.liteav.login.model.ProfileManager;
 
@@ -75,8 +76,10 @@ public class MyApplication extends BaseApplication {
         });
     }
 
+
     private void startCallService() {
         Intent intent = new Intent(this, CallService.class);
         startService(intent);
     }
+
 }

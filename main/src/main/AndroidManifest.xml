@@ -88,8 +88,7 @@
             android:name=".activity.my.UpdateMyActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <service android:name="com.amap.api.track.AMapTrackService" />
-        <service android:name="com.amap.api.location.APSService" />
+
 
     </application>
 

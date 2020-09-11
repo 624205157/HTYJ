@@ -1,4 +1,4 @@
-package com.czy.htyj;
+package com.example.main.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -250,7 +250,7 @@ public class CallService extends Service {
             @Override
             public void onSuccess() {
                 //1. 登录IM成功
-                ToastUtils.showLong("登录成功");
+//                ToastUtils.showLong("登录成功");
                 initAudioCallData();
                 initVideoCallData();
 //                initMeetingData();

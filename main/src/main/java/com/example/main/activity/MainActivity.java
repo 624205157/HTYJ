@@ -5,15 +5,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.RadioGroup;
 
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.blankj.utilcode.util.ServiceUtils;
 import com.example.commonlib.Constants;
 import com.example.commonlib.base.BaseActivity;
 import com.example.commonlib.okhttp.exception.OkHttpException;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
-import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.commonlib.utils.ShareHelper;
 import com.example.main.R;
 import com.example.main.R2;
@@ -30,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
+import com.example.main.service.CallService;
 import com.tencent.liteav.login.model.ProfileManager;
 import com.tencent.liteav.login.model.UserModel;
 
