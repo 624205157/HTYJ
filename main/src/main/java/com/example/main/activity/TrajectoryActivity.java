@@ -434,16 +434,14 @@ public class TrajectoryActivity extends RightTitleActivity {
                 Constants.SERVICE_ID,
                 terminalId,
                 startTime,
-                startTime + 24 * 60 * 60 * 1000
-//                System.currentTimeMillis() - 24 * 60 * 60 * 1000,
-//                System.currentTimeMillis()
-//                0,      // 不绑路
-//                0,      // 不做距离补偿
-//                5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
-//                0,  // 由旧到新排序
-//                1,  // 返回第1页数据
-//                100,    // 一页不超过100条
-//                ""  // 暂未实现，该参数无意义，请留空
+                startTime + 24 * 60 * 60 * 1000,
+                0,      // 不绑路
+                0,      // 不做距离补偿
+                5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
+                0,  // 由旧到新排序
+                1,  // 返回第1页数据
+                999,    // 一页不超过100条
+                ""  // 暂未实现，该参数无意义，请留空
         );
         aMapTrackClient.queryHistoryTrack(historyTrackRequest, new SimpleOnTrackListener() {
             @Override

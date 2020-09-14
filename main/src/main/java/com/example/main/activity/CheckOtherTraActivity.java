@@ -24,8 +24,10 @@ import com.amap.api.trace.LBSTraceClient;
 import com.amap.api.trace.TraceListener;
 import com.amap.api.trace.TraceLocation;
 import com.amap.api.track.AMapTrackClient;
+import com.amap.api.track.query.entity.CorrectMode;
 import com.amap.api.track.query.entity.HistoryTrack;
 import com.amap.api.track.query.entity.Point;
+import com.amap.api.track.query.entity.RecoupMode;
 import com.amap.api.track.query.entity.TrackPoint;
 import com.amap.api.track.query.model.AddTerminalRequest;
 import com.amap.api.track.query.model.AddTerminalResponse;
@@ -123,9 +125,9 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
                     showToast("请选择时间");
                     return;
                 }
-                if (Utils.isToday(selectData)) {
-                    handler.postDelayed(runnable, 60000);
-                }
+//                if (Utils.isToday(selectData)) {
+//                    handler.postDelayed(runnable, 60000);
+//                }
                 queryHistoryTrack(selectData);
             }
         });
@@ -144,11 +146,12 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
 
 
     private void getUserList() {
-
+        buildDialog("");
         RequestCenter.getDataList(UrlService.USERLIST, null, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
+                    cancelDialog();
                     JSONObject data = new JSONObject(responseObj.toString());
                     String code = data.getString("code");
                     if (TextUtils.equals(code, "0")) {
@@ -156,14 +159,14 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
                         userList.addAll(gson.fromJson(data.getJSONObject("data").getString("list"), new TypeToken<List<User>>() {
                         }.getType()));
                         for (User user : userList) {
-                            userName.add(user.getUsername());
+                            userName.add(user.getName());
                         }
 
                         reasonPicker = new OptionsPickerBuilder(CheckOtherTraActivity.this, new OnOptionsSelectListener() {
                             @Override
                             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                                 queryTerminal(userList.get(options1).getUsername());
-                                checkOther.setText(userList.get(options1).getUsername());
+                                checkOther.setText(userList.get(options1).getName());
                             }
                         }).setTitleText("选择人员").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
                         reasonPicker.setPicker(userName);
@@ -175,7 +178,8 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
 
             @Override
             public void onFailure(OkHttpException responseObj) {
-
+                showToast(responseObj.getMessage());
+                cancelDialog();
             }
         });
 
@@ -185,7 +189,8 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
     public void onViewClicked(View view) {
         int id = view.getId();
         if (id == R.id.check_other) {
-            reasonPicker.show();
+            if (reasonPicker != null)
+                reasonPicker.show();
         } else if (id == R.id.time) {
             pvTime.show();
         }
@@ -218,24 +223,24 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
         }).build();
     }
 
-    Handler handler = new Handler();
+//    Handler handler = new Handler();
 
-    /**
-     * 60秒更新一次当天数据
-     */
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            // TODO Auto-generated method stub
-            getTodayTrack();
-            handler.postDelayed(this, 60000);
-        }
-    };
+//    /**
+//     * 60秒更新一次当天数据
+//     */
+//    Runnable runnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            // TODO Auto-generated method stub
+//            getTodayTrack();
+//            handler.postDelayed(this, 60000);
+//        }
+//    };
 
-    private void getTodayTrack() {
-        Date date = new Date();
-        queryHistoryTrack(date);
-    }
+//    private void getTodayTrack() {
+//        Date date = new Date();
+//        queryHistoryTrack(date);
+//    }
 
 
     /**
@@ -249,16 +254,16 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
                 Constants.SERVICE_ID,
                 terminalId,
                 startTime,
-                startTime + 24 * 60 * 60 * 1000
+                startTime + 24 * 60 * 60 * 1000,
 //                System.currentTimeMillis() - 24 * 60 * 60 * 1000,
 //                System.currentTimeMillis()
-//                0,      // 不绑路
-//                0,      // 不做距离补偿
-//                5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
-//                0,  // 由旧到新排序
-//                1,  // 返回第1页数据
-//                100,    // 一页不超过100条
-//                ""  // 暂未实现，该参数无意义，请留空
+                0,      // 不绑路
+                0,      // 不做距离补偿
+                5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
+                0,  // 由旧到新排序
+                1,  // 返回第1页数据
+                999,    // 一页不超过100条
+                ""  // 暂未实现，该参数无意义，请留空
         );
         aMapTrackClient.queryHistoryTrack(historyTrackRequest, new SimpleOnTrackListener() {
             @Override

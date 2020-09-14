@@ -12,7 +12,7 @@ public class User {
     private String password;
 
 //    private String headUrl;//头像
-//    private String name;
+    private String name;
 //    private String tel;
 //    private String isLeader;//是否为负责人
 
@@ -69,13 +69,13 @@ public class User {
 //        this.isLeader = isLeader;
 //    }
 //
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Subject getSubject() {
         return subject;
