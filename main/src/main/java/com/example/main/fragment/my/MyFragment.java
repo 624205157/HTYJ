@@ -25,6 +25,8 @@ import com.example.main.fragment.BaseFragment;
 import com.example.main.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.json.JSONObject;
 
@@ -90,11 +92,18 @@ public class MyFragment extends BaseFragment {
         } else if (id == R.id.update_version) {
             getNewVersion();
         } else if (id == R.id.cancel) {
+            V2TIMManager.getInstance().logout(null);
+
+            //小米推送退出
+            MiPushClient.unsetUserAccount(mContext, String.valueOf(shareHelper.query("username","")), null);
+
             shareHelper.save("username", "")
                     .save("password", "")
                     .save("token", "")
                     .save("subject", "").commit();
             startActivity(new Intent(getActivity(), LoginActivity.class));
+
+
             mActivity.finish();
         }
     }

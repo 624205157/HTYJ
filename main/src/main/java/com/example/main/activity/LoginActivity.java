@@ -3,6 +3,7 @@ package com.example.main.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -19,8 +20,16 @@ import com.example.main.bean.User;
 import com.example.main.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.imsdk.v2.V2TIMCallback;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMOfflinePushConfig;
+import com.tencent.imsdk.v2.V2TIMSDKConfig;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.liteav.login.model.ProfileManager;
 import com.tencent.liteav.login.model.UserModel;
+import com.tencent.liteav.trtcaudiocalldemo.model.TRTCAudioCallImpl;
+import com.xiaomi.mipush.sdk.MiPushClient;
+import com.example.commonlib.trtc.GenerateTestUserSig;
 
 import org.json.JSONObject;
 
@@ -32,7 +41,7 @@ import butterknife.OnClick;
  * Created by 陈泽宇 on 2020/5/18
  * Describe: 登录页
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends ConfigActivity {
     @BindView(R2.id.user_name)
     EditText userName;
     @BindView(R2.id.password)
@@ -51,7 +60,6 @@ public class LoginActivity extends BaseActivity {
 
 
     private void login(String username,String password) {
-        buildDialog("登录中，请稍后...");
         User user = new User(username, Utils.encryption(password, "SHA-1"));
         Gson gson = new Gson();
         String jsonStr = gson.toJson(user);
@@ -76,17 +84,23 @@ public class LoginActivity extends BaseActivity {
                         Gson gson = new Gson();
                         Subject personInfo = gson.fromJson(data.getString("subject"), new TypeToken<Subject>() {
                         }.getType());
+
+
                         /**
                          * 腾讯云登录
                          */
+
+                        loginTRTC(LoginActivity.this,username, GenerateTestUserSig.genTestUserSig(username));
+
                         ProfileManager.getInstance().login(
                                 new UserModel(
                                         personInfo.getMobile(),
                                         personInfo.getAccount(),
                                         personInfo.getName(),
-                                        personInfo.getAvatar()))
+                                        personInfo.getAvatar()));
 
-                        ;
+                        //小米推送登录
+                        MiPushClient.setUserAccount(LoginActivity.this, username, null);
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra("from","LoginActivity");
@@ -122,7 +136,9 @@ public class LoginActivity extends BaseActivity {
                 showToast("密码不可为空");
 //                return;
             }
+            buildDialog("登录中，请稍后...");
             login(userName.getText() +"",password.getText() + "");
+
 
         }
     }

@@ -8,6 +8,9 @@ import com.blankj.utilcode.util.SPUtils;
 import com.example.commonlib.utils.ShareHelper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMSDKConfig;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +124,7 @@ public class ProfileManager {
         isLogin = false;
         callback.onSuccess();
     }
+
 
     public void login(UserModel userModel) {
         isLogin = true;

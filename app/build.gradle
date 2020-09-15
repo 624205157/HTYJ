@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.huawei.agconnect'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -43,15 +43,13 @@ android {
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":commonlib")
-
-    if (!isModule.toBoolean()){
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':commonlib')
+    if (!isModule.toBoolean()) {
         implementation project(":main")
         implementation project(":map")
         implementation project(":trtcaudiocalldemo")
         implementation project(':trtcvideocalldemo')
         implementation project(':TRTClogin')
     }
-
 }

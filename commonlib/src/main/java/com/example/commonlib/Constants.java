@@ -17,4 +17,5 @@ public class Constants {
      */
     public static long SERVICE_ID ;
     public static String TAKEN = "";
+    public static long PUSH_MI_ID = 12748;
 }

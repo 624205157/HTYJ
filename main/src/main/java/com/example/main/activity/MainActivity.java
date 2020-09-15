@@ -30,8 +30,12 @@ import com.google.gson.reflect.TypeToken;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
 import com.example.main.service.CallService;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMSDKConfig;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.liteav.login.model.ProfileManager;
 import com.tencent.liteav.login.model.UserModel;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.json.JSONObject;
 
@@ -42,7 +46,7 @@ import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends ConfigActivity {
 
     @BindView(R2.id.rg)
     RadioGroup rg;
@@ -72,7 +76,9 @@ public class MainActivity extends BaseActivity {
         String username = (String) shareHelper.query("username", "");
         String password = (String) shareHelper.query("password", "");
         if (!TextUtils.isEmpty(username)) {
+            buildDialog("登录中，请稍后...");
             login(username, password);
+
         } else {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
@@ -230,7 +236,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void login(String username, String password) {
-        buildDialog("登录中，请稍后...");
         User user = new User(username, Utils.encryption(password, "SHA-1"));
         Gson gson = new Gson();
         String jsonStr = gson.toJson(user);
@@ -258,14 +263,20 @@ public class MainActivity extends BaseActivity {
                         /**
                          * 腾讯云登录
                          */
+
+                        loginTRTC(MainActivity.this,username, com.example.commonlib.trtc.GenerateTestUserSig.genTestUserSig(username));
+
                         ProfileManager.getInstance().login(
                                 new UserModel(
                                         personInfo.getMobile(),
                                         personInfo.getAccount(),
                                         personInfo.getName(),
                                         personInfo.getAvatar()));
+                        //小米推送登录
+                        MiPushClient.setUserAccount(MainActivity.this, username, null);
 
                         initData();
+
 
                     } else {
                         showToast("登录信息失效，请重新登录");

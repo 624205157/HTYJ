@@ -483,8 +483,8 @@ public class TrajectoryActivity extends RightTitleActivity {
         }
 
         if (endPoint != null && endPoint.getLocation() != null) {
-            if (endMarkers.size() > 1) {
-                endMarkers.get(endMarkers.size() - 1).remove();
+            for (int i = endMarkers.size() - 1; i > 0; i--) {
+                endMarkers.get(i).remove();
             }
             LatLng latLng = new LatLng(endPoint.getLocation().getLat(), endPoint.getLocation().getLng());
             MarkerOptions markerOptions = new MarkerOptions()
