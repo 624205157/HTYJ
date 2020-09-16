@@ -87,6 +87,15 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/required_img"
+                    app:layout_constraintLeft_toRightOf="@+id/name_tv"
+                    app:layout_constraintTop_toTopOf="@+id/name_tv"
+                    app:layout_constraintBottom_toBottomOf="@+id/name_tv"
+                    />
+
                 <EditText
                     android:id="@+id/name"
                     android:layout_width="0dp"
@@ -128,6 +137,15 @@
                     app:layout_constraintTop_toBottomOf="@+id/v_1"
                     />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/required_img"
+                    app:layout_constraintLeft_toRightOf="@+id/type_tv"
+                    app:layout_constraintTop_toTopOf="@+id/type_tv"
+                    app:layout_constraintBottom_toBottomOf="@+id/type_tv"
+                    />
+
                 <TextView
                     android:id="@+id/type"
                     android:layout_width="0dp"
@@ -164,6 +182,15 @@
                     android:textColor="@color/text_color"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/v_2"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/required_img"
+                    app:layout_constraintLeft_toRightOf="@+id/address_tv"
+                    app:layout_constraintTop_toTopOf="@+id/address_tv"
+                    app:layout_constraintBottom_toBottomOf="@+id/address_tv"
                     />
 
                 <TextView
