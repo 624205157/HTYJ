@@ -254,47 +254,46 @@ public class CallService extends Service {
         //将服务置于启动状态 ,NOTIFICATION_ID指的是创建的通知的ID
         startForeground(NOTIFICATION_ID, notification);
 
-        initAudioCallData();
-        initVideoCallData();
         // 由于两个模块公用一个IM，所以需要在这里先进行登录，您的App只使用一个model，可以直接调用VideoCall 对应函数
         // 目前 Demo 为了方便您接入，使用的是本地签发 sig 的方式，您的项目上线，务必要保证将签发逻辑转移到服务端，否者会出现 key 被盗用，流量盗用的风险。
-//        if (SessionWrapper.isMainProcess(this)) {
-//            V2TIMSDKConfig config = new V2TIMSDKConfig();
-//            config.setLogLevel(V2TIMSDKConfig.V2TIM_LOG_DEBUG);
-//            V2TIMManager.getInstance().initSDK(this, GenerateTestUserSig.SDKAPPID, config, new V2TIMSDKListener() {
-//                @Override
-//                public void onConnecting() {
-//                }
-//
-//                @Override
-//                public void onConnectSuccess() {
-//                }
-//
-//                @Override
-//                public void onConnectFailed(int code, String error) {
-//                }
-//            });
-//        }
-//        String userId = ProfileManager.getInstance().getUserModel().userId;
-//        String userSig = ProfileManager.getInstance().getUserModel().userSig;
-//        Log.d("Login", "login: " + userId + " " + userSig);
-//        // 由于这里提前登陆了，所以会导致上一次的消息收不到，您在APP中单独使用 ITRTCAudioCall.login 不会出现这种问题
-//        V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
-//            @Override
-//            public void onError(int i, String s) {
-//                // 登录IM失败
-//                ToastUtils.showLong("登录IM失败，所有功能不可用[" + i + "]" + s);
-//            }
-//
-//            @Override
-//            public void onSuccess() {
-//                //1. 登录IM成功
-////                ToastUtils.showLong("登录成功");
-//
-////                initMeetingData();
-////                initVoiceRoom();
-//            }
-//        });
+        if (SessionWrapper.isMainProcess(this)) {
+            V2TIMSDKConfig config = new V2TIMSDKConfig();
+            config.setLogLevel(V2TIMSDKConfig.V2TIM_LOG_DEBUG);
+            V2TIMManager.getInstance().initSDK(this, GenerateTestUserSig.SDKAPPID, config, new V2TIMSDKListener() {
+                @Override
+                public void onConnecting() {
+                }
+
+                @Override
+                public void onConnectSuccess() {
+                }
+
+                @Override
+                public void onConnectFailed(int code, String error) {
+                }
+            });
+        }
+        String userId = ProfileManager.getInstance().getUserModel().userId;
+        String userSig = ProfileManager.getInstance().getUserModel().userSig;
+        Log.d("Login", "login: " + userId + " " + userSig);
+        // 由于这里提前登陆了，所以会导致上一次的消息收不到，您在APP中单独使用 ITRTCAudioCall.login 不会出现这种问题
+        V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
+            @Override
+            public void onError(int i, String s) {
+                // 登录IM失败
+                ToastUtils.showLong("登录IM失败，所有功能不可用[" + i + "]" + s);
+            }
+
+            @Override
+            public void onSuccess() {
+                //1. 登录IM成功
+//                ToastUtils.showLong("登录成功");
+                initAudioCallData();
+                initVideoCallData();
+//                initMeetingData();
+//                initVoiceRoom();
+            }
+        });
     }
 
 
@@ -349,21 +348,21 @@ public class CallService extends Service {
         mITRTCAudioCall = TRTCAudioCallImpl.sharedInstance(this);
         mITRTCAudioCall.init();
         mITRTCAudioCall.addListener(mTRTCAudioCallListener);
-//        //为了方便接入和测试
-//        int appid = GenerateTestUserSig.SDKAPPID;
-//        String userId = ProfileManager.getInstance().getUserModel().userId;
-//        String userSig = ProfileManager.getInstance().getUserModel().userSig;
-//        mITRTCAudioCall.login(appid, userId, userSig, null);
+        //为了方便接入和测试
+        int appid = GenerateTestUserSig.SDKAPPID;
+        String userId = ProfileManager.getInstance().getUserModel().userId;
+        String userSig = ProfileManager.getInstance().getUserModel().userSig;
+        mITRTCAudioCall.login(appid, userId, userSig, null);
     }
 
     private void initVideoCallData() {
         mITRTCVideoCall = TRTCVideoCallImpl.sharedInstance(this);
         mITRTCVideoCall.init();
         mITRTCVideoCall.addListener(mTRTCVideoCallListener);
-//        int appid = GenerateTestUserSig.SDKAPPID;
-//        String userId = ProfileManager.getInstance().getUserModel().userId;
-//        String userSig = ProfileManager.getInstance().getUserModel().userSig;
-//        mITRTCVideoCall.login(appid, userId, userSig, null);
+        int appid = GenerateTestUserSig.SDKAPPID;
+        String userId = ProfileManager.getInstance().getUserModel().userId;
+        String userSig = ProfileManager.getInstance().getUserModel().userSig;
+        mITRTCVideoCall.login(appid, userId, userSig, null);
     }
 
 //    private void initMeetingData() {

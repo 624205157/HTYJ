@@ -169,6 +169,7 @@ public class ProfileManager {
 //        userModel.phone = userId;
 //        userModel.userId = userId;
 //        userModel.userName = userId;
+        getUserList();
         callback.onSuccess(getUserModel(userId));
         return new NetworkAction();
     }

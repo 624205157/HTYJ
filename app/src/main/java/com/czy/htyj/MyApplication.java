@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.multidex.MultiDex;
@@ -13,8 +14,12 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.example.commonlib.base.BaseApplication;
 import com.example.commonlib.utils.ShareHelper;
+import com.example.main.activity.ConfigActivity;
 import com.example.main.service.CallService;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.tencent.imsdk.TIMLogLevel;
+import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
@@ -142,7 +147,7 @@ public class MyApplication extends BaseApplication {
         // 2. 初始化 config 对象
         V2TIMSDKConfig config = new V2TIMSDKConfig();
         // 3. 指定 log 输出级别，详情请参考 SDKConfig。
-        config.setLogLevel(V2TIMSDKConfig.V2TIM_LOG_NONE);
+        config.setLogLevel(V2TIMSDKConfig.V2TIM_LOG_DEBUG);
         // 4. 初始化 SDK 并设置 V2TIMSDKListener 的监听对象。
         // initSDK 后 SDK 会自动连接网络，网络连接状态可以在 V2TIMSDKListener 回调里面监听。
         V2TIMManager.getInstance().initSDK(this, com.example.commonlib.trtc.GenerateTestUserSig.SDKAPPID, config, null);

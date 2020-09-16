@@ -290,9 +290,11 @@ public class MainActivity extends ConfigActivity {
 
             @Override
             public void onFailure(OkHttpException e) {
-                showToast("网络连接失败,请稍后重试");
+                showToast("登录信息失效，请重新登录");
                 e.printStackTrace();
                 cancelDialog();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
             }
         });
     }
