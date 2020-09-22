@@ -147,7 +147,9 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
 
     private void getUserList() {
         buildDialog("");
-        RequestCenter.getDataList(UrlService.USERLIST, null, new DisposeDataListener() {
+        RequestParams params = new RequestParams();
+        params.put("pageable","n");
+        RequestCenter.getDataList(UrlService.USERLIST, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
@@ -156,7 +158,7 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
                     String code = data.getString("code");
                     if (TextUtils.equals(code, "0")) {
                         Gson gson = new Gson();
-                        userList.addAll(gson.fromJson(data.getJSONObject("data").getString("list"), new TypeToken<List<User>>() {
+                        userList.addAll(gson.fromJson(data.getString("data"), new TypeToken<List<User>>() {
                         }.getType()));
                         for (User user : userList) {
                             userName.add(user.getName());

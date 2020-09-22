@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.commonlib.okhttp.exception.OkHttpException;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
+import com.example.commonlib.okhttp.request.RequestParams;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
@@ -94,7 +95,9 @@ public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     private void getUserList(){
         userList.clear();
-        RequestCenter.getDataList(UrlService.USERLIST, null, new DisposeDataListener() {
+        RequestParams params = new RequestParams();
+        params.put("pageable","n");
+        RequestCenter.getDataList(UrlService.USERLIST, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
@@ -102,9 +105,9 @@ public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.On
                     String code = data.getString("code");
                     if (TextUtils.equals(code,"0")){
                         Gson gson = new Gson();
-                        shareHelper.save("userList",data.getJSONObject("data").getString("list")).commit();
+                        shareHelper.save("userList",data.getString("data")).commit();
                         ProfileManager.getInstance().getUserList();//初始化用户数据列表
-                        userList.addAll(gson.fromJson(data.getJSONObject("data").getString("list"),new TypeToken<List<Subject>>(){}.getType()));
+                        userList.addAll(gson.fromJson(data.getString("data"),new TypeToken<List<Subject>>(){}.getType()));
                         String my = (String) shareHelper.query("username","");
                         for (Subject s : userList){
                             if (TextUtils.equals(s.getAccount(),my)){

@@ -108,7 +108,7 @@ public class GridDetailsActivity extends RightTitleActivity {
 
         RequestParams params = new RequestParams();
         params.put("gridId",getIntent().getStringExtra("gridId"));
-
+        params.put("pageable","n");
         RequestCenter.getDataList(UrlService.USERLIST, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
@@ -117,7 +117,7 @@ public class GridDetailsActivity extends RightTitleActivity {
                     String code = data.getString("code");
                     if (TextUtils.equals(code,"0")){
                         Gson gson = new Gson();
-                        mData.addAll(gson.fromJson(data.getJSONObject("data").getString("list"),new TypeToken<List<Subject>>(){}.getType()));
+                        mData.addAll(gson.fromJson(data.getString("data"),new TypeToken<List<Subject>>(){}.getType()));
 
                         adapter.setList(mData);
 
