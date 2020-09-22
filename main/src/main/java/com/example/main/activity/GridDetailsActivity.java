@@ -81,7 +81,7 @@ public class GridDetailsActivity extends RightTitleActivity {
 
 //        mData.addAll(grid.getUsers());
 
-        adapter = new GridDetailsAdapter(mData);
+        adapter = new GridDetailsAdapter(this,mData);
         adapter.setAnimationEnable(true);
 
         adapter.addChildClickViewIds(R.id.tel);

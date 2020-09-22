@@ -109,7 +109,7 @@ public class TaskDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState, String a) {
         addBack();
-        setTitleText("下发任务");
+        setTitleText("任务详情");
 
         getData();
 

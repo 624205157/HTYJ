@@ -155,7 +155,17 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
 
         @Override
         public void run() {
-            showToast("搜索" + search.getText().toString());
+            String searchStr = search.getText().toString();
+            if (!TextUtils.isEmpty(searchStr)) {
+                RequestParams params = new RequestParams();
+                params.put("name", searchStr);
+                params.put("pageable", "n");
+                getSearch(params);
+            } else {
+                pageNum = 0;
+                mData.clear();
+                getData();
+            }
         }
     }
 
@@ -166,7 +176,6 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
         RequestParams params = new RequestParams();
         try {
             params.put("current", ++pageNum);
-            params.put("pageable", "y");
 
             if (pages < pageNum) {
                 mAdapter.getLoadMoreModule().setEnableLoadMore(false);
@@ -210,6 +219,40 @@ public class TaskListFragment extends BaseFragment implements SwipeRefreshLayout
             }
         });
 
+    }
+
+    private void getSearch(RequestParams params) {
+        mData.clear();
+        try {
+            params.put("states", URLEncoder.encode(state, "UTF-8"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        RequestCenter.getDataList(UrlService.TASK, params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                try {
+                    JSONObject result = new JSONObject(responseObj.toString());
+                    JSONObject data = result.getJSONObject("data");
+                    if (TextUtils.equals(result.getString("code"), "0")) {
+                        mData.addAll(new Gson().fromJson(data.getString("list"), new TypeToken<List<Task>>() {
+                        }.getType()));
+                        mAdapter.setList(mData);
+                        mAdapter.notifyDataSetChanged();
+                        mAdapter.getLoadMoreModule().setEnableLoadMore(false);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException responseObj) {
+
+            }
+        });
     }
 
     @Override

@@ -56,10 +56,10 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
     private String state;
 
-    public static EventListFragment newInstance(String state){
+    public static EventListFragment newInstance(String state) {
         EventListFragment fragment = new EventListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("state",state);
+        bundle.putString("state", state);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -104,20 +104,20 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
         mAdapter = new EventAdapter(mData);
         mAdapter.setAnimationEnable(true);
         mAdapter.getLoadMoreModule().setOnLoadMoreListener(this);
-        mAdapter.addChildClickViewIds(R.id.navigation,R.id.check_v);
+        mAdapter.addChildClickViewIds(R.id.navigation, R.id.check_v);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 if (view.getId() == R.id.navigation) {
                     showToast("导航");
                     ARouter.getInstance().build("/map/navigation")
-                            .withParcelable("address",mData.get(position).getPoint())
+                            .withParcelable("address", mData.get(position).getPoint())
                             .navigation();
 
-                }else if (view.getId() == R.id.check_v) {
+                } else if (view.getId() == R.id.check_v) {
                     Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
-                    intent.putExtra("id",mData.get(position).getId());
-                    intent.putExtra("state",mData.get(position).getState());
+                    intent.putExtra("id", mData.get(position).getId());
+                    intent.putExtra("state", mData.get(position).getState());
                     startActivity(intent);
                 }
             }
@@ -159,11 +159,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
             String searchStr = search.getText().toString();
             if (!TextUtils.isEmpty(searchStr)) {
                 RequestParams params = new RequestParams();
-                if (Utils.isContainChinese(searchStr)) {
-                    params.put("name", searchStr);
-                } else {
-                    params.put("sc_code", searchStr);
-                }
+                params.put("name", searchStr);
                 params.put("pageable", "n");
                 getSearch(params);
             } else {
@@ -176,7 +172,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
     private int pages = 1;
 
-    private void getData(){
+    private void getData() {
 
         RequestParams params = new RequestParams();
         try {
@@ -190,7 +186,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
             mAdapter.getLoadMoreModule().setEnableLoadMore(false);
             return;
         }
-        params.put("state",state);
+        params.put("state", state);
 
         RequestCenter.getDataList(UrlService.EVENT, params, new DisposeDataListener() {
             @Override
@@ -206,7 +202,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
 
                         mAdapter.notifyDataSetChanged();
 
-                    }else {
+                    } else {
                         showToast(data.getString("msg"));
                     }
 

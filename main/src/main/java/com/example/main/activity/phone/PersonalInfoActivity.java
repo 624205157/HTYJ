@@ -1,5 +1,6 @@
 package com.example.main.activity.phone;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,12 +9,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.commonlib.base.BaseActivity;
+import com.example.commonlib.view.TextHintDialog;
+import com.example.commonlib.view.TwoChangeDialog;
 import com.example.main.R;
 import com.example.main.R2;
+import com.example.main.activity.GridDetailsActivity;
 import com.example.main.bean.Grid;
 import com.example.main.bean.Subject;
+import com.example.main.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.permissionx.guolindev.PermissionX;
+import com.permissionx.guolindev.callback.RequestCallback;
 import com.tencent.liteav.login.model.ProfileManager;
 import com.tencent.liteav.login.model.UserModel;
 import com.tencent.liteav.trtcaudiocalldemo.ui.TRTCAudioCallActivity;
@@ -25,6 +32,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.main.utils.Utils.isMultiSim;
 
 /**
  * Created by czy on 2020/8/9 20:42.
@@ -87,106 +96,55 @@ public class PersonalInfoActivity extends BaseActivity {
 
     }
 
-    @OnClick({R2.id.voice, R2.id.video})
+    @OnClick({R2.id.voice, R2.id.video,R2.id.tel})
     public void onViewClicked(View view) {
         if (view.getId() == R.id.voice) {
 
             TRTCAudioCallActivity.startCallSomeone(PersonalInfoActivity.this, list);
         } else if (view.getId() == R.id.video) {
             TRTCVideoCallActivity.startCallSomeone(PersonalInfoActivity.this, list);
+        }else if(view.getId() == R.id.tel){
+            callPhone(tel.getText() + "");
         }
     }
 
+    private void callPhone(String callNumber){
+        if (!isMultiSim(this)) {
+            new TextHintDialog(this).setMessageStr("拨打电话：" + callNumber)
+                    .setClickListener(isConfirm -> {
 
-//    private void startAudioCall(){
-//        //1. 初始化组件
-//        ITRTCAudioCall sCall =  TRTCAudioCallImpl.sharedInstance(this);
-//        sCall.init();
-////2. 注册监听器
-//        sCall.addListener(new TRTCAudioCallListener() {
-//            @Override
-//            public void onError(int code, String msg) {
-//                showToast(code + " " + msg);
-//            }
-//
-//            //...省略一些监听代码
-//            public void onInvited(String sponsor, final List<String> userIdList, boolean isFromGroup, int callType) {
-//                // 收到来自 sponsor 发过来的通话请求，此处代码选择接听，您也可以调用 reject() 拒绝之。
-//                sCall.accept();
-//            }
-//
-//            @Override
-//            public void onGroupCallInviteeListUpdate(List<String> userIdList) {
-//
-//            }
-//
-//            @Override
-//            public void onUserEnter(String userId) {
-//
-//            }
-//
-//            @Override
-//            public void onUserLeave(String userId) {
-//
-//            }
-//
-//            @Override
-//            public void onReject(String userId) {
-//
-//            }
-//
-//            @Override
-//            public void onNoResp(String userId) {
-//
-//            }
-//
-//            @Override
-//            public void onLineBusy(String userId) {
-//
-//            }
-//
-//            @Override
-//            public void onCallingCancel() {
-//
-//            }
-//
-//            @Override
-//            public void onCallingTimeout() {
-//
-//            }
-//
-//            @Override
-//            public void onCallEnd() {
-//
-//            }
-//
-//            @Override
-//            public void onUserAudioAvailable(String userId, boolean isVideoAvailable) {
-//
-//            }
-//
-//            @Override
-//            public void onUserVoiceVolume(Map<String, Integer> volumeMap) {
-//
-//            }
-//        });
-//        String userID = (String) shareHelper.query("userID","");
-////3. 完成组件的登录，登录成功后才可以调用组件的其他功能函数
-//        sCall.login(GenerateTestUserSig.SDKAPPID,userID , GenerateTestUserSig.genTestUserSig(userID), new ITRTCAudioCall.ActionCallBack() {
-//            @Override
-//            public void onError(int code, String msg) {
-//
-//            }
-//
-//            public void onSuccess() {
-//                //4. 此处为实例代码：我们在组件登录成功后呼叫用户“aaa”
-//                if (TextUtils.equals(userID,"123456")) {
-//                    sCall.call("654321");
-//                }else {
-//                    sCall.call("123456");
-//                }
-//            }
-//        });
-//    }
+                    })
+                    .show();
+        } else {
+            new TwoChangeDialog(this).setMessageStr("拨打电话：" + callNumber)
+                    .setButtonText("电话卡1", "电话卡2")
+                    .setClickListener(tag -> {
+                        getPermission(tag,callNumber);
+                    }).show();
+        }
+    }
+
+    private void getPermission(int id ,String callNumber) {
+        PermissionX.init(this)
+                .permissions(Manifest.permission.CALL_PHONE
+                )
+                .request(new RequestCallback() {
+                    @Override
+                    public void onResult(boolean allGranted, List<String> grantedList, List<String> deniedList) {
+                        if (allGranted) {
+                            Utils.call(PersonalInfoActivity.this,id,callNumber);
+                        } else {
+                            String text = "";
+                            for (String a : deniedList) {
+                                text = text + a + ";";
+                            }
+                            showToast("您拒绝了" +text);
+//                            Toast.makeText(MainActivity.this, "您拒绝了定位权限", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
 
 }

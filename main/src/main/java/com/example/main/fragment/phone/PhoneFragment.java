@@ -105,7 +105,13 @@ public class PhoneFragment extends BaseFragment implements SwipeRefreshLayout.On
                         shareHelper.save("userList",data.getJSONObject("data").getString("list")).commit();
                         ProfileManager.getInstance().getUserList();//初始化用户数据列表
                         userList.addAll(gson.fromJson(data.getJSONObject("data").getString("list"),new TypeToken<List<Subject>>(){}.getType()));
-
+                        String my = (String) shareHelper.query("username","");
+                        for (Subject s : userList){
+                            if (TextUtils.equals(s.getAccount(),my)){
+                                userList.remove(s);
+                                break;
+                            }
+                        }
                         adapter.setList(userList);
                         adapter.notifyDataSetChanged();
                     }

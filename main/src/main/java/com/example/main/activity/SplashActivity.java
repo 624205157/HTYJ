@@ -14,8 +14,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.main.R;
+import com.example.main.utils.Utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -26,7 +28,6 @@ public class SplashActivity extends Activity {
     private Runnable runnable = () -> {
         toMainActivity();
     };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,15 +49,17 @@ public class SplashActivity extends Activity {
             }
         });
 
+        TextView version = findViewById(R.id.version);
+        version.setText("版本v" + Utils.getVersionName(this));
     }
 
-    private void toLogin(){
+    private void toLogin() {
         startActivity(new Intent(SplashActivity.this,
                 LoginActivity.class));
         finish();
     }
 
-    private void toMainActivity(){
+    private void toMainActivity() {
         startActivity(new Intent(SplashActivity.this,
                 MainActivity.class));
         finish();

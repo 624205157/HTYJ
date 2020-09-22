@@ -76,7 +76,7 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
     protected void onCreate(Bundle savedInstanceState, String a) {
 
         addBack();
-        setTitleText("预案列表");
+        setTitleText("预案管理");
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -150,11 +150,7 @@ public class PlanListActivity extends BaseActivity implements OnLoadMoreListener
             String searchStr = search.getText().toString();
             if (!TextUtils.isEmpty(searchStr)) {
                 RequestParams params = new RequestParams();
-                if (Utils.isContainChinese(searchStr)) {
-                    params.put("name", searchStr);
-                } else {
-                    params.put("sc_code", searchStr);
-                }
+                params.put("name", searchStr);
                 params.put("pageable", "n");
                 getSearch(params);
             } else {
