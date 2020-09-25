@@ -78,6 +78,7 @@ public class LoginActivity extends ConfigActivity {
                                 .save("username", username)
                                 .save("password", password)
                                 .save("token", data.getString("token"))
+                                .save("userSig",data.getJSONObject("signature").getString("userSig"))
                                 .save("subject", data.getString("subject")).commit();
                         Constants.TAKEN = data.getString("token");
                         Constants.SERVICE_ID = data.getInt("serviceId");
@@ -90,7 +91,7 @@ public class LoginActivity extends ConfigActivity {
                          * 腾讯云登录
                          */
 
-                        loginTRTC(LoginActivity.this,username, GenerateTestUserSig.genTestUserSig(username));
+                        loginTRTC(LoginActivity.this,username, data.getJSONObject("signature").getString("userSig"));
 
                         ProfileManager.getInstance().login(
                                 new UserModel(

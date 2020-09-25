@@ -17,7 +17,6 @@ import java.util.List;
 
 import javax.security.auth.Subject;
 
-import static com.example.commonlib.trtc.GenerateTestUserSig.genTestUserSig;
 
 public class ProfileManager {
     private static final ProfileManager ourInstance = new ProfileManager();
@@ -133,7 +132,7 @@ public class ProfileManager {
 //        userModel.userName = userId;
 //        userModel.phone = userId;
 //        userModel.userId = userId;
-        userModel.userSig = genTestUserSig(userModel.userId);
+        userModel.userSig = (String) shareHelper.query("userSig","");
         setUserModel(userModel);
     }
 
@@ -145,7 +144,7 @@ public class ProfileManager {
         userModel.userName = userId;
         userModel.phone = userId;
         userModel.userId = userId;
-        userModel.userSig = genTestUserSig(userModel.userId);
+        userModel.userSig =(String) shareHelper.query("userSig","");
         setUserModel(userModel);
         callback.onSuccess();
     }
@@ -158,7 +157,7 @@ public class ProfileManager {
         userModel.userName = userId;
         userModel.phone = userId;
         userModel.userId = userId;
-        userModel.userSig = genTestUserSig(userModel.userId);
+        userModel.userSig = (String) shareHelper.query("userSig","");
         setUserModel(userModel);
         callback.onSuccess();
     }

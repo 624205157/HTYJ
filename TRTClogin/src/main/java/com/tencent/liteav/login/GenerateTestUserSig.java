@@ -83,9 +83,9 @@ public class GenerateTestUserSig {
      * <p>
      * 文档：https://cloud.tencent.com/document/product/269/32688#Server
      */
-    public static String genTestUserSig(String userId) {
-        return GenTLSSignature(SDKAPPID, userId, EXPIRETIME, null, SECRETKEY);
-    }
+//    public static String genTestUserSig(String userId) {
+//        return GenTLSSignature(SDKAPPID, userId, EXPIRETIME, null, SECRETKEY);
+//    }
 
     /**
      * 生成 tls 票据
