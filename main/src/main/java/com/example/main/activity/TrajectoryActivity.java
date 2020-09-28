@@ -435,7 +435,7 @@ public class TrajectoryActivity extends RightTitleActivity {
                 terminalId,
                 startTime,
                 startTime + 24 * 60 * 60 * 1000,
-                0,      // 不绑路
+                1,      // 不绑路
                 0,      // 不做距离补偿
                 5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
                 0,  // 由旧到新排序

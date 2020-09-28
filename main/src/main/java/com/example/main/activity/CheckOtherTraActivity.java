@@ -259,7 +259,7 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
                 startTime + 24 * 60 * 60 * 1000,
 //                System.currentTimeMillis() - 24 * 60 * 60 * 1000,
 //                System.currentTimeMillis()
-                0,      // 不绑路
+                1,      // 不绑路
                 0,      // 不做距离补偿
                 5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
                 0,  // 由旧到新排序
@@ -393,21 +393,27 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
      */
     private void setupRecord(List<Point> points, TrackPoint startPoint, TrackPoint endPoint) {
         // 轨迹纠偏初始化
-        LBSTraceClient mTraceClient = new LBSTraceClient(
-                getApplicationContext());
-        List<TraceLocation> mGraspTraceLocationList = new ArrayList<>();
-        for (Point p : points) {
-            TraceLocation location = new TraceLocation();
-            location.setLatitude(p.getLat());
-            location.setLongitude(p.getLng());
-            location.setSpeed((float) p.getSpeed());
-            location.setTime(p.getTime());
-            mGraspTraceLocationList.add(location);
-        }
+//        LBSTraceClient mTraceClient = new LBSTraceClient(
+//                getApplicationContext());
+//        List<TraceLocation> mGraspTraceLocationList = new ArrayList<>();
+//        for (Point p : points) {
+//            TraceLocation location = new TraceLocation();
+//            location.setLatitude(p.getLat());
+//            location.setLongitude(p.getLng());
+//            location.setSpeed((float) p.getSpeed());
+//            location.setTime(p.getTime());
+//            mGraspTraceLocationList.add(location);
+//        }
         setGraspEnable();
         // 调用轨迹纠偏，将mGraspTraceLocationList进行轨迹纠偏处理
-        mTraceClient.queryProcessedTrace(1, mGraspTraceLocationList,
-                LBSTraceClient.TYPE_AMAP, this);
+//        mTraceClient.queryProcessedTrace(1, mGraspTraceLocationList,
+//                LBSTraceClient.TYPE_AMAP, this);
+        clearTracksOnMap();
+        for (Point p : points) {
+            LatLng latLng = new LatLng(p.getLat(), p.getLng());
+            mGraspLatLngList.add(latLng);
+        }
+        addGraspTrace(mGraspLatLngList);
 
     }
 
@@ -531,6 +537,7 @@ public class CheckOtherTraActivity extends RightTitleActivity implements TraceLi
      * 清空地图
      */
     private void clearTracksOnMap() {
+        mGraspLatLngList.clear();
         if (mGraspPolyline != null)
             mGraspPolyline.remove();
         if (mGraspStartMarker != null)
