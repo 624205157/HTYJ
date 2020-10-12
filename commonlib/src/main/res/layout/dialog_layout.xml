@@ -7,6 +7,7 @@
     android:orientation="vertical">
     <!-- 弹窗上半部分 -->
     <LinearLayout
+        android:id="@+id/group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_top_circle_lr"

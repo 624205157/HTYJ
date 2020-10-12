@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.commonlib.view.SwipeItemLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/stl"
+    >
+
+
+    <RelativeLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line_color"
+            />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    tools:text="资源名称"
+                    android:textSize="14sp"
+                    />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/line_color" />
+
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    tools:text="资源种类"
+                    />
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/line_color" />
+
+                <TextView
+                    android:id="@+id/total"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    tools:text="资源总量"
+                    />
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/line_color" />
+
+                <TextView
+                    android:id="@+id/surplus"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    tools:text="资源剩余"
+                    />
+
+
+
+            </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <TextView
+            android:id="@+id/slide_1"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="修改"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="#27B893"
+            />
+
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/gary" />
+
+        <TextView
+            android:id="@+id/slide_2"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="删除"
+            android:textColor="@color/white"
+            android:background="@color/red"
+            android:gravity="center"
+            />
+
+
+    </LinearLayout>
+
+</com.example.commonlib.view.SwipeItemLayout>
+
+
+
+
+
+
+
+
+

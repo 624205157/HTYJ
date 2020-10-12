@@ -195,7 +195,6 @@ public class MyDialog extends CustomDialog implements View.OnClickListener {
             if (null != clickListener) {
                 clickListener.onClick(2);
             }
-            dismiss();
         }
     }
 

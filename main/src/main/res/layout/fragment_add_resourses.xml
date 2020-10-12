@@ -75,113 +75,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/relocation">
 
-                <TextView
-                    android:id="@+id/name_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="资源名称"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/required_img"
-                    app:layout_constraintLeft_toRightOf="@+id/name_tv"
-                    app:layout_constraintTop_toTopOf="@+id/name_tv"
-                    app:layout_constraintBottom_toBottomOf="@+id/name_tv"
-                    />
-
-                <EditText
-                    android:id="@+id/name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toRightOf="@+id/name_tv"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/name_tv"
-                    android:background="@null"
-                    android:hint="请输入资源名称"
-                    android:textColor="@color/text_color"
-                    android:textSize="16sp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="20dp"
-                    style="@style/EditTextStyle"
-                    />
-
-                <View
-                    android:id="@+id/v_1"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/name_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/name"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="5dp"
-                    />
-
-
-                <TextView
-                    android:id="@+id/type_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="资源种类"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/v_1"
-                    />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/required_img"
-                    app:layout_constraintLeft_toRightOf="@+id/type_tv"
-                    app:layout_constraintTop_toTopOf="@+id/type_tv"
-                    app:layout_constraintBottom_toBottomOf="@+id/type_tv"
-                    />
-
-                <TextView
-                    android:id="@+id/type"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@+id/name"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/type_tv"
-                    android:background="@null"
-                    android:hint="请选择"
-                    android:textSize="16sp"
-                    android:layout_marginRight="20dp"
-                    android:textColor="@color/text_color"
-                    />
-
-                <View
-                    android:id="@+id/v_2"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/type_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/type"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="5dp"
-                    />
 
                 <TextView
                     android:id="@+id/address_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:text="资源地址"
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/v_2"
+                    app:layout_constraintTop_toTopOf="parent"
                     />
 
                 <ImageView
@@ -197,10 +102,11 @@
                     android:id="@+id/address"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintLeft_toRightOf="@+id/address_tv"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/address_tv"
                     android:textSize="16sp"
+                    android:layout_marginLeft="40dp"
                     android:layout_marginRight="20dp"
                     android:textColor="@color/text_color"
                     />
@@ -218,123 +124,6 @@
 
 
                 <TextView
-                    android:id="@+id/total_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="资源总量"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/v_3"
-                    />
-
-                <EditText
-                    android:id="@+id/total"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@+id/name"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/total_tv"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    android:background="@null"
-                    android:hint="请输入资源总量"
-                    android:layout_marginRight="20dp"
-                    style="@style/EditTextNumStyle"
-                    />
-
-                <View
-                    android:id="@+id/v_4"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/total_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/total"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="5dp"
-                    />
-
-                <TextView
-                    android:id="@+id/remain_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="资源剩余"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/v_4"
-                    />
-
-                <EditText
-                    android:id="@+id/remain"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@+id/name"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/remain_tv"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    android:background="@null"
-                    android:hint="请输入剩余量"
-                    android:layout_marginRight="20dp"
-                    style="@style/EditTextNumStyle"
-                    />
-
-                <View
-                    android:id="@+id/v_5"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/remain_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/remain"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="5dp"
-                    />
-
-
-                <TextView
-                    android:id="@+id/grid_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="归属网格"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/v_5"
-                    />
-
-                <TextView
-                    android:id="@+id/grid"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@+id/name"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/grid_tv"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    android:background="@null"
-                    android:hint="请选择"
-                    android:layout_marginRight="20dp"
-                    />
-
-                <View
-                    android:id="@+id/v_9"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/line_color"
-                    app:layout_constraintLeft_toLeftOf="@+id/grid_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/grid"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="5dp"
-                    />
-
-                <TextView
                     android:id="@+id/tv_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -344,7 +133,7 @@
                     android:textSize="16sp"
                     android:textColor="@color/text_color"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/v_9"
+                    app:layout_constraintTop_toBottomOf="@+id/v_3"
                     />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -355,11 +144,142 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_1"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_margin="10dp"
                     />
 
+                <TextView
+                    android:id="@+id/tv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="资源详情:"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/photo_recycler1"
+                    />
 
+                <ImageView
+                    android:id="@+id/add_res"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/add_res"
+                    app:layout_constraintTop_toTopOf="@+id/tv_2"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_2"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    />
+
+                <View
+                    android:id="@+id/v_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0.5dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_2"
+                    android:background="@color/line_color"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/ll"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/v_2"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    >
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/line_color" />
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/text_color"
+                        android:text="资源名称"
+                        android:textSize="16sp"
+                        />
+
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/line_color" />
+
+                    <TextView
+                        android:id="@+id/type"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:text="资源种类"
+                        android:textColor="@color/text_color"
+                        />
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/line_color" />
+
+                    <TextView
+                        android:id="@+id/total"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:text="资源总量"
+                        android:textColor="@color/text_color"
+                        />
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/line_color" />
+
+                    <TextView
+                        android:id="@+id/surplus"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:text="资源剩余"
+                        android:textColor="@color/text_color"
+                        />
+
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/line_color" />
+
+
+                </LinearLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/res_list"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ll"
+                    />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,6 +22,8 @@ public class Resources {
     @SerializedName("gridName")
     private String grid;
 
+    private String categories;//种类（几种）
+
     private List<MyFiles> attachments;
 
     private Address point = new Address();
@@ -127,5 +129,13 @@ public class Resources {
 
     public void setGrid(String grid) {
         this.grid = grid;
+    }
+
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 }

@@ -107,19 +107,21 @@ public class UpdateEnterpriseFragment extends BaseFragment implements SwipeRefre
                     startActivity(intent);
                 }
                 if (view.getId() == R.id.del) {
-                    new MyDialog(mContext)
-                            .setTitleStr("提示")
-                            .setMessageStr("您确定要删除吗?")
-                            .setButtonText("取消", "确定")
-                            .setClickListener(new CallPhoneListener() {
-                                @Override
-                                public void onClick(int var1) {
-                                    if (var1 == 2) {
-                                        deleteData(mData.get(position).getId(), adapter, position);
+                    MyDialog dialog = new MyDialog(mContext);
+                    dialog.setTitleStr("提示");
+                    dialog.setMessageStr("您确定要删除吗?");
+                    dialog.setButtonText("取消", "确定");
+                    dialog.setClickListener(new CallPhoneListener() {
+                        @Override
+                        public void onClick(int var1) {
+                            if (var1 == 2) {
+                                deleteData(mData.get(position).getId(), adapter, position);
 //                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-                            }).show();
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
                 }
             }
         });

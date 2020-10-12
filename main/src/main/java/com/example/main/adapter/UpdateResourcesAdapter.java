@@ -26,10 +26,10 @@ public class UpdateResourcesAdapter extends BaseQuickAdapter<Resources, BaseView
 
     @Override
     protected void convert(@NotNull BaseViewHolder holder, Resources resources) {
-        holder.setText(R.id.name, resources.getName());
-        holder.setText(R.id.address, "地址: " + resources.getAddress());
-        holder.setText(R.id.type, "类别: " + resources.getType());
-        holder.setText(R.id.total, "数量: " + resources.getTotal());
+        holder.setText(R.id.address,  resources.getAddress());
+        holder.setText(R.id.type, "种类: " + resources.getCategories() + "种");
+        holder.setText(R.id.total_num, "总数量: " + resources.getTotal());
+        holder.setText(R.id.surplus, "剩余数量: " + resources.getSurplus());
 
         View view = holder.getView(R.id.cl_1);
         view.setOnClickListener(new View.OnClickListener() {
