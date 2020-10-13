@@ -333,14 +333,20 @@ public class AddResourcesFragment extends BaseFragment {
             showToast("资源地址不可为空,请重新定位");
             return;
         }
+        if (resourcesList.size() == 0){
+            showToast("至少添加一个资源");
+            return;
+        }
 
         RequestParams params = new RequestParams();
         try {
-            params.put("categoryId", typeSelect.getId());
-            params.put("categoryName", typeSelect.getName());
             params.put("address", Utils.getText(address));
             params.put("longitude", latLng.longitude + "");
             params.put("latitude", latLng.latitude + "");
+            Gson gson = new Gson();
+            String items = gson.toJson(resourcesList);
+            params.put("items", items);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -422,6 +428,7 @@ public class AddResourcesFragment extends BaseFragment {
                             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                                 typeSelect = typeList.get(options1);
                                 type.setText(typeSelect.getName());
+                                type.setTag(typeSelect.getId());
                             }
                         }).setTitleText("资源种类").setContentTextSize(22).setTitleSize(22).setSubCalSize(21)
                                 .isDialog(true)
@@ -466,11 +473,11 @@ public class AddResourcesFragment extends BaseFragment {
             total.setText(resources.getTotal());
             surplus.setText(resources.getSurplus());
 
-            dialog.setButtonText("修改", "取消");
+            dialog.setButtonText( "取消","修改");
             dialog.setClickListener(new CallPhoneListener() {
                 @Override
                 public void onClick(int var1) {
-                    if (var1 == 1) {
+                    if (var1 == 2) {
                         if (TextUtils.isEmpty(name.getText())) {
                             showToast("资源名称不可为空");
                             return;
@@ -482,6 +489,7 @@ public class AddResourcesFragment extends BaseFragment {
 
                         resources.setName(name.getText() + "");
                         resources.setType(type.getText() + "");
+                        resources.setCategoryId(type.getTag() + "");
                         resources.setTotal(total.getText() + "");
                         resources.setSurplus(surplus.getText() + "");
 
@@ -493,11 +501,11 @@ public class AddResourcesFragment extends BaseFragment {
                 }
             });
         }else {
-            dialog.setButtonText("添加", "取消");
+            dialog.setButtonText( "取消","添加");
             dialog.setClickListener(new CallPhoneListener() {
                 @Override
                 public void onClick(int var1) {
-                    if (var1 == 1) {
+                    if (var1 == 2) {
                         if (TextUtils.isEmpty(name.getText())) {
                             showToast("资源名称不可为空");
                             return;
@@ -509,6 +517,7 @@ public class AddResourcesFragment extends BaseFragment {
                         Resources resources = new Resources();
                         resources.setName(name.getText() + "");
                         resources.setType(type.getText() + "");
+                        resources.setCategoryId(type.getTag() + "");
                         resources.setTotal(total.getText() + "");
                         resources.setSurplus(surplus.getText() + "");
 

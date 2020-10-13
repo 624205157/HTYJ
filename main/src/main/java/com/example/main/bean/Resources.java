@@ -15,12 +15,15 @@ public class Resources {
     private String address;
     @SerializedName("categoryName")
     private String type;
+    private String categoryId;
     private String total;
     private double longitude;//经度
     private double latitude;//纬度
     private String surplus;//剩余量
     @SerializedName("gridName")
     private String grid;
+
+    private List<Resources> items;//资源条目
 
     private String categories;//种类（几种）
 
@@ -137,5 +140,21 @@ public class Resources {
 
     public void setCategories(String categories) {
         this.categories = categories;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public List<Resources> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Resources> items) {
+        this.items = items;
     }
 }

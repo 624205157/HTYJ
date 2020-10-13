@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
@@ -28,17 +29,22 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.example.commonlib.base.BaseActivity;
+import com.example.commonlib.listener.CallPhoneListener;
 import com.example.commonlib.okhttp.exception.OkHttpException;
 import com.example.commonlib.okhttp.listener.DisposeDataListener;
 import com.example.commonlib.okhttp.request.RequestParams;
+import com.example.commonlib.view.MyDialog;
+import com.example.commonlib.view.SwipeItemLayout;
 import com.example.main.R;
 import com.example.main.R2;
 import com.example.main.RequestCenter;
 import com.example.main.UrlService;
 import com.example.main.adapter.GridImageAdapter;
+import com.example.main.adapter.ResourcesAdapter;
 import com.example.main.bean.Grid;
 import com.example.main.bean.MyFiles;
 import com.example.main.bean.Resources;
+import com.example.main.listener.ClickCallBack;
 import com.example.main.utils.FullyGridLayoutManager;
 import com.example.main.utils.GlideEngine;
 import com.example.main.utils.Utils;
@@ -65,37 +71,28 @@ import butterknife.OnClick;
  * Created by czy on 2020/8/10 11:30.
  * describe: 更新应急资源
  */
-public class UpdateResourcesActivity  extends BaseActivity {
+public class UpdateResourcesActivity extends BaseActivity {
 
 
     @BindView(R2.id.map)
     MapView map;
-    @BindView(R2.id.name)
-    EditText name;
-    @BindView(R2.id.type)
-    TextView type;
     @BindView(R2.id.address)
     TextView address;
-    @BindView(R2.id.total)
-    EditText total;
-    @BindView(R2.id.remain)
-    EditText remain;
-    @BindView(R2.id.grid)
-    TextView grid;
     @BindView(R2.id.photo_recycler1)
     RecyclerView photoRecycler1;
+    @BindView(R2.id.res_list)
+    RecyclerView resList;
     @BindView(R2.id.location_text)
     TextView locationText;
 
 
     private OptionsPickerView reasonPicker;
-    private OptionsPickerView reasonPicker2;
     private List<String> typeNameList = new ArrayList<>();
-    private List<String> gridNameList = new ArrayList<>();
-    private List<Grid> gridList = new ArrayList<>();
     private List<Grid> typeList = new ArrayList<>();
-    private Grid gridSelect = new Grid();
     private Grid typeSelect = new Grid();
+
+    private ResourcesAdapter resourcesAdapter;
+    private List<Resources> resourcesList = new ArrayList<>();
 
     private GridImageAdapter adapter;
     //已经选择图片
@@ -182,15 +179,14 @@ public class UpdateResourcesActivity  extends BaseActivity {
         init();
 
 
-
         //初始化网格归属列表
-        initGridList();
-
+//        initGridList();
+        getTypeList();
         buildDialog("");
     }
 
 
-    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.grid, R2.id.submit,R2.id.type})
+    @OnClick({R2.id.relocation, R2.id.position_fine_tuning, R2.id.submit, R2.id.add_res})
     public void onViewClicked(View view) {
 
         int id = view.getId();
@@ -198,14 +194,10 @@ public class UpdateResourcesActivity  extends BaseActivity {
             getPermission();
         } else if (id == R.id.position_fine_tuning) {
             startActivityForResult(new Intent(UpdateResourcesActivity.this, PositionFineTuningActivity.class), 0x100);
-        } else if (id == R.id.grid) {
-            if (reasonPicker2!=null)
-            reasonPicker2.show();
+        } else if (id == R.id.add_res) {
+            showAddResDialog(-1);
         } else if (id == R.id.submit) {
             sendData();
-        } else if (id == R.id.type) {
-            if (reasonPicker!=null)
-            reasonPicker.show();
         }
     }
 
@@ -233,6 +225,22 @@ public class UpdateResourcesActivity  extends BaseActivity {
             }
         });
 
+        resourcesAdapter = new ResourcesAdapter(resourcesList, new ClickCallBack() {
+            @Override
+            public void update(int position) {
+                showAddResDialog(position);
+            }
+
+            @Override
+            public void delete(int position) {
+                resourcesList.remove(position);
+                resourcesAdapter.notifyDataSetChanged();
+            }
+        });
+        resourcesAdapter.setAnimationEnable(true);
+        resList.setLayoutManager(new LinearLayoutManager(this));
+        resList.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(this));
+        resList.setAdapter(resourcesAdapter);
 
     }
 
@@ -332,7 +340,7 @@ public class UpdateResourcesActivity  extends BaseActivity {
     private void getData() {
         RequestParams params = new RequestParams();
         params.put("id", getIntent().getStringExtra("id"));
-        RequestCenter.getDataList(UrlService.RESOURCE,params, new DisposeDataListener() {
+        RequestCenter.getDataList(UrlService.RESOURCE, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 cancelDialog();
@@ -342,41 +350,18 @@ public class UpdateResourcesActivity  extends BaseActivity {
                         JSONObject data = (JSONObject) result.getJSONObject("data").getJSONArray("list").get(0);
                         resources = new Gson().fromJson(data.toString(), new TypeToken<Resources>() {
                         }.getType());
-                        name.setText(resources.getName());
-                        total.setText(resources.getTotal());
-                        remain.setText(resources.getSurplus());
                         latLng = new LatLng(resources.getLatitude(), resources.getLongitude());
                         moveMap(latLng, resources.getAddress());
 
-                        for (MyFiles imageList :resources.getAttachments()){
-                            selectList.add(new LocalMedia(imageList.getUid(),imageList.getUrl()));
+                        for (MyFiles imageList : resources.getAttachments()) {
+                            selectList.add(new LocalMedia(imageList.getUid(), imageList.getUrl()));
                         }
 
                         adapter.setList(selectList);
                         adapter.notifyDataSetChanged();
 
-
-                        if (!TextUtils.isEmpty(resources.getGrid())) {
-                            for (Grid grids : gridList) {
-                                if (TextUtils.equals(grids.getName(), resources.getGrid())) {
-                                    reasonPicker2.setSelectOptions(gridList.indexOf(grids));
-                                    grid.setText(grids.getName());
-                                    gridSelect.setName(grids.getName());
-                                    gridSelect.setId(grids.getId());
-                                }
-                            }
-                        }
-
-                        if (!TextUtils.isEmpty(resources.getType())) {
-                            for (Grid grids : typeList) {
-                                if (TextUtils.equals(grids.getName(), resources.getType())) {
-                                    reasonPicker.setSelectOptions(typeList.indexOf(grids));
-                                    type.setText(grids.getName());
-                                    typeSelect.setName(grids.getName());
-                                    typeSelect.setId(grids.getId());
-                                }
-                            }
-                        }
+                        resourcesAdapter.setList(resources.getItems());
+                        resourcesAdapter.notifyDataSetChanged();
 
                     }
 
@@ -394,42 +379,35 @@ public class UpdateResourcesActivity  extends BaseActivity {
 
 
     private void sendData() {
-        if (TextUtils.isEmpty(name.getText())) {
-            showToast("资源名不可为空");
-            return;
-        }
-        if (TextUtils.isEmpty(Utils.getText(address))){
+        if (TextUtils.isEmpty(Utils.getText(address))) {
             showToast("资源地址不可为空,请重新定位");
             return;
         }
-        if (TextUtils.isEmpty(typeSelect.getId())){
-            showToast("资源种类不可为空,请选择");
+        if (resourcesList.size() == 0){
+            showToast("至少添加一个资源");
             return;
         }
+
         RequestParams params = new RequestParams();
         try {
-            params.put("id",resources.getId());
-            params.put("name", Utils.getText(name));
-            params.put("categoryId", typeSelect.getId());
-            params.put("categoryName", typeSelect.getName());
+            params.put("id", resources.getId());
             params.put("address", Utils.getText(address));
-            params.put("total", Utils.getText(total));
-            params.put("surplus", Utils.getText(remain));
             params.put("longitude", latLng.longitude + "");
-            params.put("latitude", latLng.latitude+ "");
-            params.put("gridId", gridSelect.getId());
-            params.put("gridName", gridSelect.getName());
+            params.put("latitude", latLng.latitude + "");
+            Gson gson = new Gson();
+            String items = gson.toJson(resourcesList);
+            params.put("items", items);
 
 
-            String exist="";
+            String exist = "";
 
-            if (selectList.size()>0){
+            if (selectList.size() > 0) {
 
-                Iterator<LocalMedia> it_b=selectList.iterator();
-                while(it_b.hasNext()){
-                    LocalMedia localMedia=it_b.next();
-                    if (!TextUtils.isEmpty(localMedia.getUid())){
-                        exist+= localMedia.getUid()+",";
+                Iterator<LocalMedia> it_b = selectList.iterator();
+                while (it_b.hasNext()) {
+                    LocalMedia localMedia = it_b.next();
+                    if (!TextUtils.isEmpty(localMedia.getUid())) {
+                        exist += localMedia.getUid() + ",";
                         it_b.remove();
                     }
                 }
@@ -437,7 +415,7 @@ public class UpdateResourcesActivity  extends BaseActivity {
             }
 
 
-            params.put("exists",exist.substring(0,exist.length()-1));
+            params.put("exists", exist.substring(0, exist.length() - 1));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -445,7 +423,7 @@ public class UpdateResourcesActivity  extends BaseActivity {
 
         buildDialog("提交中");
 
-        RequestCenter.addUpdateData(UrlService.RESOURCE,params, Utils.getFileList(selectList), new DisposeDataListener() {
+        RequestCenter.addUpdateData(UrlService.RESOURCE, params, Utils.getFileList(selectList), new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 cancelDialog();
@@ -466,54 +444,56 @@ public class UpdateResourcesActivity  extends BaseActivity {
             }
         });
     }
+
     /**
      * 初始化网格归属
      */
-    private void initGridList(){
+//    private void initGridList() {
+//
+//        RequestCenter.getGrid(null, new DisposeDataListener() {
+//            @Override
+//            public void onSuccess(Object responseObj) {
+//                cancelDialog();
+//                try {
+//                    JSONObject result = new JSONObject(responseObj.toString());
+//                    if (result.getInt("code") == 0) {
+////                        JSONObject data = result.getJSONObject("data");
+//                        gridList.clear();
+//                        gridList.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Grid>>() {
+//                        }.getType()));
+//                        typeNameList.clear();
+//                        for (Grid grid : gridList) {
+//                            typeNameList.add(grid.getName());
+//                        }
+//                        reasonPicker2 = new OptionsPickerBuilder(UpdateResourcesActivity.this, new OnOptionsSelectListener() {
+//                            @Override
+//                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+//                                gridSelect = gridList.get(options1);
+//                                grid.setText(gridSelect.getName());
+//                            }
+//                        }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
+//                        reasonPicker2.setPicker(typeNameList);
+//                    }
+//
+//                    getTypeList();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(OkHttpException responseObj) {
+//
+//            }
+//        });
+//
+//
+//    }
 
-        RequestCenter.getGrid(null, new DisposeDataListener() {
-            @Override
-            public void onSuccess(Object responseObj) {
-                cancelDialog();
-                try {
-                    JSONObject result = new JSONObject(responseObj.toString());
-                    if (result.getInt("code") == 0) {
-//                        JSONObject data = result.getJSONObject("data");
-                        gridList.clear();
-                        gridList.addAll(new Gson().fromJson(result.getString("data"),new TypeToken<List<Grid>>(){}.getType()));
-                        typeNameList.clear();
-                        for (Grid grid:gridList){
-                            typeNameList.add(grid.getName());
-                        }
-                        reasonPicker2 = new OptionsPickerBuilder(UpdateResourcesActivity.this, new OnOptionsSelectListener() {
-                            @Override
-                            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                                gridSelect = gridList.get(options1);
-                                grid.setText(gridSelect.getName());
-                            }
-                        }).setTitleText("归属网格").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-                        reasonPicker2.setPicker(typeNameList);
-                    }
-
-                    getTypeList();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(OkHttpException responseObj) {
-
-            }
-        });
-
-
-    }
-
-    private void getTypeList(){
+    private void getTypeList() {
         RequestParams params = new RequestParams();
-        params.put("pId","EMERGENCY_RESOURCE_TYPE");//资源种类
+        params.put("pId", "EMERGENCY_RESOURCE_TYPE");//资源种类
         RequestCenter.getType(params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
@@ -523,10 +503,11 @@ public class UpdateResourcesActivity  extends BaseActivity {
                     if (result.getInt("code") == 0) {
 //                        JSONObject data = result.getJSONObject("data");
                         typeList.clear();
-                        typeList.addAll(new Gson().fromJson(result.getString("data"),new TypeToken<List<Grid>>(){}.getType()));
-                        gridNameList.clear();
-                        for (Grid grid: typeList){
-                            gridNameList.add(grid.getName());
+                        typeList.addAll(new Gson().fromJson(result.getString("data"), new TypeToken<List<Grid>>() {
+                        }.getType()));
+                        typeNameList.clear();
+                        for (Grid grid : typeList) {
+                            typeNameList.add(grid.getName());
                         }
                         reasonPicker = new OptionsPickerBuilder(UpdateResourcesActivity.this, new OnOptionsSelectListener() {
                             @Override
@@ -534,8 +515,10 @@ public class UpdateResourcesActivity  extends BaseActivity {
                                 typeSelect = typeList.get(options1);
                                 type.setText(typeSelect.getName());
                             }
-                        }).setTitleText("资源种类").setContentTextSize(22).setTitleSize(22).setSubCalSize(21).build();
-                        reasonPicker.setPicker(gridNameList);
+                        }).setTitleText("资源种类").setContentTextSize(22).setTitleSize(22).setSubCalSize(21)
+                                .isDialog(true)
+                                .build();
+                        reasonPicker.setPicker(typeNameList);
 
                         //字典项查完再查询反显数据
                         getData();
@@ -552,6 +535,95 @@ public class UpdateResourcesActivity  extends BaseActivity {
             }
         });
     }
+
+    private TextView type;
+
+    private void showAddResDialog(int position) {
+        View view = getLayoutInflater().inflate(R.layout.dialog_add_resourses, null);
+        EditText name = view.findViewById(R.id.name);
+        type = view.findViewById(R.id.type);
+        EditText total = view.findViewById(R.id.total);
+        EditText surplus = view.findViewById(R.id.surplus);
+
+        type.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reasonPicker.show();
+            }
+        });
+        MyDialog dialog = new MyDialog(this);
+        dialog.setAddView(view);
+
+        if (position != -1){
+            Resources resources = resourcesList.get(position);
+            name.setText(resources.getName());
+            type.setText(resources.getType());
+            total.setText(resources.getTotal());
+            surplus.setText(resources.getSurplus());
+
+            dialog.setButtonText( "取消","修改");
+            dialog.setClickListener(new CallPhoneListener() {
+                @Override
+                public void onClick(int var1) {
+                    if (var1 == 2) {
+                        if (TextUtils.isEmpty(name.getText())) {
+                            showToast("资源名称不可为空");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(type.getText())) {
+                            showToast("请选择资源类别");
+                            return;
+                        }
+
+                        resources.setName(name.getText() + "");
+                        resources.setType(type.getText() + "");
+                        resources.setCategoryId(type.getTag() + "");
+                        resources.setTotal(total.getText() + "");
+                        resources.setSurplus(surplus.getText() + "");
+
+                        resourcesList.set(position,resources);
+//                        resourcesAdapter.setList(resourcesList);
+                        resourcesAdapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                }
+            });
+        }else {
+            dialog.setButtonText( "取消","添加");
+            dialog.setClickListener(new CallPhoneListener() {
+                @Override
+                public void onClick(int var1) {
+                    if (var1 == 2) {
+                        if (TextUtils.isEmpty(name.getText())) {
+                            showToast("资源名称不可为空");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(type.getText())) {
+                            showToast("请选择资源类别");
+                            return;
+                        }
+                        Resources resources = new Resources();
+                        resources.setName(name.getText() + "");
+                        resources.setType(type.getText() + "");
+                        resources.setCategoryId(type.getTag() + "");
+                        resources.setTotal(total.getText() + "");
+                        resources.setSurplus(surplus.getText() + "");
+
+                        resourcesList.add(resources);
+                        resourcesAdapter.setList(resourcesList);
+                        resourcesAdapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                }
+            });
+        }
+
+
+
+
+        dialog.show();
+    }
+
 
     @Override
     public void onDestroy() {
