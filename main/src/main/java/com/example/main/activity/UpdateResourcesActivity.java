@@ -578,8 +578,8 @@ public class UpdateResourcesActivity extends BaseActivity {
                         resources.setName(name.getText() + "");
                         resources.setType(type.getText() + "");
                         resources.setCategoryId(type.getTag() + "");
-                        resources.setTotal(total.getText() + "");
-                        resources.setSurplus(surplus.getText() + "");
+                        resources.setTotal(getNum(total));
+                        resources.setSurplus(getNum(surplus));
 
                         resourcesList.set(position,resources);
 //                        resourcesAdapter.setList(resourcesList);
@@ -606,8 +606,8 @@ public class UpdateResourcesActivity extends BaseActivity {
                         resources.setName(name.getText() + "");
                         resources.setType(type.getText() + "");
                         resources.setCategoryId(type.getTag() + "");
-                        resources.setTotal(total.getText() + "");
-                        resources.setSurplus(surplus.getText() + "");
+                        resources.setTotal(getNum(total));
+                        resources.setSurplus(getNum(surplus));
 
                         resourcesList.add(resources);
                         resourcesAdapter.setList(resourcesList);
@@ -622,6 +622,14 @@ public class UpdateResourcesActivity extends BaseActivity {
 
 
         dialog.show();
+    }
+
+    private String getNum(EditText editText) {
+        if (TextUtils.isEmpty(editText.getText())) {
+            return "0";
+        } else {
+            return editText.getText() + "";
+        }
     }
 
 

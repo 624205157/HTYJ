@@ -333,7 +333,7 @@ public class AddResourcesFragment extends BaseFragment {
             showToast("资源地址不可为空,请重新定位");
             return;
         }
-        if (resourcesList.size() == 0){
+        if (resourcesList.size() == 0) {
             showToast("至少添加一个资源");
             return;
         }
@@ -466,14 +466,14 @@ public class AddResourcesFragment extends BaseFragment {
         MyDialog dialog = new MyDialog(mActivity);
         dialog.setAddView(view);
 
-        if (position != -1){
+        if (position != -1) {
             Resources resources = resourcesList.get(position);
             name.setText(resources.getName());
             type.setText(resources.getType());
             total.setText(resources.getTotal());
             surplus.setText(resources.getSurplus());
 
-            dialog.setButtonText( "取消","修改");
+            dialog.setButtonText("取消", "修改");
             dialog.setClickListener(new CallPhoneListener() {
                 @Override
                 public void onClick(int var1) {
@@ -490,18 +490,18 @@ public class AddResourcesFragment extends BaseFragment {
                         resources.setName(name.getText() + "");
                         resources.setType(type.getText() + "");
                         resources.setCategoryId(type.getTag() + "");
-                        resources.setTotal(total.getText() + "");
-                        resources.setSurplus(surplus.getText() + "");
+                        resources.setTotal(getNum(total));
+                        resources.setSurplus(getNum(surplus));
 
-                        resourcesList.set(position,resources);
+                        resourcesList.set(position, resources);
 //                        resourcesAdapter.setList(resourcesList);
                         resourcesAdapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 }
             });
-        }else {
-            dialog.setButtonText( "取消","添加");
+        } else {
+            dialog.setButtonText("取消", "添加");
             dialog.setClickListener(new CallPhoneListener() {
                 @Override
                 public void onClick(int var1) {
@@ -518,8 +518,8 @@ public class AddResourcesFragment extends BaseFragment {
                         resources.setName(name.getText() + "");
                         resources.setType(type.getText() + "");
                         resources.setCategoryId(type.getTag() + "");
-                        resources.setTotal(total.getText() + "");
-                        resources.setSurplus(surplus.getText() + "");
+                        resources.setTotal(getNum(total));
+                        resources.setSurplus(getNum(surplus));
 
                         resourcesList.add(resources);
                         resourcesAdapter.setList(resourcesList);
@@ -531,9 +531,15 @@ public class AddResourcesFragment extends BaseFragment {
         }
 
 
-
-
         dialog.show();
+    }
+
+    private String getNum(EditText editText) {
+        if (TextUtils.isEmpty(editText.getText())) {
+            return "0";
+        } else {
+            return editText.getText() + "";
+        }
     }
 
     @Override
