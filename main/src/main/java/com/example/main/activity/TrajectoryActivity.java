@@ -113,13 +113,13 @@ public class TrajectoryActivity extends RightTitleActivity {
                     handler.postDelayed(runnable, 10000);
                     startTrack();
                 } else {
-                    aMapTrackClient.stopTrack(new TrackParam(Constants.SERVICE_ID, terminalId), onTrackListener);
+                    stopTrack();
                     showToast("位置上报已关闭");
                 }
             }
         });
 
-        username = (String) shareHelper.query("username", "");
+        username = (String) shareHelper.query("username", "");//本人账号
         aMapTrackClient = new AMapTrackClient(getApplicationContext());
         aMapTrackClient.setInterval(2, 10);
 
@@ -170,7 +170,7 @@ public class TrajectoryActivity extends RightTitleActivity {
     Handler handler = new Handler();
 
     /**
-     * 60秒更新一次当天数据
+     * 10秒更新一次当天数据
      */
     Runnable runnable = new Runnable() {
         @Override
@@ -332,6 +332,12 @@ public class TrajectoryActivity extends RightTitleActivity {
         }
         aMapTrackClient.startTrack(trackParam, onTrackListener);
     }
+    /**
+     * 结束轨迹
+     */
+    private void stopTrack(){
+        aMapTrackClient.stopTrack(new TrackParam(Constants.SERVICE_ID, terminalId), onTrackListener);
+    }
 
     /**
      * 在8.0以上手机，如果app切到后台，系统会限制定位相关接口调用频率
@@ -440,7 +446,7 @@ public class TrajectoryActivity extends RightTitleActivity {
                 5000,   // 距离补偿阈值，只有超过5km的点才启用距离补偿
                 0,  // 由旧到新排序
                 1,  // 返回第1页数据
-                999,    // 一页不超过100条
+                999,    // 一页不超过999条
                 ""  // 暂未实现，该参数无意义，请留空
         );
         aMapTrackClient.queryHistoryTrack(historyTrackRequest, new SimpleOnTrackListener() {

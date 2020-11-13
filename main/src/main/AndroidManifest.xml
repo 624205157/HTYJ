@@ -83,11 +83,13 @@
         <activity
             android:name=".activity.PlanDetailsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.SignInActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
             android:name=".activity.my.UpdateMyActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
 
 
     </application>

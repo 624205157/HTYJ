@@ -95,7 +95,7 @@ public class MyFragment extends BaseFragment {
             V2TIMManager.getInstance().logout(null);
 
             //小米推送退出
-            MiPushClient.unsetUserAccount(mContext, String.valueOf(shareHelper.query("username","")), null);
+            MiPushClient.unsetUserAccount(mContext, String.valueOf(shareHelper.query("username", "")), null);
 
             shareHelper.save("username", "")
                     .save("password", "")
@@ -108,10 +108,10 @@ public class MyFragment extends BaseFragment {
         }
     }
 
-    private void getNewVersion(){
+    private void getNewVersion() {
         buildDialog("");
         RequestParams params = new RequestParams();
-        params.put("platform","android");
+        params.put("platform", "android");
         params.put("version", Utils.getVersionName(getActivity()) + "");
 //        params.put("version", "0.0.1");
         RequestCenter.getDataList(UrlService.VERSION, params, new DisposeDataListener() {
@@ -120,17 +120,17 @@ public class MyFragment extends BaseFragment {
                 cancelDialog();
                 try {
                     JSONObject result = new JSONObject(responseObj.toString());
-                    if (TextUtils.equals(result.getString("code"),"0")){
+                    if (TextUtils.equals(result.getString("code"), "0")) {
                         JSONObject data = result.getJSONObject("data");
-                        if (TextUtils.equals(data.getString("needUpdate"),"0")){
+                        if (TextUtils.equals(data.getString("needUpdate"), "0")) {
                             showToast("当前为最新版本");
-                        }else {
-                            updateApp(data.getString("fileUrl"),data.getString("content"));
+                        } else {
+                            updateApp(data.getString("fileUrl"), data.getString("content"));
                         }
-                    }else {
+                    } else {
                         showToast(result.getString("msg"));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -146,12 +146,13 @@ public class MyFragment extends BaseFragment {
 //    private String apkUrl = "http://118.24.148.250:8080/yk/update_signed.apk";
 //    private String updateContent = "1、Kotlin重构版\n2、支持自定义UI\n3、增加md5校验\n4、更多功能等你探索";
 
-    private void updateApp(String url,String content) {
+    private void updateApp(String url, String content) {
         AllenVersionChecker
                 .getInstance()
                 .downloadOnly(
                         UIData.create().setDownloadUrl(url).setContent(content).setTitle("发现新版本")
                 )
+                .setShowDownloadingDialog(false)
                 .executeMission(mContext);
     }
 

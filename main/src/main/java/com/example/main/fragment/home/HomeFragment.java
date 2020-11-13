@@ -23,6 +23,7 @@ import com.example.main.activity.EnterpriseActivity;
 import com.example.main.activity.EventActivity;
 import com.example.main.activity.PlanListActivity;
 import com.example.main.activity.ResourcesActivity;
+import com.example.main.activity.SignInActivity;
 import com.example.main.activity.TaskActivity;
 import com.example.main.activity.TrajectoryActivity;
 import com.example.main.bean.Event;
@@ -65,7 +66,7 @@ public class HomeFragment extends BaseFragment {
         getData();
     }
 
-    @OnClick({R2.id.event, R2.id.task, R2.id.enterprise, R2.id.resources, R2.id.plan, R2.id.trajectory})
+    @OnClick({R2.id.event, R2.id.task, R2.id.enterprise, R2.id.resources, R2.id.plan, R2.id.trajectory,R2.id.sign})
     public void onViewClicked(View view) {
         int id = view.getId();
         if (id == R.id.event) {
@@ -80,6 +81,8 @@ public class HomeFragment extends BaseFragment {
             startActivity(new Intent(getActivity(), PlanListActivity.class));
         } else if (id == R.id.trajectory) {
             startActivity(new Intent(getActivity(), TrajectoryActivity.class));
+        } else if (id == R.id.sign) {
+            startActivity(new Intent(getActivity(), SignInActivity.class));
         }
     }
 
